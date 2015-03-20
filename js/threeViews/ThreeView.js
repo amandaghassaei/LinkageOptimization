@@ -13,11 +13,6 @@ ThreeView = Backbone.View.extend({
 
     mouseIsDown: false,//store state of mouse click inside this el
 
-    //intersections/object highlighting
-    mouseProjection: new THREE.Raycaster(),
-    highlighter: null,
-    currentIntersectedPart: null,
-
     el: "#threeContainer",
 
     controls: null,

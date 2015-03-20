@@ -5,13 +5,19 @@
 
 function ThreeModel(){
 
+    Physijs.scripts.worker = 'dependencies/physics/physijs_worker.js';
+    Physijs.scripts.ammo = 'ammo.js';
+
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 10000);
-    var scene = new THREE.Scene();
+    var scene = new Physijs.Scene();
     var renderer = new THREE.WebGLRenderer({antialias:true});//antialiasing is not supported in ff and on mac+chrome
 
     initialize();
 
     function initialize(){
+
+        scene.setGravity(new THREE.Vector3( 0, -50, 0 )); // set gravity
+        scene.addEventListener('update', simulate);
 
         camera.position.x = 125;
         camera.position.y = 100;
@@ -64,10 +70,15 @@ function ThreeModel(){
         renderer.render(scene, camera);
     }
 
+    function simulate(){
+        scene.simulate();
+    }
+
     return {//return public properties/methods
         render: render,
         sceneRemove: sceneRemove,
         sceneAdd: sceneAdd,
+        simulate: simulate,
         domElement: renderer.domElement,
         camera: camera
     }
