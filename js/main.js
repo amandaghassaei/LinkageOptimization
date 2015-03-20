@@ -26,14 +26,8 @@ $(function(){
     //do stuff
     var plane = new Physijs.BoxMesh( // Physijs mesh
         new THREE.BoxGeometry(100, 100, 2, 10, 10), // Three.js geometry
-        Physijs.createMaterial(new THREE.MeshLambertMaterial({color: 0xeeeeee}),
-            .4, // friction
-            .8 // restitution
-        ),
-        0 // weight, 0 is for zero gravity
-    );
+        Physijs.createMaterial(new THREE.MeshLambertMaterial({color: 0xeeeeee}), 0.4, 0.8), 0);
     globals.three.sceneAdd(plane);
-
 
     var numBalls = 50;
     makeBall();
@@ -48,11 +42,6 @@ $(function(){
         ball.position.z = 40;
 
         globals.three.sceneAdd(ball);
-
         if (numBalls-- > 0) setTimeout(makeBall, 600);
     }
-
-    globals.three.render();
-    globals.three.simulate();
-
 });

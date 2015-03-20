@@ -17,7 +17,7 @@ function ThreeModel(){
     function initialize(){
 
         scene.setGravity(new THREE.Vector3( 0, 0, -50)); // set gravity
-        scene.addEventListener('update', simulate);
+        scene.addEventListener('update', render);
 
         camera.position.x = 125;
         camera.position.y = 100;
@@ -30,7 +30,7 @@ function ThreeModel(){
         var light = new THREE.DirectionalLight(0xffffff);
         light.position.set(1, 1, 1);
         scene.add(light);
-        light = new THREE.DirectionalLight(0x002288);
+        light = new THREE.DirectionalLight(0xaaaaaa);
         light.position.set(-1, -1, -1);
         scene.add(light);
         light = new THREE.AmbientLight(0x222222);
@@ -67,19 +67,14 @@ function ThreeModel(){
     }
 
     function render(){
-        renderer.render(scene, camera);
-    }
-
-    function simulate(){
         scene.simulate();
-        render();
+        renderer.render(scene, camera);
     }
 
     return {//return public properties/methods
         render: render,
         sceneRemove: sceneRemove,
         sceneAdd: sceneAdd,
-        simulate: simulate,
         domElement: renderer.domElement,
         camera: camera
     }
