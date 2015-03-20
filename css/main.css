@@ -96,10 +96,6 @@ nav .btn {
 	background: #BABABA;
 }
 
-#STLImportStats {
-    display: none;
-}
-
 .dropdown-menu {
     margin-top: 0!important;
     border-top-left-radius: 0!important;
@@ -151,37 +147,6 @@ hr {
   border-color: #888 -moz-use-text-color #888;
 }
 
-
-#gcodeEditor {
-    font-family: Courier, monospace;
-    font-size: 13px;
-    line-height: 30px;
-    height: 400px;
-    width: 100%;
-    background-color: rgba(255,255,255,0.5);
-    white-space: pre-wrap;
-    padding: 15px 0 15px 20px;
-    overflow: auto;
-}
-
-#gcodeEditor:focus {
-    outline-width: 0;
-}
-
-#gcodeHighlighter{
-    padding: 0 0 0 10px;
-    width: 100%;
-    margin: 0 0 0 -10px;
-    left: -15px;
-    display: inline-block;
-    background-color: rgba(255, 255, 0, 0.35);
-}
-
-#postWarning {
-    background-color: rgba(255,0,0,0.15);
-    padding: 10px 15px 15px 15px;
-    margin: 20px 0;
-}
 
 input.numberInput{
     width:22%;
