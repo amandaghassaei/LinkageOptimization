@@ -34,43 +34,25 @@ $(function(){
     );
     globals.three.sceneAdd(plane);
 
-    setInterval(function() {
-      var ball = new Physijs.SphereMesh(
-        new THREE.SphereGeometry(
-          Math.random() * (4 - 1) + 1,
-          16,
-          16
-        ),
-        Physijs.createMaterial(
-          new THREE.MeshLambertMaterial({
-            color: 0xff0000,
-            reflectivity: .8
-          }),
-          .4,
-          .6
-        ),
-        1
-      );
 
-      var r = {
-        x: Math.random() * (Math.PI - Math.PI / 12) + Math.PI / 12,
-        y: Math.random() * (Math.PI - Math.PI / 12) + Math.PI / 12,
-        z: Math.random() * (Math.PI - Math.PI / 12) + Math.PI / 12
-      };
+    var numBalls = 50;
+    makeBall();
 
-      ball.rotation.set(r.x, r.y, r.z);
-      ball.position.y = 40;
-      ball.castShadow = true;
-      ball.receiveShadow = true;
+    function makeBall() {
+        var ball = new Physijs.SphereMesh(
+            new THREE.SphereGeometry(Math.random() * (4 - 1) + 1, 16, 16),
+            Physijs.createMaterial(new THREE.MeshLambertMaterial({color: 0xff0000, reflectivity: .8}), 0.4, 0.6), 1);
 
-      globals.three.sceneAdd(ball);
-    }, 600);
+        ball.position.x = Math.random()*10;
+        ball.position.y = Math.random()*10;
+        ball.position.z = 40;
+
+        globals.three.sceneAdd(ball);
+
+        if (numBalls-- > 0) setTimeout(makeBall, 600);
+    }
 
     globals.three.render();
     globals.three.simulate();
-
-//    var cube = new THREE.Mesh(new THREE.BoxGeometry(40,40,40), new THREE.MeshNormalMaterial());
-//    globals.three.sceneAdd(cube);
-//    globals.three.render();
 
 });

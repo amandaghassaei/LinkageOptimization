@@ -16,7 +16,7 @@ function ThreeModel(){
 
     function initialize(){
 
-        scene.setGravity(new THREE.Vector3( 0, -50, 0 )); // set gravity
+        scene.setGravity(new THREE.Vector3( 0, 0, -50)); // set gravity
         scene.addEventListener('update', simulate);
 
         camera.position.x = 125;
@@ -72,6 +72,7 @@ function ThreeModel(){
 
     function simulate(){
         scene.simulate();
+        render();
     }
 
     return {//return public properties/methods
