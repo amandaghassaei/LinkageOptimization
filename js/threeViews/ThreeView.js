@@ -22,9 +22,7 @@ ThreeView = Backbone.View.extend({
 
     controls: null,
 
-    initialize: function(options){
-
-        this.appState = options.appState;
+    initialize: function(){
 
         _.bindAll(this, "_mouseMoved", "_animate");
 

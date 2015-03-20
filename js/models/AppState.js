@@ -17,7 +17,6 @@ AppState = Backbone.Model.extend({
         lastSimulationTab: "physics",
         lastAssembleTab: "assembler",
 
-        menuWrapper: null,
         menuIsVisible: true,
 
         allMenuTabs: {
@@ -61,10 +60,6 @@ AppState = Backbone.Model.extend({
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
 
         if (this.isMobile()) this.set("menuIsVisible", false);
-    },
-
-    delayedInit: function(){
-        this.set("menuWrapper", new MenuWrapper({model: this}));
     },
 
     isMobile: function() {

@@ -14,16 +14,18 @@ $(function(){
     //init global singletons
     globals.three = new ThreeModel();
     globals.appState = new AppState();
-    globals.appState.delayedInit();
-
 
     //ui
+    new MenuWrapper({model: globals.appState});
     new NavBar({model:globals.appState});
     new Ribbon({model:globals.appState});
 
     //threeJS View
-    new ThreeView({model:globals.three, appState:globals.appState});
+    new ThreeView({model:globals.three});
 
     //do stuff
+    var cube = new THREE.Mesh(new THREE.BoxGeometry(40,40,40), new THREE.MeshNormalMaterial());
+    globals.three.sceneAdd(cube);
+    globals.three.render();
 
 });
