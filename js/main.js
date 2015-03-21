@@ -29,7 +29,7 @@ $(function(){
     globals.linkage.link(hinge1, hinge2);
     var hinge3 = globals.linkage.addHingeAtPosition(new THREE.Vector2(5,0));
     globals.linkage.link(hinge3, hinge1);
-    hinge3.setStatic(true);
+    //hinge3.setStatic(true);
 
 
     //threeJS View
