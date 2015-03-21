@@ -6,10 +6,13 @@ var hingeGeometry = new THREE.CylinderGeometry(1,1,1,20,20);
 hingeGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
 var material = new THREE.MeshNormalMaterial();
 
-function Hinge(position, rad, depth){
+function Hinge(position, width, depth){
     this.position = position;//draw at this position when paused
     this.body = this._buildBody(position);
-    this.mesh = this._buildMesh(rad, depth);
+
+    this.mesh = this._buildMesh();
+    this.setWidth(width);
+    this.setDepth(depth);
     globals.three.sceneAdd(this.mesh);
 }
 
@@ -21,12 +24,17 @@ Hinge.prototype.setStatic = function(isStatic){//body cannot move
     globals.physics.setStatic(this.body, isStatic);
 };
 
-Hinge.prototype._buildMesh = function(rad, depth){
-    var mesh = new THREE.Mesh(hingeGeometry, material);
-    mesh.scale.x = rad;
-    mesh.scale.y = rad;
-    mesh.scale.z = depth;
-    return mesh;
+Hinge.prototype._buildMesh = function(){
+    return new THREE.Mesh(hingeGeometry, material);
+};
+
+Hinge.prototype.setWidth = function(width){
+    this.mesh.scale.x = width/2;//we are really setting rad here - divide by two
+    this.mesh.scale.y = width/2;
+};
+
+Hinge.prototype.setDepth = function(depth){
+    this.mesh.scale.z = depth;
 };
 
 Hinge.prototype.currentPosition = function(){

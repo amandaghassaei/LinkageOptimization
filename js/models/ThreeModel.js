@@ -13,7 +13,7 @@ function ThreeModel(){
 
     function initialize(){
 
-        camera.position.set(0,0,100);
+        camera.position.set(0,0,40);
         //camera.up.set(0,0,1);//set z axis as "up"
 
         scene.fog = new THREE.FogExp2(0xcccccc, 0.000);

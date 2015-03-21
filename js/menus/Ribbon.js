@@ -31,7 +31,7 @@ Ribbon = Backbone.View.extend({
             <div class="btn-group">\
               <a id="twoDView" class="btn btn-primary btn-ribbon" href="#">2D</a>\
               <a id="threeDView" class="btn btn-primary btn-ribbon" href="#">3D</a>\
-              <a id="threeDView" class="btn btn-primary btn-ribbon" href="#">another button</a>\
+              <a id="threeDView" class="btn btn-primary btn-ribbon" href="#">play/pause</a>\
             </div>\
         </div>\
         ')

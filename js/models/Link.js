@@ -10,9 +10,13 @@ function Link(hingeA, hingeB, width, depth, length){//optional parameter "length
 // otherwise calculated from initial positions of hinges
     this.hingeA = hingeA;
     this.hingeB = hingeB;
+
     if (length === undefined) length = this._dist(hingeA.getPosition(), hingeB.getPosition());
     this.constraint = this._buildConstraint(hingeA, hingeB, length);
-    this.mesh = this._buildMesh(width, length, depth);
+
+    this.mesh = this._buildMesh(length);
+    this.setWidth(width);
+    this.setDepth(depth);
     globals.three.sceneAdd(this.mesh);
 }
 
@@ -20,12 +24,18 @@ Link.prototype._buildConstraint = function(hingeA, hingeB, length){//links creat
     return globals.physics.makeConstraint(hingeA.body, hingeB.body, length);
 };
 
-Link.prototype._buildMesh = function(width, length, depth){
+Link.prototype._buildMesh = function(length){
     var mesh = new THREE.Mesh(linkGeometry, material);
-    mesh.scale.x = width;
     mesh.scale.y = length;
-    mesh.scale.z = depth;
     return mesh;
+};
+
+Link.prototype.setWidth = function(width){
+    this.mesh.scale.x = width;
+};
+
+Link.prototype.setDepth = function(depth){
+    this.mesh.scale.z = depth;
 };
 
 Link.prototype.render = function(){

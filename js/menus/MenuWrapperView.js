@@ -16,7 +16,7 @@ MenuWrapper = Backbone.View.extend({
         _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility", "_hide", "_show");
 
         //init all tab view controllers
-        this.placeHolderMenu = new ExampleMenuView({model:this.model});
+        this.drawParams = new DrawParamsMenuView({model:this.model});
 
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);
@@ -43,30 +43,8 @@ MenuWrapper = Backbone.View.extend({
             }
         });
 
-        if (tabName == "lattice"){
-            this.placeHolderMenu.render();
-        } else if (tabName == "import"){
-            this.placeHolderMenu.render();
-        } else if (tabName == "sketch"){
-            this.placeHolderMenu.render();
-        } else if (tabName == "part"){
-            this.placeHolderMenu.render();
-        } else if (tabName == "script"){
-            this.placeHolderMenu.render();
-        } else if (tabName == "physics"){
-            this.placeHolderMenu.render();
-        } else if (tabName == "material"){
-            this.placeHolderMenu.render();
-        } else if (tabName == "optimize"){
-            this.placeHolderMenu.render();
-        } else if (tabName == "assembler"){
-            this.placeHolderMenu.render();
-        } else if (tabName == "animate"){
-            this.placeHolderMenu.render();
-        } else if (tabName == "cam"){
-            this.placeHolderMenu.render();
-        } else if (tabName == "send"){
-            this.placeHolderMenu.render();
+        if (tabName == "drawParams"){
+            this.drawParams.render();
         } else {
             console.warn("no tab initialized!");
             $("#menuContent").html('Coming Soon.');//clear out content from menu

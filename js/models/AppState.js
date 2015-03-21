@@ -9,10 +9,10 @@ AppState = Backbone.Model.extend({
     defaults: {
 
         currentNav:"navDesign",// design, sim, assemble
-        currentTab:"lattice",
+        currentTab:"drawParams",
 
         //last tab that one open in each of the main menus
-        lastDesignTab: "lattice",
+        lastDesignTab: "drawParams",
         lastSimulationTab: "physics",
         lastAssembleTab: "assembler",
 
@@ -20,7 +20,7 @@ AppState = Backbone.Model.extend({
 
         allMenuTabs: {
             navDesign:{
-                lattice:"Lattice",
+                drawParams:"Params",
                 import:"Import",
                 sketch:"Sketch",
                 part:"Part",

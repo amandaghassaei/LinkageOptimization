@@ -17,10 +17,34 @@ Linkage = Backbone.Model.extend({
 
     initialize: function () {
 
+        //bind events
+        this.listenTo(this, "change:linkWidth", this.setWidth);
+        this.listenTo(this, "change:zDepth", this.setDepth);
+
+    },
+
+    setWidth: function(){
+        var width = this.get("linkWidth");
+        _.each(this.get("hinges"), function(hinge){
+            hinge.setWidth(width);
+        });
+        _.each(this.get("links"), function(link){
+            link.setWidth(width);
+        });
+    },
+
+    setDepth: function(){
+        var depth = this.get("zDepth");
+        _.each(this.get("hinges"), function(hinge){
+            hinge.setDepth(depth);
+        });
+        _.each(this.get("links"), function(link){
+            link.setDepth(depth);
+        });
     },
 
     addHingeAtPosition: function(position){
-        var hinge = new Hinge(position, this.get("linkWidth")/2, this.get("zDepth"));
+        var hinge = new Hinge(position, this.get("linkWidth"), this.get("zDepth"));
         this.get("hinges").push(hinge);
         return hinge;
     },
