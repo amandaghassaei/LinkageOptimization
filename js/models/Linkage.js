@@ -18,12 +18,12 @@ Linkage = Backbone.Model.extend({
     initialize: function () {
 
         //bind events
-        this.listenTo(this, "change:linkWidth", this.setWidth);
-        this.listenTo(this, "change:zDepth", this.setDepth);
+        this.listenTo(this, "change:linkWidth", this._setWidth);
+        this.listenTo(this, "change:zDepth", this._setDepth);
 
     },
 
-    setWidth: function(){
+    _setWidth: function(){
         var width = this.get("linkWidth");
         _.each(this.get("hinges"), function(hinge){
             hinge.setWidth(width);
@@ -33,7 +33,7 @@ Linkage = Backbone.Model.extend({
         });
     },
 
-    setDepth: function(){
+    _setDepth: function(){
         var depth = this.get("zDepth");
         _.each(this.get("hinges"), function(hinge){
             hinge.setDepth(depth);
@@ -69,11 +69,13 @@ Linkage = Backbone.Model.extend({
             this.get("driveCrank").rotate(globals.appState.get("thetaStep"));
         }
 
-        _.each(this.get("hinges"), function(hinge){
-            hinge.render();
-        });
-        _.each(this.get("links"), function(link){
-            link.render();
-        });
+        //if (globals.appState.get("isAnimating")){
+            _.each(this.get("hinges"), function (hinge) {
+                hinge.render();
+            });
+            _.each(this.get("links"), function (link) {
+                link.render();
+            });
+        //}
     }
 });

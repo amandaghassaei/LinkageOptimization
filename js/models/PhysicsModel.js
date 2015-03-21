@@ -24,7 +24,7 @@ function PhysicsModel(){
 
     function _makeCircularBody(position, radius){
         var body = Bodies.circle(position.x, position.y, radius,
-            {friction:0, frictionAir:0, groupId:1});
+            {friction:0, frictionAir:0, groupId:1});//things with the same groupId cannot collide
         worldAdd(body);
         return body;
     }

@@ -8,7 +8,7 @@ Ribbon = Backbone.View.extend({
     el: "#navRibbon",
 
     events: {
-        "click #cellModeToggle":                                    "_toggleCellMode"
+        "click #playPause":                                    "_playPause"
     },
 
     initialize: function(){
@@ -21,9 +21,14 @@ Ribbon = Backbone.View.extend({
         this.render();
     },
 
+    _playPause: function(e){
+        e.preventDefault();
+        var state = this.model.get("isAnimating");
+        this.model.set("isAnimating", !state);
+    },
+
     render: function(){
         this.$el.html(this.template(this.model.toJSON()));
-//        if ()
     },
 
     template: _.template('\
@@ -31,7 +36,7 @@ Ribbon = Backbone.View.extend({
             <div class="btn-group">\
               <a id="twoDView" class="btn btn-primary btn-ribbon" href="#">2D</a>\
               <a id="threeDView" class="btn btn-primary btn-ribbon" href="#">3D</a>\
-              <a id="threeDView" class="btn btn-primary btn-ribbon" href="#">play/pause</a>\
+              <a id="playPause" class="btn btn-primary btn-ribbon" href="#">play/pause</a>\
             </div>\
         </div>\
         ')
