@@ -11,8 +11,8 @@ Linkage = Backbone.Model.extend({
         links: [],
         driveCrank: null,
 
-        linkWidth: 1,
-        zDepth: 1
+        linkWidth: 3,
+        zDepth: 3
     },
 
     initialize: function () {
