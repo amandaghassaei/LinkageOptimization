@@ -36,8 +36,8 @@ Link.prototype.render = function(){
     var centerPos = this._avg(hingeAPos, hingeBPos);
     this.mesh.position.set(centerPos.x, centerPos.y, 0);
 
-    //get rotation
-
+    //get rotation of link - negative y comes from canvas using neg y for rendering (i think)
+    this.mesh.rotation.z = Math.atan2(hingeAPos.x-hingeBPos.x, -(hingeAPos.y-hingeBPos.y));
 };
 
 Link.prototype._avg = function(positionA, positionB){

@@ -23,7 +23,7 @@ function PhysicsModel(){
     }
 
     function makeHingeBody(position){
-        var body = Bodies.circle(position.x, position.y, 0);//x, y, rad
+        var body = Bodies.circle(position.x, position.y, 1);//x, y, rad
         worldAdd(body);
         return body;
     }
