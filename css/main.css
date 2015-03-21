@@ -30,16 +30,16 @@ html, body {
     border-radius: 0!important;
 }
 
-.navbar-header {
-    padding-right: 0px;
-    width: 104px;
-}
+/*.navbar-header {*/
+    /*padding-right: 0px;*/
+    /*width: 104px;*/
+/*}*/
 
-#logo {
-    height:150%;
-    position:relative;
-    top:-7px;
-}
+/*#logo {*/
+    /*height:150%;*/
+    /*position:relative;*/
+    /*top:-7px;*/
+/*}*/
 
 .demo-row{
     padding:30px;

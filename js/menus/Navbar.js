@@ -15,7 +15,7 @@ NavBar = Backbone.View.extend({
         "click .menuHoverControls":                             "_setNavSelection",
         "click #saveJSON":                                      "_save",
         "click #saveAsJSON":                                    "_saveAs",
-        "change #saveAsModel":                                  "_saveAs",// todo detect enter key
+        "change #saveAsModel":                                  "_saveAs",
         "click #saveUser":                                      "_saveUserSettings",
         "shown.bs.modal .modal":                                "_showModal",
         "hide.bs.modal .modal":                                 "_hideModal",
@@ -32,7 +32,6 @@ NavBar = Backbone.View.extend({
         this.listenTo(this.model, "change:currentNav", this._updateNavSelectionUI);
         $(document).bind('keyup', this._handleKeyStroke);
 
-        this._uiStuff();
         this._updateShowHideButton();
         this._updateNavSelectionUI();
     },
@@ -128,16 +127,6 @@ NavBar = Backbone.View.extend({
 
     _hideModal: function(e){
         $(e.target).find("input.filename").blur();
-    },
-
-    _uiStuff: function(){
-        var $logo = $("#logo");
-        $logo.mouseover(function(){
-            $logo.attr("src","assets/logo-active.png");
-        });
-        $logo.mouseout(function(){
-            $logo.attr("src","assets/logo.png");
-        });
     },
 
     _deselectAllNavItems: function(){
