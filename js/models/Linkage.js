@@ -39,6 +39,12 @@ Linkage = Backbone.Model.extend({
     },
 
     render: function(){//called from render loop in threeView
+
+        //rotate crank
+        if (globals.appState.get("isAnimating") && this.get("driveCrank")){
+            this.get("driveCrank").rotate(globals.appState.get("thetaStep"));
+        }
+
         _.each(this.get("hinges"), function(hinge){
             hinge.render();
         });

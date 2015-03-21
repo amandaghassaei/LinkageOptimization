@@ -3,10 +3,6 @@
  */
 
 function DriveCrank(centerHinge, outsideHinge, link){
-    //todo do we need to store all these objects?
-    this.centerHinge = centerHinge;//defines the center position of the crank
-    this.outsideHinge = outsideHinge;//connects the crank to the rest of the linkage
-    this.link = link;//link defines the radius of the crank
     this.body = this._buildBody(centerHinge, link);
     this.constraints = this._buildConstraints(this.body, centerHinge, outsideHinge);
 }
@@ -32,8 +28,8 @@ DriveCrank.prototype._diff = function(position1, position2){
     return diff;
 };
 
-DriveCrank.prototype.render = function(){
-
+DriveCrank.prototype.rotate = function(thetaStep){
+    globals.physics.rotate(this.body, thetaStep);
 };
 
 DriveCrank.prototype.destroy = function(){//deallocate everything
@@ -44,9 +40,6 @@ DriveCrank.prototype.destroy = function(){//deallocate everything
     this.constraints = null;
     globals.worldRemove(this.body);
     this.body = null;
-    this.centerHinge = null;
-    this.outsideHinge = null;
-    this.link = null;
 };
 
 DriveCrank.prototype.toJSON = function(){

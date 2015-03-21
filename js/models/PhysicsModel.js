@@ -35,9 +35,7 @@ function PhysicsModel(){
     }
 
     function makeDriveCrankBody(position, radius){
-        var body = _makeCircularBody(position, radius);
-        //setStatic(body, true);
-        return body;
+        return _makeCircularBody(position, radius);
     }
 
     function setStatic(object, isStatic){
@@ -48,6 +46,10 @@ function PhysicsModel(){
         var constraint = Constraint.create({bodyA:bodyA, bodyB:bodyB, length:length, stiffness:1, pointA:pointA});
         worldAdd(constraint);
         return constraint;
+    }
+
+    function rotate(object, thetaStep){
+        Body.rotate(object, thetaStep);
     }
 
     function run(){
@@ -62,6 +64,7 @@ function PhysicsModel(){
         makeDriveCrankBody: makeDriveCrankBody,
         setStatic: setStatic,
         makeConstraint: makeConstraint,
+        rotate: rotate,
         run:run
     };
 }
