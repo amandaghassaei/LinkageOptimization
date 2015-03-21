@@ -26,7 +26,7 @@ $(function(){
     //do stuff
     var plane = new Physijs.BoxMesh( // Physijs mesh
         new THREE.BoxGeometry(100, 100, 2, 10, 10), // Three.js geometry
-        Physijs.createMaterial(new THREE.MeshLambertMaterial({color: 0xeeeeee}), 0.4, 0.8), 0);
+        Physijs.createMaterial(new THREE.MeshLambertMaterial({color: 0xeeeeee}), 0.4, 1), 0);
     globals.three.sceneAdd(plane);
 
     var numBalls = 50;
@@ -35,7 +35,7 @@ $(function(){
     function makeBall() {
         var ball = new Physijs.SphereMesh(
             new THREE.SphereGeometry(Math.random() * (4 - 1) + 1, 16, 16),
-            Physijs.createMaterial(new THREE.MeshLambertMaterial({color: 0xff0000, reflectivity: .8}), 0.4, 0.6), 1);
+            Physijs.createMaterial(new THREE.MeshLambertMaterial({color: 0xff0000, reflectivity: .8}), 0.4, 1), 1);
 
         ball.position.x = Math.random()*10;
         ball.position.y = Math.random()*10;
