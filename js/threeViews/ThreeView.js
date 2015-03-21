@@ -24,7 +24,7 @@ ThreeView = Backbone.View.extend({
         this.controls = new THREE.OrbitControls(this.model.camera, this.$el.get(0));
         this.controls.addEventListener('change', this.model.render);
 
-        this.$el.append(this.model.domElement);//render only once
+        this.$el.append(this.model.domElement);//append only once
 
         this._render();
     },
@@ -34,13 +34,13 @@ ThreeView = Backbone.View.extend({
     ////////////////////////////////////////////////////////////////////////////////
 
     _render: function(){//start render loop
-        requestAnimationFrame(this._render);
-        this.controls.update();
+        globals.linkage.render();
         this.model.render();
+        requestAnimationFrame(this._render);
     },
 
     _setControlsEnabled: function(state){
-        this.controls.enabled = !state;
+        this.controls.enabled = state;
     },
 
     ////////////////////////////////////////////////////////////////////////////////

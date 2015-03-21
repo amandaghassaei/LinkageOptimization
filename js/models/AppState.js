@@ -2,8 +2,7 @@
  * Created by aghassaei on 1/29/15.
  */
 
-//a class to store global app state, model for navbar and menu wrapper
-//never deallocated
+//a class to store global app state
 
 AppState = Backbone.Model.extend({
 
@@ -41,7 +40,9 @@ AppState = Backbone.Model.extend({
             }
         },
 
-        is3D: false
+        is3D: false,
+        isAnimating: true,//play/pause animation
+        animationSpeed: 1
 
     },
 
@@ -140,7 +141,7 @@ AppState = Backbone.Model.extend({
         if (Math.abs(e.originalEvent.deltaX) > Math.abs(e.originalEvent.deltaY)) e.preventDefault();
     },
 
-        ////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////SAVE////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
 
@@ -151,14 +152,12 @@ AppState = Backbone.Model.extend({
 
     saveJSON: function(name){
         if (!name) name = "defaultName";
-        var data = JSON.stringify({
-            somethingsToSave: "something"
-        });
+        var data = JSON.stringify(globals.linkage.toJSON());
         this._saveFile(data, name, ".json");
     },
 
     loadFileFromJSON: function(data){
-        this._setData(JSON.parse(data));
+        this._setData(JSON.parse(data));q
     },
 
     _setData: function(data){
