@@ -26,7 +26,7 @@ Linkage = Backbone.Model.extend({
     },
 
     link: function(hingeA, hingeB, distance){
-        this.get("links").push(new Link(hingeA, hingeB, distance, this.get("linkWidth"), this.get("zDepth")));
+        this.get("links").push(new Link(hingeA, hingeB, this.get("linkWidth"), this.get("zDepth"), distance));
     },
 
     render: function(){//called from render loop in threeView

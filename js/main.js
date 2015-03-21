@@ -25,8 +25,7 @@ $(function(){
     //do stuff
     var hinge1 = globals.linkage.addHingeAtPosition(new THREE.Vector2(1,5));
     var hinge2 = globals.linkage.addHingeAtPosition(new THREE.Vector2(-3,10));
-    globals.linkage.link(hinge1, hinge2, 10);
-    //hinge2.setStatic(false);
+    globals.linkage.link(hinge1, hinge2);
 
     //threeJS View
     new ThreeView({model:globals.three});

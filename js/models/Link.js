@@ -6,18 +6,24 @@
 var linkGeometry = new THREE.BoxGeometry(1,1,1);
 var material = new THREE.MeshNormalMaterial();
 
-function Link(hingeA, hingeB, length, width, depth){//hinges have bodies in matter.js, Links are just used for visualization
+function Link(hingeA, hingeB, width, depth, length){//optional parameter "length" sets distance constraint,
+// otherwise calculated from initial positions of hinges
     this.hingeA = hingeA;
     this.hingeB = hingeB;
-    this.mesh = this._buildMesh(hingeA, hingeB, length, width, depth);
+    if (length === undefined) length = this._dist(hingeA.getPosition(), hingeB.getPosition());
+    this.constraint = this._buildConstraint(hingeA, hingeB, length);
+    this.mesh = this._buildMesh(width, length, depth);
     globals.three.sceneAdd(this.mesh);
 }
 
-Link.prototype._buildMesh = function(hingeA, hingeB, length, width, depth){
+Link.prototype._buildConstraint = function(hingeA, hingeB, length){//links create a distance constraint between hinges
+    return globals.physics.makeConstraint(hingeA.body, hingeB.body, length);
+};
+
+Link.prototype._buildMesh = function(width, length, depth){
     var mesh = new THREE.Mesh(linkGeometry, material);
-    length = this._dist(hingeA.position(), hingeB.position());
-    mesh.scale.y = length;
     mesh.scale.x = width;
+    mesh.scale.y = length;
     mesh.scale.z = depth;
     return mesh;
 };
@@ -54,6 +60,8 @@ Link.prototype._dist = function(positionA, positionB){
 Link.prototype.destroy = function(){//deallocate everything
     this.hingeA = null;
     this.hingeB = null;
+    //todo remove constraint from world
+    this.constraint = null;
     globals.three.sceneRemove(this.mesh);
     this.mesh = null;
 };

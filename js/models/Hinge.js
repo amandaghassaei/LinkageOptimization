@@ -7,7 +7,7 @@ hingeGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
 var material = new THREE.MeshNormalMaterial();
 
 function Hinge(position, rad, depth){
-    this.initialPos = position;//draw at this position when paused
+    this.position = position;//draw at this position when paused
     this.body = this._buildBody(position);
     this.mesh = this._buildMesh(rad, depth);
     globals.three.sceneAdd(this.mesh);
@@ -33,8 +33,8 @@ Hinge.prototype.currentPosition = function(){
     return _.clone(this.body.position);
 };
 
-Hinge.prototype.position = function(){
-    return _.clone(this.initialPos);
+Hinge.prototype.getPosition = function(){
+    return _.clone(this.position);
 };
 
 Hinge.prototype.render = function(){
@@ -43,11 +43,13 @@ Hinge.prototype.render = function(){
 };
 
 Hinge.prototype.destroy = function(){
-    this.initialPos = null;
+    this.position = null;
+    globals.physics.worldRemove(this.body);
+    this.body = null;
     globals.three.sceneRemove(this.mesh);
     this.mesh = null;
 };
 
 Hinge.prototype.toJSON = function(){
-    return {position:this.initialPos};
+    return {position:this.position};
 };
