@@ -3,6 +3,9 @@
  */
 
 function DriveCrank(centerHinge, outsideHinge, link){
+    this.centerHinge = centerHinge;
+    this.outsideHinge = outsideHinge;
+    this.link = link;
     this.body = this._buildBody(centerHinge, link);
     this.constraints = this._buildConstraints(this.body, centerHinge, outsideHinge);
 }
@@ -40,8 +43,15 @@ DriveCrank.prototype.destroy = function(){//deallocate everything
     this.constraints = null;
     globals.worldRemove(this.body);
     this.body = null;
+    this.centerHinge = null;
+    this.outsideHinge = null;
+    this.link = null;
 };
 
 DriveCrank.prototype.toJSON = function(){
-    return {};
+    return {
+        centerHinge: this.centerHinge.getId(),
+        outsideHinge: this.outsideHinge.getId(),
+        length: this.link.length
+    };
 };

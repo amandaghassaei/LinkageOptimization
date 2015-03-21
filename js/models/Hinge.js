@@ -45,12 +45,17 @@ Hinge.prototype.getPosition = function(){
     return _.clone(this.position);
 };
 
+Hinge.prototype.getId = function(){//position of this instance in the hinges array on the globals.linkage
+    return globals.linkage.get("hinges").indexOf(this);
+};
+
 Hinge.prototype.render = function(){
     var position = this.body.position;//get position from body and update mesh
     this.mesh.position.set(position.x, position.y, 0);
 };
 
 Hinge.prototype.destroy = function(){
+    //todo send message to link saying it is no longer valid
     this.position = null;
     globals.physics.worldRemove(this.body);
     this.body = null;

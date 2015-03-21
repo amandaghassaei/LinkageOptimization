@@ -12,6 +12,7 @@ function Link(hingeA, hingeB, width, depth, length){//optional parameter "length
     this.hingeB = hingeB;
 
     if (length === undefined) length = this._dist(hingeA.getPosition(), hingeB.getPosition());
+    else this.length = length;//save special length param for save file, otherwise it can be recalculated
     this.constraint = this._buildConstraint(hingeA, hingeB, length);
 
     this.mesh = this._buildMesh(length);
@@ -81,5 +82,8 @@ Link.prototype.destroy = function(){//deallocate everything
 };
 
 Link.prototype.toJSON = function(){
-    return {};
+    return {
+        hinges: [this.hingeA.getId(), this.hingeB.getId()],
+        length: this.length
+    };
 };
