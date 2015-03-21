@@ -57,10 +57,14 @@ Link.prototype._dist = function(positionA, positionB){
     return Math.sqrt(diffSq);
 };
 
+Link.prototype.getLength = function(){
+    return this.constraint.length;
+};
+
 Link.prototype.destroy = function(){//deallocate everything
     this.hingeA = null;
     this.hingeB = null;
-    //todo remove constraint from world
+    globals.physics.worldRemove(this.constraint);
     this.constraint = null;
     globals.three.sceneRemove(this.mesh);
     this.mesh = null;

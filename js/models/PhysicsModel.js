@@ -11,7 +11,7 @@ function PhysicsModel(){
     var Body = Matter.Body;
     var Constraint = Matter.Constraint;
 
-    var world = World.create({gravity:{x:0,y:1}});//no gravity
+    var world = World.create({gravity:{x:0,y:0}});//no gravity
     var engine = Engine.create(document.body, {world:world});
 
     function worldAdd(object){
@@ -22,9 +22,21 @@ function PhysicsModel(){
         World.remove(engine.world, object);
     }
 
-    function makeHingeBody(position){
-        var body = Bodies.circle(position.x, position.y, 1, {friction:0, frictionAir:0});//x, y, rad
+    function _makeCircularBody(position, radius){
+        var body = Bodies.circle(position.x, position.y, radius,
+            {friction:0, frictionAir:0, groupId:1});
         worldAdd(body);
+        return body;
+    }
+
+    function makeHingeBody(position){
+        return _makeCircularBody(position, 1);//rad of 1 for hinges
+        // (radius doesn't really matter since we are not doing collision detection)
+    }
+
+    function makeDriveCrankBody(position, radius){
+        var body = _makeCircularBody(position, radius);
+        //setStatic(body, true);
         return body;
     }
 
@@ -32,8 +44,8 @@ function PhysicsModel(){
         Body.setStatic(object, isStatic);
     }
 
-    function makeConstraint(bodyA, bodyB, length){
-        var constraint = Constraint.create({bodyA:bodyA, bodyB:bodyB, length:length, stiffness:1});
+    function makeConstraint(bodyA, bodyB, length, pointA){//pointA only passed in for driveCrank
+        var constraint = Constraint.create({bodyA:bodyA, bodyB:bodyB, length:length, stiffness:1, pointA:pointA});
         worldAdd(constraint);
         return constraint;
     }
@@ -42,11 +54,12 @@ function PhysicsModel(){
         Engine.run(engine);
     }
 
-    return {
+    return {//return public methods and properties
         engine: engine,
         worldAdd: worldAdd,
         worldRemove: worldRemove,
         makeHingeBody: makeHingeBody,
+        makeDriveCrankBody: makeDriveCrankBody,
         setStatic: setStatic,
         makeConstraint: makeConstraint,
         run:run

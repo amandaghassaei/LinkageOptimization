@@ -9,10 +9,10 @@ Linkage = Backbone.Model.extend({
 
         hinges: [],
         links: [],
+        driveCrank: null,
 
         linkWidth: 1,
         zDepth: 1
-
     },
 
     initialize: function () {
@@ -25,8 +25,17 @@ Linkage = Backbone.Model.extend({
         return hinge;
     },
 
+    addDriveCrank: function(centerHinge, outsideHinge, link){
+        if (!centerHinge || !outsideHinge || !link) return console.warn("parameter is missing");
+        var driveCrank = new DriveCrank(centerHinge, outsideHinge, link);
+        this.set("driveCrank", driveCrank);
+        return driveCrank;
+    },
+
     link: function(hingeA, hingeB, distance){
-        this.get("links").push(new Link(hingeA, hingeB, this.get("linkWidth"), this.get("zDepth"), distance));
+        var link = new Link(hingeA, hingeB, this.get("linkWidth"), this.get("zDepth"), distance);
+        this.get("links").push(link);
+        return link;
     },
 
     render: function(){//called from render loop in threeView

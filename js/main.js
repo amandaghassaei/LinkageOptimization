@@ -25,10 +25,10 @@ $(function(){
     //do stuff
     var hinge1 = globals.linkage.addHingeAtPosition(new THREE.Vector2(1,5));
     var hinge2 = globals.linkage.addHingeAtPosition(new THREE.Vector2(-3,10));
-    hinge2.setStatic(true);
-    globals.linkage.link(hinge1, hinge2);
-    var hinge3 = globals.linkage.addHingeAtPosition(new THREE.Vector2(5,0));
-    globals.linkage.link(hinge3, hinge1);
+    var link = globals.linkage.link(hinge1, hinge2);
+    var crank = globals.linkage.addDriveCrank(hinge1, hinge2, link);
+    var hinge3 = globals.linkage.addHingeAtPosition(new THREE.Vector2(5,1));
+    globals.linkage.link(hinge3, hinge2);
     //hinge3.setStatic(true);
 
 
@@ -36,5 +36,13 @@ $(function(){
     new ThreeView({model:globals.three});
 
     globals.physics.run();//start physics engine
+
+    function rotate(){
+        Matter.Body.rotate(crank.body, 0.1);
+        setTimeout(rotate, 100);
+    }
+
+    rotate();
+
 
 });
