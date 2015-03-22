@@ -13,7 +13,9 @@ DrawParamsMenuView = Backbone.View.extend({
 
         _.bindAll(this, "render", "_onKeyup");
 
+        //bind events
         $(document).bind('keyup', {}, this._onKeyup);
+        this.listenTo(globals.appState, "change", this.render);
 
     },
 
@@ -46,7 +48,7 @@ DrawParamsMenuView = Backbone.View.extend({
 
     template: _.template('\
         Link Width: &nbsp;&nbsp;<input data-type="linkWidth" value="<%= linkWidth %>" placeholder="Width" class="form-control numberInput" type="text"><br/><br/>\
-        Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text">\
+        <% if (is3D){ %>Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><% } %>\
         ')
 
 });

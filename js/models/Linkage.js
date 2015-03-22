@@ -45,7 +45,7 @@ Linkage = Backbone.Model.extend({
     },
 
     _getDepth: function(){
-        if (!globals.appState.get("is3D")) return 0;
+        if (!globals.appState.get("is3D")) return 0.000001;
         return this.get("zDepth");
     },
 

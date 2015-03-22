@@ -40,9 +40,10 @@ Ribbon = Backbone.View.extend({
     template: _.template('\
         <div class="btn-toolbar">\
             <div class="btn-group">\
-              <a data-state="false" class="btn btn-primary btn-ribbon is3d" href="#">2D</a>\
-              <a data-state="true" class="btn btn-primary btn-ribbon is3d" href="#">3D</a>\
-              <a id="playPause" class="btn btn-primary btn-ribbon" href="#">play/pause</a>\
+              <a data-state="<%= !is3D %>" class="btn btn-primary btn-ribbon is3d" href="#">\
+              <% if (is3D){ %>2D<% } else { %>3D<% } %></a>\
+              <a id="playPause" class="btn btn-primary btn-ribbon" href="#">\
+              <% if (isAnimating){ %><span class="fui-pause"><% } else { %><span class="fui-play"><% } %></a></span></a>\
             </div>\
         </div>\
         ')
