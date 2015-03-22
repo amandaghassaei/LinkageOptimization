@@ -117,6 +117,14 @@ AppState = Backbone.Model.extend({
                 e.preventDefault();
                 if (state) this.set("isAnimating", !this.get("isAnimating"));
                 break;
+            case 50://2 key
+                e.preventDefault();
+                this.set("is3D", false);
+                break;
+            case 51://3 key
+                e.preventDefault();
+                this.set("is3D", true);
+                break;
             case 83://s save
                 if (e.ctrlKey || e.metaKey){//command
                     e.preventDefault();
