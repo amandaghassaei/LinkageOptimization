@@ -97,7 +97,7 @@ AppState = Backbone.Model.extend({
     _handleKeyStroke: function(e){//receives keyup and keydown
 
         if ($("input").is(':focus')) return;//we are typing in an input
-        //todo check is CodeMirror is in focus
+        if ($(".CodeMirror-focused").length>0) return;//editing script
 
         var state = e.data.state;
         var currentTab = this.get("currentTab");
