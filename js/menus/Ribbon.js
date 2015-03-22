@@ -8,7 +8,8 @@ Ribbon = Backbone.View.extend({
     el: "#navRibbon",
 
     events: {
-        "click #playPause":                                    "_playPause"
+        "click #playPause":                                     "_playPause",
+        "click .is3d":                                          "_changeDimension"
     },
 
     initialize: function(){
@@ -27,6 +28,11 @@ Ribbon = Backbone.View.extend({
         this.model.set("isAnimating", !state);
     },
 
+    _changeDimension: function(e){
+        e.preventDefault();
+        globals.appState.set("is3D", $(e.target).data("state"));
+    },
+
     render: function(){
         this.$el.html(this.template(this.model.toJSON()));
     },
@@ -34,8 +40,8 @@ Ribbon = Backbone.View.extend({
     template: _.template('\
         <div class="btn-toolbar">\
             <div class="btn-group">\
-              <a id="twoDView" class="btn btn-primary btn-ribbon" href="#">2D</a>\
-              <a id="threeDView" class="btn btn-primary btn-ribbon" href="#">3D</a>\
+              <a data-state="false" class="btn btn-primary btn-ribbon is3d" href="#">2D</a>\
+              <a data-state="true" class="btn btn-primary btn-ribbon is3d" href="#">3D</a>\
               <a id="playPause" class="btn btn-primary btn-ribbon" href="#">play/pause</a>\
             </div>\
         </div>\

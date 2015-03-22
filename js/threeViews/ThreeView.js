@@ -21,11 +21,14 @@ ThreeView = Backbone.View.extend({
 
         _.bindAll(this, "_mouseMoved", "_render");
 
+        this.listenTo(globals.appState, "change:is3D", this._changeDimension);
+
         this.controls = new THREE.OrbitControls(this.model.camera, this.$el.get(0));
         this.controls.addEventListener('change', this.model.render);
 
         this.$el.append(this.model.domElement);//append only once
 
+        this._changeDimension();//set up for initial dimension
         this._render();
     },
 
@@ -39,8 +42,13 @@ ThreeView = Backbone.View.extend({
         requestAnimationFrame(this._render);
     },
 
-    _setControlsEnabled: function(state){
-        this.controls.enabled = state;
+    _changeDimension: function(){
+        var state = globals.appState.get("is3D");
+        this.controls.noRotate = !state;
+        if (!state) {
+            this.model.camera.position.set(0,0,100);
+            this.controls.update();
+        }
     },
 
     ////////////////////////////////////////////////////////////////////////////////

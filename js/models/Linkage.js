@@ -20,6 +20,7 @@ Linkage = Backbone.Model.extend({
         //bind events
         this.listenTo(this, "change:linkWidth", this._setWidth);
         this.listenTo(this, "change:zDepth", this._setDepth);
+        this.listenTo(globals.appState, "change:is3D", this._setDepth);
 
     },
 
@@ -34,7 +35,7 @@ Linkage = Backbone.Model.extend({
     },
 
     _setDepth: function(){
-        var depth = this.get("zDepth");
+        var depth = this._getDepth();
         _.each(this.get("hinges"), function(hinge){
             hinge.setDepth(depth);
         });
@@ -43,8 +44,13 @@ Linkage = Backbone.Model.extend({
         });
     },
 
+    _getDepth: function(){
+        if (!globals.appState.get("is3D")) return 0;
+        return this.get("zDepth");
+    },
+
     addHingeAtPosition: function(position){
-        var hinge = new Hinge(position, this.get("linkWidth"), this.get("zDepth"));
+        var hinge = new Hinge(position, this.get("linkWidth"), this._getDepth());
         this.get("hinges").push(hinge);
         return hinge;
     },
@@ -57,7 +63,7 @@ Linkage = Backbone.Model.extend({
     },
 
     link: function(hingeA, hingeB, distance){
-        var link = new Link(hingeA, hingeB, this.get("linkWidth"), this.get("zDepth"), distance);
+        var link = new Link(hingeA, hingeB, this.get("linkWidth"), this._getDepth(), distance);
         this.get("links").push(link);
         return link;
     },
