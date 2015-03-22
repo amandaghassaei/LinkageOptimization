@@ -25,26 +25,20 @@ ScriptMenuView = Backbone.View.extend({
     _handleKeyStroke: function(e){
         if (e.keyCode == 82 && this.model.get("currentTab") == "script"){
             if (e.shiftKey || !e.metaKey) return;
+            e.preventDefault();
             e.stopPropagation();
-            this._runScript(e);
+            globals.appState.runScript(globals.codeMirror.getValue());
         }
-    },
-
-    _syncScript: function(){
-        eval("globals.script =" + this.codeMirror.getValue());
     },
 
     _runScript: function(e){
         e.preventDefault();
-        globals.linkage.clearAll();
-        this._syncScript();
-        globals.script();
-        globals.appState.set("isAnimating", true);
+        globals.appState.runScript(globals.codeMirror.getValue());
     },
 
     _saveScript: function(e){
         e.preventDefault();
-        this._syncScript();
+        globals.appState.syncScript(globals.codeMirror.getValue());
         globals.appState.saveFile(globals.script, "linkageScript", ".js");
     },
 
@@ -62,11 +56,8 @@ ScriptMenuView = Backbone.View.extend({
 
     render: function(){
         if (this.model.get("currentTab") != "script") return;
-        //todo check for codemirror focus
-
         this.$el.html(this.template({script:globals.script}));
-
-        this.codeMirror = CodeMirror.fromTextArea(document.getElementById("scriptEditor"), {
+        globals.codeMirror = CodeMirror.fromTextArea(document.getElementById("scriptEditor"), {
             lineNumbers: true,
             mode: "javascript"
         });

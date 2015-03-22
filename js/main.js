@@ -22,7 +22,8 @@ $(function(){
     new NavBar({model:globals.appState});
     new Ribbon({model:globals.appState});
 
-globals.script = function(){//the lack of indenting is on purpose - looks weird in the script editor otherwise
+    //the lack of indenting is on purpose - looks weird in the script editor otherwise
+globals.script = function(){
     var hinge1 = globals.linkage.addHingeAtPosition({x:0,y:20});
     var hinge2 = globals.linkage.addHingeAtPosition({x:0,y:-20});
     var hinge3 = globals.linkage.addHingeAtPosition({x:-10,y:0});

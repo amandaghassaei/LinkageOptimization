@@ -163,8 +163,21 @@ AppState = Backbone.Model.extend({
         this.saveFile(data, name, ".json");
     },
 
-    loadScript: function(data){
-        globals.script = data;
+    syncScript: function(script){
+        eval("globals.script =" + script);
+    },
+
+    loadScript: function(script){
+        this.syncScript(script);
+        this.runScript();
+        globals.codeMirror.setValue(script);
+    },
+
+    runScript: function(script){
+        globals.linkage.clearAll();
+        if (script) this.syncScript(script);
+        globals.script();
+        this.set("isAnimating", true);
     },
 
     loadFileFromJSON: function(data){
