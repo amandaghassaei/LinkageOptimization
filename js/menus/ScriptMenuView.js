@@ -18,35 +18,28 @@ ScriptMenuView = Backbone.View.extend({
         _.bindAll(this, "render");
 
         //bind events
-        this.listenTo(globals.appState, "change", this.render);
-        $(document).bind('keyup', {}, this._scriptEdit);
+        this.listenTo(globals.appState, "change:currentTab", this.render);
 
         globals.script = function(){
-var hinge1 = globals.linkage.addHingeAtPosition({x:0,y:20});
-var hinge2 = globals.linkage.addHingeAtPosition({x:0,y:-20});
-var hinge3 = globals.linkage.addHingeAtPosition({x:-10,y:0});
-var hinge4 = globals.linkage.addHingeAtPosition({x:14,y:0}).setStatic(true);
-var hinge5 = globals.linkage.addHingeAtPosition({x:-20,y:0});
+    var hinge1 = globals.linkage.addHingeAtPosition({x:0,y:20});
+    var hinge2 = globals.linkage.addHingeAtPosition({x:0,y:-20});
+    var hinge3 = globals.linkage.addHingeAtPosition({x:-10,y:0});
+    var hinge4 = globals.linkage.addHingeAtPosition({x:14,y:0}).setStatic(true);
+    var hinge5 = globals.linkage.addHingeAtPosition({x:-20,y:0});
 
-globals.linkage.link(hinge1, hinge3);
-globals.linkage.link(hinge3, hinge2);
-globals.linkage.link(hinge2, hinge4);
-globals.linkage.link(hinge4, hinge1);
-var link35 = globals.linkage.link(hinge3, hinge5);
-globals.linkage.addDriveCrank(hinge5, hinge3, link35);
+    globals.linkage.link(hinge1, hinge3);
+    globals.linkage.link(hinge3, hinge2);
+    globals.linkage.link(hinge2, hinge4);
+    globals.linkage.link(hinge4, hinge1);
+    var link35 = globals.linkage.link(hinge3, hinge5);
+    globals.linkage.addDriveCrank(hinge5, hinge3, link35);
 };
-    },
-
-    _scriptEdit: function(e){
-        var $editor = $("#scriptEditor");
-        if (!$editor.is(":focus")) return;
-        e.preventDefault();
-        eval("globals.script =" + $editor.text());
     },
 
     _runScript: function(e){
         e.preventDefault();
         globals.linkage.clearAll();
+        eval("globals.script =" + this.codeMirror.getValue());
         globals.script();
         globals.appState.set("isAnimating", true);
     },
@@ -61,17 +54,31 @@ globals.linkage.addDriveCrank(hinge5, hinge3, link35);
         $("#fileInput").click();
     },
 
+    _setEditorHeight: function(){
+        var $editor = $('.CodeMirror');
+        var height = this.$el.height()-$editor.position().top;
+        height = Math.max(height, 250);
+        $editor.css({height:height +"px"});
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "script") return;
-        if ($("input").is(":focus")) return;
-        this.$el.html(this.template(_.extend(this.model.toJSON(), {script:globals.script})));
+        //todo check for codemirror focus
+
+        this.$el.html(this.template({script:globals.script}));
+
+        this.codeMirror = CodeMirror.fromTextArea(document.getElementById("scriptEditor"), {
+            lineNumbers: true,
+            mode: "javascript"
+        });
+        this._setEditorHeight();
     },
 
     template: _.template('\
-            <a href="#" id="loadScript" class=" btn btn-lg btn-halfWidth btn-default">Load Script</a>\
-            <a href="#" id="runScript" class=" btn btn-lg btn-halfWidth pull-right btn-default">Run Script</a><br/>\
-            <div id="scriptEditor" contenteditable><%= script %></div><br/>\
-            <a href="#" id="saveScript" class=" btn btn-block btn-lg btn-default">Save Script</a><br/>\
+            <div class="col-sm-4"><a href="#" id="loadScript" class=" btn btn-lg btn-block btn-default">Load Script</a></div>\
+            <div class="col-sm-4"><a href="#" id="runScript" class=" btn btn-lg btn-block btn-default">Run Script</a></div>\
+            <div class="col-sm-4"><a href="#" id="saveScript" class=" btn btn-lg btn-block btn-default">Save Script</a></div><br/><br/>\
+            <textarea id="scriptEditor"><%= script %></textarea><br/>\
         ')
 
 });

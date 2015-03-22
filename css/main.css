@@ -229,6 +229,10 @@ input.numberInput{
     width: 47%;
 }
 
+.btn-thirdWidth {
+    width: 31%;
+}
+
 #navRibbon{
     height: 30px;
     width: 100%;
@@ -256,15 +260,10 @@ input.numberInput{
 }
 
 #scriptEditor {
-    font-family: Courier, monospace;
-    font-size: 13px;
-    line-height: 30px;
     width: 100%;
     background-color: rgba(255,255,255,0.5);
-    white-space: pre-wrap;
-    padding: 15px 0 15px 20px;
 }
 
-#scriptEditor:focus {
-    outline-width: 0;
+.CodeMirror {
+    opacity: 0.6;
 }

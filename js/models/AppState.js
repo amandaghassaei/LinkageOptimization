@@ -24,10 +24,10 @@ AppState = Backbone.Model.extend({
                 script:"Script"
             },
             navEvo:{
-                physics:"Physics",
-                part:"Part",
-                material:"Material",
-                optimize:"Optimize"
+                physics:"Fitness",
+                part:"Population",
+                material:"Mutation",
+                optimize:"Run"
             },
             navExport:{
                 print: "3d Print",
@@ -97,6 +97,7 @@ AppState = Backbone.Model.extend({
     _handleKeyStroke: function(e){//receives keyup and keydown
 
         if ($("input").is(':focus')) return;//we are typing in an input
+        //todo check is CodeMirror is in focus
 
         var state = e.data.state;
         var currentTab = this.get("currentTab");

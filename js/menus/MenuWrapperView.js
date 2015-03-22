@@ -49,7 +49,7 @@ MenuWrapper = Backbone.View.extend({
         if (tabName == "drawParams") {
             this.drawParams.render();
         } else if (tabName == "script"){
-            this.$el.parent().animate({width:"750px"}, {done:this.script.render});
+            this.$el.parent().animate({width:"970px"}, {done:this.script.render});
         } else {
             console.warn("no tab initialized!");
             $("#menuContent").html('Coming Soon.');//clear out content from menu
