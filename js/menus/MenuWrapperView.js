@@ -44,10 +44,12 @@ MenuWrapper = Backbone.View.extend({
             }
         });
 
+        if (tabName != "script") this.$el.parent().animate({width:"420px"});
+
         if (tabName == "drawParams") {
             this.drawParams.render();
         } else if (tabName == "script"){
-            this.script.render();
+            this.$el.parent().animate({width:"750px"}, {done:this.script.render});
         } else {
             console.warn("no tab initialized!");
             $("#menuContent").html('Coming Soon.');//clear out content from menu
@@ -78,7 +80,8 @@ MenuWrapper = Backbone.View.extend({
     },
 
     _hide: function(callback, suppressModelUpdate){
-        this.$el.parent().animate({right: "-420"}, {done: callback});
+        var width = this.$el.parent().width();
+        this.$el.parent().animate({right: "-" + width + "px"}, {done: callback});
         if (!suppressModelUpdate) this.model.set("menuIsVisible", false);
     },
 

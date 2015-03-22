@@ -68,8 +68,8 @@ globals.linkage.addDriveCrank(hinge5, hinge3, link35);
     },
 
     template: _.template('\
-            <a href="#" id="loadScript" class=" btn btn-block btn-lg btn-default">Load Script</a><br/>\
-            <a href="#" id="runScript" class=" btn btn-block btn-lg btn-default">Run Script</a><br/>\
+            <a href="#" id="loadScript" class=" btn btn-lg btn-halfWidth btn-default">Load Script</a>\
+            <a href="#" id="runScript" class=" btn btn-lg btn-halfWidth pull-right btn-default">Run Script</a><br/>\
             <div id="scriptEditor" contenteditable><%= script %></div><br/>\
             <a href="#" id="saveScript" class=" btn btn-block btn-lg btn-default">Save Script</a><br/>\
         ')
