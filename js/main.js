@@ -40,7 +40,4 @@ $(function(){
     //threeJS View
     new ThreeView({model:globals.three});
 
-    globals.physics.run();//start physics engine
-
-
 });

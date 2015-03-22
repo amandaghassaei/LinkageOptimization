@@ -67,6 +67,7 @@ Linkage = Backbone.Model.extend({
         //rotate crank
         if (globals.appState.get("isAnimating") && this.get("driveCrank")){
             this.get("driveCrank").rotate(globals.appState.get("thetaStep"));
+            globals.physics.update();
         }
 
         //if (globals.appState.get("isAnimating")){

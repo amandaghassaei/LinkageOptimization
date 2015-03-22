@@ -52,8 +52,8 @@ function PhysicsModel(){
         Body.rotate(object, thetaStep);
     }
 
-    function run(){
-        Engine.run(engine);
+    function update(){
+        Engine.update(engine, 0.1);
     }
 
     return {//return public methods and properties
@@ -65,6 +65,6 @@ function PhysicsModel(){
         setStatic: setStatic,
         makeConstraint: makeConstraint,
         rotate: rotate,
-        run:run
+        update:update
     };
 }
