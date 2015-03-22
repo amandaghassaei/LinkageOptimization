@@ -8,6 +8,7 @@ ScriptMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
+        "click #runScript":                                      "_runScript"
     },
 
     initialize: function(){
@@ -19,6 +20,11 @@ ScriptMenuView = Backbone.View.extend({
 
     },
 
+    _runScript: function(e){
+        e.preventDefault();
+
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "script") return;
         if ($("input").is(":focus")) return;
@@ -26,6 +32,7 @@ ScriptMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
+            <a href="#" id="runScript" class=" btn btn-block btn-lg btn-default">Run Script</a><br/>\
         ')
 
 });
