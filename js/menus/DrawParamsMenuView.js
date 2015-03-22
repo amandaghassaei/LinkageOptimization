@@ -54,7 +54,7 @@ DrawParamsMenuView = Backbone.View.extend({
 
     template: _.template('\
         Link Width: &nbsp;&nbsp;<input data-type="linkWidth" value="<%= linkWidth %>" placeholder="Width" class="form-control numberInput" type="text"><br/><br/>\
-        <% if (is3D){ %>Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><% } %>\
+        <% if (is3D){ %>Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/><% } %>\
         <a href="#" id="clearAll" class=" btn btn-block btn-lg btn-default">Clear All</a><br/>\
         ')
 
