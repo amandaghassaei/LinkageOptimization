@@ -111,7 +111,7 @@ AppState = Backbone.Model.extend({
         } else this.downKeys[e.keyCode] = false;
 
 //        console.log(e);
-        console.log(e.keyCode);
+//        console.log(e.keyCode);
         switch(e.keyCode){
             case 32://space bar (play/pause)
                 e.preventDefault();
