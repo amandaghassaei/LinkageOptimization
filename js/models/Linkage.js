@@ -21,7 +21,6 @@ Linkage = Backbone.Model.extend({
         this.listenTo(this, "change:linkWidth", this._setWidth);
         this.listenTo(this, "change:zDepth", this._setDepth);
         this.listenTo(globals.appState, "change:is3D", this._setDepth);
-
     },
 
     _setWidth: function(){

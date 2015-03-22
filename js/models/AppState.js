@@ -135,7 +135,7 @@ AppState = Backbone.Model.extend({
             case 79://o open
                 if (e.ctrlKey || e.metaKey){//command
                     e.preventDefault();
-                    $("#jsonInput").click();
+                    $("#fileInput").click();
                 }
                 break;
             default:
@@ -151,15 +151,19 @@ AppState = Backbone.Model.extend({
     ////////////////////////////////////SAVE////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
 
-    _saveFile: function(data, name, extension){
+    saveFile: function(data, name, extension){
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
         saveAs(blob, name + extension);
     },
 
     saveJSON: function(name){
-        if (!name) name = "defaultName";
+        if (!name) name = "linkage";
         var data = JSON.stringify(globals.linkage.toJSON());
-        this._saveFile(data, name, ".json");
+        this.saveFile(data, name, ".json");
+    },
+
+    loadScript: function(data){
+        globals.script = data;
     },
 
     loadFileFromJSON: function(data){
