@@ -8,13 +8,13 @@ AppState = Backbone.Model.extend({
 
     defaults: {
 
-        currentNav:"navDesign",// design, sim, assemble
+        currentNav:"navDesign",// design, evo, export
         currentTab:"drawParams",
 
         //last tab that one open in each of the main menus
         lastDesignTab: "drawParams",
-        lastSimulationTab: "physics",
-        lastAssembleTab: "assembler",
+        lastEvoTab: "physics",
+        lastExportTab: "print",
 
         menuIsVisible: true,
 
@@ -26,17 +26,15 @@ AppState = Backbone.Model.extend({
                 part:"Part",
                 script:"Script"
             },
-            navSim:{
+            navEvo:{
                 physics:"Physics",
                 part:"Part",
                 material:"Material",
                 optimize:"Optimize"
             },
-            navAssemble:{
-                assembler:"Assembler",
-                cam: "Process",
-                animate:"Preview",
-                send: "Send"
+            navExport:{
+                print: "3d Print",
+                mill: "Mill"
             }
         },
 
@@ -80,8 +78,8 @@ AppState = Backbone.Model.extend({
 
     _storeTab: function(currentNav, currentTab){
         if (currentNav == "navDesign") this.set("lastDesignTab", currentTab);
-        else if (currentNav == "navSim") this.set("lastSimulationTab", currentTab);
-        else if (currentNav == "navAssemble") this.set("lastAssembleTab", currentTab);
+        else if (currentNav == "navEvo") this.set("lastEvoTab", currentTab);
+        else if (currentNav == "navExport") this.set("lastExportTab", currentTab);
     },
 
     //update to last tab open in that section
@@ -89,10 +87,10 @@ AppState = Backbone.Model.extend({
         var navSelection = this.get("currentNav");
         if (navSelection == "navDesign") this.set("currentTab",
             this.get("lastDesignTab"), {silent:true});
-        else if (navSelection == "navSim") this.set("currentTab",
-            this.get("lastSimulationTab"), {silent:true});
-        else if (navSelection == "navAssemble") this.set("currentTab",
-            this.get("lastAssembleTab"), {silent:true});
+        else if (navSelection == "navEvo") this.set("currentTab",
+            this.get("lastEvoTab"), {silent:true});
+        else if (navSelection == "navExport") this.set("currentTab",
+            this.get("lastExportTab"), {silent:true});
     },
 
     ///////////////////////////////////////////////////////////////////////////////
