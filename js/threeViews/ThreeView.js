@@ -46,7 +46,10 @@ ThreeView = Backbone.View.extend({
         var state = globals.appState.get("is3D");
         this.controls.noRotate = !state;
         if (!state) {
-            this.model.camera.position.set(0,0,100);
+            var camPosition = this.model.camera.position;
+            var distFromOrigin = Math.sqrt(Math.pow(camPosition.x,2)+Math.pow(camPosition.y,2)+Math.pow(camPosition.z,2));
+            if (distFromOrigin < 2) distFromOrigin = 100;
+            this.model.camera.position.set(0,0,distFromOrigin);
             this.controls.update();
         }
     },
