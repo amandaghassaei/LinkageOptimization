@@ -21,9 +21,6 @@ AppState = Backbone.Model.extend({
         allMenuTabs: {
             navDesign:{
                 drawParams:"Params",
-                import:"Import",
-                sketch:"Sketch",
-                part:"Part",
                 script:"Script"
             },
             navEvo:{

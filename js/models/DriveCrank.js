@@ -37,11 +37,11 @@ DriveCrank.prototype.rotate = function(thetaStep){
 
 DriveCrank.prototype.destroy = function(){//deallocate everything
     _.each(this.constraints, function(constraint){
-        globals.worldRemove(constraint);
+        globals.physics.worldRemove(constraint);
         constraint = null;
     });
     this.constraints = null;
-    globals.worldRemove(this.body);
+    globals.physics.worldRemove(this.body);
     this.body = null;
     this.centerHinge = null;
     this.outsideHinge = null;

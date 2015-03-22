@@ -26,21 +26,15 @@ Linkage = Backbone.Model.extend({
 
     _setWidth: function(){
         var width = this.get("linkWidth");
-        _.each(this.get("hinges"), function(hinge){
-            hinge.setWidth(width);
-        });
-        _.each(this.get("links"), function(link){
-            link.setWidth(width);
+        this._iterateAllHingesAndLinks(function(object){
+            object.setWidth(width);
         });
     },
 
     _setDepth: function(){
         var depth = this._getDepth();
-        _.each(this.get("hinges"), function(hinge){
-            hinge.setDepth(depth);
-        });
-        _.each(this.get("links"), function(link){
-            link.setDepth(depth);
+        this._iterateAllHingesAndLinks(function(object){
+            object.setDepth(depth);
         });
     },
 
@@ -68,6 +62,26 @@ Linkage = Backbone.Model.extend({
         return link;
     },
 
+    clearAll: function(){
+        this._iterateAllHingesAndLinks(function(object){
+            object.destroy();
+        });
+        this.set("hinges", []);
+        this.set("links", []);
+        if (this.get("driveCrank")) this.get("driveCrank").destroy();
+        this.set("driveCrank", null);
+        globals.appState.set("isAnimating", false);
+    },
+
+    _iterateAllHingesAndLinks: function(callback){
+        _.each(this.get("hinges"), function (hinge) {
+            callback(hinge);
+        });
+        _.each(this.get("links"), function (link) {
+            callback(link);
+        });
+    },
+
     render: function(){//called from render loop in threeView
 
         //rotate crank
@@ -75,11 +89,8 @@ Linkage = Backbone.Model.extend({
             this.get("driveCrank").rotate(globals.appState.get("thetaStep"));
             globals.physics.update();
 
-            _.each(this.get("hinges"), function (hinge) {
-                hinge.render();
-            });
-            _.each(this.get("links"), function (link) {
-                link.render();
+            this._iterateAllHingesAndLinks(function(object){
+                object.render();
             });
         }
     }

@@ -79,6 +79,7 @@ Link.prototype.destroy = function(){//deallocate everything
     this.constraint = null;
     globals.three.sceneRemove(this.mesh);
     this.mesh = null;
+    this.length = null;
 };
 
 Link.prototype.toJSON = function(){

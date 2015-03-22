@@ -7,6 +7,7 @@ DrawParamsMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
+        "click #clearAll":                                      "_clearAll"
     },
 
     initialize: function(){
@@ -40,6 +41,11 @@ DrawParamsMenuView = Backbone.View.extend({
         globals.linkage.set(property, newVal);
     },
 
+    _clearAll: function(e){
+        e.preventDefault();
+        globals.linkage.clearAll();
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "drawParams") return;
         if ($("input").is(":focus")) return;
@@ -49,6 +55,7 @@ DrawParamsMenuView = Backbone.View.extend({
     template: _.template('\
         Link Width: &nbsp;&nbsp;<input data-type="linkWidth" value="<%= linkWidth %>" placeholder="Width" class="form-control numberInput" type="text"><br/><br/>\
         <% if (is3D){ %>Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><% } %>\
+        <a href="#" id="clearAll" class=" btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\
         ')
 
 });
