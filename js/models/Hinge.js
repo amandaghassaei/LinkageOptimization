@@ -22,6 +22,7 @@ Hinge.prototype._buildBody = function(position){//hinge owns a rigid body in mat
 
 Hinge.prototype.setStatic = function(isStatic){//body cannot move
     globals.physics.setStatic(this.body, isStatic);
+    return this;
 };
 
 Hinge.prototype._buildMesh = function(){

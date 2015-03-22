@@ -23,12 +23,11 @@ $(function(){
     new Ribbon({model:globals.appState});
 
     //do stuff
-    var hinge1 = globals.linkage.addHingeAtPosition(new THREE.Vector2(0,20));
-    var hinge2 = globals.linkage.addHingeAtPosition(new THREE.Vector2(0,-20));
-    var hinge3 = globals.linkage.addHingeAtPosition(new THREE.Vector2(-10,0));
-    var hinge4 = globals.linkage.addHingeAtPosition(new THREE.Vector2(14,0));
-    hinge4.setStatic(true);
-    var hinge5 = globals.linkage.addHingeAtPosition(new THREE.Vector2(-20,0));
+    var hinge1 = globals.linkage.addHingeAtPosition({x:0,y:20});
+    var hinge2 = globals.linkage.addHingeAtPosition({x:0,y:-20});
+    var hinge3 = globals.linkage.addHingeAtPosition({x:-10,y:0});
+    var hinge4 = globals.linkage.addHingeAtPosition({x:14,y:0}).setStatic(true);
+    var hinge5 = globals.linkage.addHingeAtPosition({x:-20,y:0});
 
     globals.linkage.link(hinge1, hinge3);
     globals.linkage.link(hinge3, hinge2);
