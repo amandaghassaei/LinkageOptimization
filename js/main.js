@@ -22,7 +22,6 @@ $(function(){
     new NavBar({model:globals.appState});
     new Ribbon({model:globals.appState});
 
-    //do stuff
 globals.script = function(){//the lack of indenting is on purpose - looks weird in the script editor otherwise
     var hinge1 = globals.linkage.addHingeAtPosition({x:0,y:20});
     var hinge2 = globals.linkage.addHingeAtPosition({x:0,y:-20});
@@ -37,6 +36,8 @@ globals.script = function(){//the lack of indenting is on purpose - looks weird 
     var link35 = globals.linkage.link(hinge3, hinge5);
     globals.linkage.addDriveCrank(hinge5, hinge3, link35);
 };
+
+    //do stuff
     globals.script();
 
     //threeJS View
