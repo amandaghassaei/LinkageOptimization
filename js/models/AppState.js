@@ -30,7 +30,7 @@ AppState = Backbone.Model.extend({
                 optimize:"Run"
             },
             navExport:{
-                print: "3d Print",
+                print: "3D Print",
                 mill: "Mill"
             }
         },
