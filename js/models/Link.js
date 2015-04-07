@@ -6,7 +6,7 @@
 var linkGeometry = new THREE.BoxGeometry(1,1,1);
 var material = new THREE.MeshNormalMaterial();
 
-function Link(hingeA, hingeB, width, depth, length){//optional parameter "length" sets distance constraint,
+function Link(hingeA, hingeB, length){//optional parameter "length" sets distance constraint,
 // otherwise calculated from initial positions of hinges
     this.hingeA = hingeA;
     this.hingeB = hingeB;
@@ -16,8 +16,8 @@ function Link(hingeA, hingeB, width, depth, length){//optional parameter "length
     this.constraint = this._buildConstraint(hingeA, hingeB, length);
 
     this.mesh = this._buildMesh(length);
-    this.setWidth(width);
-    this.setDepth(depth);
+    this.setWidth(globals.appState.get("linkWidth"));
+    this.setDepth(globals.appState.getDepth());
     globals.three.sceneAdd(this.mesh);
 }
 

@@ -6,13 +6,13 @@ var hingeGeometry = new THREE.CylinderGeometry(1,1,1,20,20);
 hingeGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
 var material = new THREE.MeshNormalMaterial();
 
-function Hinge(position, width, depth){
+function Hinge(position){
     this.position = position;//draw at this position when paused
     this.body = this._buildBody(position);
 
     this.mesh = this._buildMesh();
-    this.setWidth(width);
-    this.setDepth(depth);
+    this.setWidth(globals.appState.get("linkWidth"));
+    this.setDepth(globals.appState.getDepth());
     globals.three.sceneAdd(this.mesh);
 }
 

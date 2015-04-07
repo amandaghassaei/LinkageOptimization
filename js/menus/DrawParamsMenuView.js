@@ -38,18 +38,18 @@ DrawParamsMenuView = Backbone.View.extend({
         if (isNaN(newVal)) return;
         newVal = parseFloat(newVal.toFixed(4));
         var property = $(e.target).data("type");
-        globals.linkage.set(property, newVal);
+        globals.appState.set(property, newVal);
     },
 
     _clearAll: function(e){
         e.preventDefault();
-        globals.linkage.clearAll();
+        globals.linkage.destroy();
     },
 
     render: function(){
         if (this.model.get("currentTab") != "drawParams") return;
         if ($("input").is(":focus")) return;
-        this.$el.html(this.template(_.extend(this.model.toJSON(), globals.linkage.toJSON())));
+        this.$el.html(this.template(this.model.toJSON()));
     },
 
     template: _.template('\

@@ -37,7 +37,10 @@ AppState = Backbone.Model.extend({
 
         is3D: false,
         isAnimating: true,//play/pause animation
-        thetaStep: 0.01
+        thetaStep: 0.01,
+
+        linkWidth: 3,
+        zDepth: 3
 
     },
 
@@ -53,6 +56,11 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:currentTab", this._tabChanged);
         this.listenTo(this, "change:currentNav", this._updateCurrentTabForNav);
 
+        //bind events
+        this.listenTo(this, "change:linkWidth", this._setWidth);
+        this.listenTo(this, "change:zDepth", this._setDepth);
+        this.listenTo(this, "change:is3D", this._setDepth);
+
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
 
         if (this.isMobile()) this.set("menuIsVisible", false);
@@ -60,6 +68,23 @@ AppState = Backbone.Model.extend({
 
     isMobile: function() {
         return (window.innerWidth <= 700);
+    },
+
+    ///////////////////////////////////////////////////////////////////////////////
+    /////////////////////DRAWING///////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
+
+    _setWidth: function(){
+        globals.linkage.setWidth(this.get("linkWidth"));
+    },
+
+    _setDepth: function(){
+        globals.linkage.setDepth(this.getDepth());
+    },
+
+    getDepth: function(){
+        if (!globals.appState.get("is3D")) return 0.000001;
+        return this.get("zDepth");
     },
 
 
@@ -174,7 +199,7 @@ AppState = Backbone.Model.extend({
     },
 
     runScript: function(script){
-        globals.linkage.clearAll();
+        globals.linkage.destroy();
         if (script) this.syncScript(script);
         globals.script();
         this.set("isAnimating", true);
