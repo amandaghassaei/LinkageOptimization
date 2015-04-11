@@ -35,6 +35,7 @@ Link.prototype.getLength = function(){
 
 Link.prototype.setLength = function(length){
     this._constraint.length = length;
+    this._mesh.scale.y = length;
 };
 
 
