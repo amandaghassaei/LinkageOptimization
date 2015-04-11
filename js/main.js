@@ -35,7 +35,7 @@ globals.script = function(){
     globals.linkage.link(hinge2, hinge4);
     globals.linkage.link(hinge4, hinge1);
     var link35 = globals.linkage.link(hinge3, hinge5);
-    globals.linkage.addDriveCrank(hinge5, hinge3, link35);
+    globals.linkage.addDriveCrank(hinge5, hinge3, link35.getLength());
 };
 
     //do stuff

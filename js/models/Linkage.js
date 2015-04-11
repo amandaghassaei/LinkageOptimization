@@ -3,15 +3,38 @@
  */
 
 
-function Linkage(hinges, links, driveCrank){//init a linkage with optional hinges, links, and driveCrank
+function Linkage(hinges, links, driveCrank, okToPassRefs){//init a linkage with optional hinges, links, and driveCrank
+
+    if (hinges == undefined && links === undefined && driveCrank === undefined) okToPassRefs = true;
 
     if (hinges === undefined) hinges = [];
     if (links === undefined) links = [];
     if (driveCrank == undefined) driveCrank = null;
-    this._hinges = hinges;
-    this._links = links;
-    this._driveCrank = driveCrank;
+
     this._fitness = null;
+
+    if (okToPassRefs){
+        this._hinges = hinges;
+        this._links = links;
+        this._driveCrank = driveCrank;
+        return;
+    }
+
+    //be sure to clone everything that's passed in to remove references
+    var self = this;
+    this._hinges = [];
+    _.each(hinges, function(hinge){
+        self._hinges.push(hinge.clone(self));
+    });
+    this._links = [];
+    _.each(links, function(link){
+        self._links.push(link.clone(self._hinges[link.getHingeAId()], self._hinges[link.getHingeBId()]));
+    });
+    if (driveCrank) this._driveCrank = driveCrank.clone(
+        self._hinges[driveCrank.getCenterHingeId()],
+        self._hinges[driveCrank.getOutsideHingeId()]
+    );
+    else console.warn("linkage inited without drive crank");
 }
 
 
@@ -19,7 +42,7 @@ function Linkage(hinges, links, driveCrank){//init a linkage with optional hinge
 //Construct
 
 Linkage.prototype.addHingeAtPosition = function(position){
-    var hinge = new Hinge(position);
+    var hinge = new Hinge(position, this);
     this._hinges.push(hinge);
     return hinge;
 };
@@ -104,6 +127,7 @@ Linkage.prototype.destroy = function(){
 };
 
 
+
 //Utilities
 
 Linkage.prototype._iterateAllHingesAndLinks = function(callback){
@@ -115,6 +139,20 @@ Linkage.prototype._iterateAllHingesAndLinks = function(callback){
     });
 };
 
-Linkage.prototype._clone = function(){
-    var clone = new Linkage();
+Linkage.prototype.toJSON = function(){
+    return {
+        hinges: this._hinges,
+        links: this._links,
+        driveCrank: this._driveCrank.toJSON()
+    }
+};
+
+Linkage.prototype.getHingeId = function(hinge){//used for saving
+    var index = this._hinges.indexOf(hinge);
+    if (index < 0) console.warn("hinge could not be found in this linkage");
+    return index;
+};
+
+Linkage.prototype.clone = function(){
+    return new Linkage(this._hinges, this._links, this._driveCrank);
 };

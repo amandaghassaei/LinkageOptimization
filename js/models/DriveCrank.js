@@ -2,11 +2,11 @@
  * Created by fab on 3/21/15.
  */
 
-function DriveCrank(centerHinge, outsideHinge, link){
+function DriveCrank(centerHinge, outsideHinge, length){
     this._centerHinge = centerHinge;
     this._outsideHinge = outsideHinge;
-    this._link = link;
-    this._body = this._buildBody(centerHinge, link);
+    this._length = length;
+    this._body = this._buildBody(centerHinge, length);
     this._constraints = this._buildConstraints(this._body, centerHinge, outsideHinge);
 }
 
@@ -14,8 +14,8 @@ function DriveCrank(centerHinge, outsideHinge, link){
 
 //Physics
 
-DriveCrank.prototype._buildBody = function(centerHinge, link){
-    return globals.physics.makeDriveCrankBody(centerHinge.getPosition(), link.getLength());
+DriveCrank.prototype._buildBody = function(centerHinge, length){
+    return globals.physics.makeDriveCrankBody(centerHinge.getPosition(), length);
 };
 
 DriveCrank.prototype._buildConstraints = function(body, centerHinge, outsideHinge){
@@ -45,7 +45,7 @@ DriveCrank.prototype.destroy = function(){//deallocate everything
     this._body = null;
     this._centerHinge = null;
     this._outsideHinge = null;
-    this._link = null;
+    this._length = null;
 };
 
 
@@ -54,10 +54,18 @@ DriveCrank.prototype.destroy = function(){//deallocate everything
 
 DriveCrank.prototype.toJSON = function(){
     return {
-        centerHinge: this._centerHinge.getId(),
-        outsideHinge: this._outsideHinge.getId(),
-        length: this._link.length
+        centerHinge: this.getCenterHingeId(),
+        outsideHinge: this.getOutsideHingeId(),
+        length: this._length
     };
+};
+
+Link.prototype.getCenterHingeId = function(){
+    return this.centerHinge.getId();
+};
+
+Link.prototype.getOutsideHingeId = function(){
+    return this._outsideHinge.getId();
 };
 
 DriveCrank.prototype._diff = function(position1, position2){
@@ -66,4 +74,8 @@ DriveCrank.prototype._diff = function(position1, position2){
         diff[key] = position1[key] - position2[key];
     });
     return diff;
+};
+
+DriveCrank.prototype.clone = function(centerHinge, outsideHinge){
+    return new DriveCrank(centerHinge, outsideHinge, this.length);
 };

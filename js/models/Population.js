@@ -28,8 +28,9 @@ Population.prototype.calcNextGen = function(){
 
 Population.prototype._createMatingPool = function(linkages){//create mating pool using fitness proportionate selection
     var pool = [];
-    _.each(this.linkages, function(linkage){
-        for (var i=0;i<linkage.getFitness();i++){
+    _.each(linkages, function(linkage){
+        var numPoolEntries = linkage.getFitness();//this may change
+        for (var i=0;i<numPoolEntries;i++){
             pool.push(linkage);
         }
     });

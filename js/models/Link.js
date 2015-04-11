@@ -53,8 +53,8 @@ Link.prototype.setDepth = function(depth){
 };
 
 Link.prototype.render = function(){
-    var hingeAPos = this._hingeA.currentPosition();
-    var hingeBPos = this._hingeB.currentPosition();
+    var hingeAPos = this._hingeA.getCurrentPosition();
+    var hingeBPos = this._hingeB.getCurrentPosition();
 
     //get center of mass position
     var centerPos = this._avg(hingeAPos, hingeBPos);
@@ -85,9 +85,17 @@ Link.prototype.destroy = function(){//deallocate everything
 
 Link.prototype.toJSON = function(){
     return {
-        hinges: [this._hingeA.getId(), this._hingeB.getId()],
+        hinges: [this.getHingeAId(), this.getHingeBId()],
         length: this._length
     };
+};
+
+Link.prototype.getHingeAId = function(){
+    return this._hingeA.getId();
+};
+
+Link.prototype.getHingeBId = function(){
+    return this._hingeB.getId();
 };
 
 Link.prototype._avg = function(positionA, positionB){
@@ -105,4 +113,8 @@ Link.prototype._dist = function(positionA, positionB){
         diffSq += Math.pow(positionA[key] - positionB[key], 2);
     });
     return Math.sqrt(diffSq);
+};
+
+Link.prototype._clone = function(hingeA, hingeB){
+    return new Link(hingeA, hingeB, this._length);
 };

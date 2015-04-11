@@ -6,7 +6,9 @@ var hingeGeometry = new THREE.CylinderGeometry(1,1,1,20,20);
 hingeGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
 var hingeMaterial = new THREE.MeshNormalMaterial();
 
-function Hinge(position){
+function Hinge(position, parentLinkage){
+    if (parentLinkage === undefined) console.warn("no parent linkage supplied for hinge");
+    this._parentLinkage = parentLinkage;
     this._position = position;//draw at this position when paused
     this._body = this._buildBody(position);
 
@@ -52,11 +54,11 @@ Hinge.prototype.setDepth = function(depth){
     this._mesh.scale.z = depth;
 };
 
-Hinge.prototype.currentPosition = function(){
+Hinge.prototype.getCurrentPosition = function(){//position from animation loop
     return _.clone(this._body.position);
 };
 
-Hinge.prototype.getPosition = function(){//todo where is this used?
+Hinge.prototype.getPosition = function(){//position from definition
     return _.clone(this._position);
 };
 
@@ -77,7 +79,9 @@ Hinge.prototype.destroy = function(){
     this._body = null;
     globals.three.sceneRemove(this._mesh);
     this._mesh = null;
+    this._parentLinkage = null;
 };
+
 
 
 
@@ -88,5 +92,9 @@ Hinge.prototype.toJSON = function(){
 };
 
 Hinge.prototype.getId = function(){//position of this instance in the hinges array on the globals.linkage
-    return globals.linkage.get("hinges").indexOf(this);
+    return this._parentLinkage.getHingeId(this);
+};
+
+Hinge.prototype.clone = function(parentLinkage){
+    return new Hinge(_.clone(this._position), parentLinkage);
 };
