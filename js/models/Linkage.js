@@ -64,15 +64,15 @@ Linkage.prototype.link = function(hingeA, hingeB, distance){
 
 //Mating
 
-Linkage.prototype.hillClimb = function(){
-
+Linkage.prototype.hillClimb = function(mutationRate){
+    return this._clone()._mutate(mutationRate);
 };
 
-Linkage.prototype.mate = function(mate){
-    return this.clone(this.crossoverLinks(mate));//child is a clone of parent1, with links crossed with parent2
+Linkage.prototype.mate = function(mate, mutationRate){
+    return this._clone(this._crossoverLinks(mate)._mutate(mutationRate));//child is a clone of parent1, with links crossed with parent2
 };
 
-Linkage.prototype.crossoverLinks = function(mate){//be careful here, crossed links array references parent links
+Linkage.prototype._crossoverLinks = function(mate){//be careful here, crossed links array references parent links
     //cross link arrays, here's one way to do it, there may be others to explore
     var crossoverIndex = Math.floor(Math.random()*(this._links.length+1));
     var crossedLinks = [];
@@ -91,7 +91,7 @@ Linkage.prototype.getLinkAtIndex = function(index){
 
 //Mutation
 
-Linkage.prototype.mutate = function(mutationRate){
+Linkage.prototype._mutate = function(mutationRate){
     _.each(this._links, function(link){
         if (Math.random()<mutationRate){
             var linkLength = link.getLength();
@@ -191,7 +191,7 @@ Linkage.prototype.getHingeId = function(hinge){//used for saving
     return index;
 };
 
-Linkage.prototype.clone = function(links){
+Linkage.prototype._clone = function(links){
     if (links === undefined) links = this._links;
     return new Linkage(this._hinges, links, this._driveCrank);
 };

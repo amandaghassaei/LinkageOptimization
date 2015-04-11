@@ -9,6 +9,7 @@ var hingeMaterial = new THREE.MeshNormalMaterial();
 function Hinge(position, parentLinkage){
     if (parentLinkage === undefined) console.warn("no parent linkage supplied for hinge");
     this._parentLinkage = parentLinkage;
+    //todo update this._position from physics after motion settles
     this._position = position;//draw at this position when paused
     this._body = this._buildBody(position);
 

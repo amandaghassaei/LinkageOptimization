@@ -20,7 +20,7 @@ Population.prototype.calcNextGen = function(){
     if (globals.appState.get("isHillClimbing")){
         var parent = this._getBestLinkage(this.linkages);
         nextGenLinkages.push(parent);
-        nextGenLinkages.push(parent.clone().mutate(mutationRate));//we should add simulated annealing ot this as well
+        nextGenLinkages.push(parent.hillClimb(mutationRate));//we should add simulated annealing ot this as well
         return nextGenLinkages;
     }
 
@@ -29,7 +29,7 @@ Population.prototype.calcNextGen = function(){
     for (var i=0;i<this.linkages.length;i++){//next generation is the same size as this one
         var parent1 = this._drawFromMatingPool(matingPool);
         var parent2 = this._drawFromMatingPool(matingPool);
-        nextGenLinkages.push(parent1.mate(parent2).mutate(mutationRate));
+        nextGenLinkages.push(parent1.mate(parent2, mutationRate));
     }
 
     return nextGenLinkages;
