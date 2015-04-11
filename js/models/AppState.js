@@ -63,7 +63,7 @@ AppState = Backbone.Model.extend({
 
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
     },
-    
+
 
 
     //Draw

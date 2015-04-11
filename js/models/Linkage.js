@@ -81,6 +81,10 @@ Linkage.prototype._calcFitness = function(){
     return 4;//todo actually calc fitness here
 };
 
+Linkage.prototype.getTrajectory = function(){//trajectory of the linkage as an 2xn array
+    return [[null, null]];
+};
+
 
 
 //Draw
