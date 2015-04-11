@@ -4,66 +4,89 @@
 
 var hingeGeometry = new THREE.CylinderGeometry(1,1,1,20,20);
 hingeGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
-var material = new THREE.MeshNormalMaterial();
+var hingeMaterial = new THREE.MeshNormalMaterial();
 
 function Hinge(position){
-    this.position = position;//draw at this position when paused
-    this.body = this._buildBody(position);
+    this._position = position;//draw at this position when paused
+    this._body = this._buildBody(position);
 
-    this.mesh = this._buildMesh();
+    this._mesh = this._buildMesh();
     this.setWidth(globals.appState.get("linkWidth"));
     this.setDepth(globals.appState.getDepth());
-    globals.three.sceneAdd(this.mesh);
+    globals.three.sceneAdd(this._mesh);
 }
+
+
+
+
+//Physics
 
 Hinge.prototype._buildBody = function(position){//hinge owns a rigid body in matter.js
     return globals.physics.makeHingeBody(position);
 };
 
+Hinge.prototype.getBody = function(){
+    return this._body;
+};
+
 Hinge.prototype.setStatic = function(isStatic){//body cannot move
-    globals.physics.setStatic(this.body, isStatic);
+    globals.physics.setStatic(this._body, isStatic);
     return this;
 };
 
+
+
+
+//Draw
+
 Hinge.prototype._buildMesh = function(){
-    return new THREE.Mesh(hingeGeometry, material);
+    return new THREE.Mesh(hingeGeometry, hingeMaterial);
 };
 
 Hinge.prototype.setWidth = function(width){
-    this.mesh.scale.x = width/2;//we are really setting rad here - divide by two
-    this.mesh.scale.y = width/2;
+    this._mesh.scale.x = width/2;//we are really setting rad here - divide by two
+    this._mesh.scale.y = width/2;
 };
 
 Hinge.prototype.setDepth = function(depth){
-    this.mesh.scale.z = depth;
+    this._mesh.scale.z = depth;
 };
 
 Hinge.prototype.currentPosition = function(){
-    return _.clone(this.body.position);
+    return _.clone(this._body.position);
 };
 
-Hinge.prototype.getPosition = function(){
-    return _.clone(this.position);
+Hinge.prototype.getPosition = function(){//todo where is this used?
+    return _.clone(this._position);
+};
+
+Hinge.prototype.render = function(){
+    var position = this._body.position;//get position from body and update mesh
+    this._mesh.position.set(position.x, position.y, 0);
+};
+
+
+
+
+//Deallocate
+
+Hinge.prototype.destroy = function(){
+    //todo send message to link saying it is no longer valid
+    this._position = null;
+    globals.physics.worldRemove(this._body);
+    this._body = null;
+    globals.three.sceneRemove(this._mesh);
+    this._mesh = null;
+};
+
+
+
+//Utilities
+
+Hinge.prototype.toJSON = function(){
+    return {position:this._position};
 };
 
 Hinge.prototype.getId = function(){//position of this instance in the hinges array on the globals.linkage
     return globals.linkage.get("hinges").indexOf(this);
-};
-
-Hinge.prototype.render = function(){
-    var position = this.body.position;//get position from body and update mesh
-    this.mesh.position.set(position.x, position.y, 0);
-};
-
-Hinge.prototype.destroy = function(){
-    //todo send message to link saying it is no longer valid
-    this.position = null;
-    globals.physics.worldRemove(this.body);
-    this.body = null;
-    globals.three.sceneRemove(this.mesh);
-    this.mesh = null;
-};
-
-Hinge.prototype.toJSON = function(){
-    return {position:this.position};
 };

@@ -8,10 +8,59 @@ function Linkage(hinges, links, driveCrank){//init a linkage with optional hinge
     if (hinges === undefined) hinges = [];
     if (links === undefined) links = [];
     if (driveCrank == undefined) driveCrank = null;
-    this.hinges = hinges;
-    this.links = links;
-    this.driveCrank = driveCrank;
+    this._hinges = hinges;
+    this._links = links;
+    this._driveCrank = driveCrank;
+    this._fitness = null;
 }
+
+
+
+//Construct
+
+Linkage.prototype.addHingeAtPosition = function(position){
+    var hinge = new Hinge(position);
+    this._hinges.push(hinge);
+    return hinge;
+};
+
+Linkage.prototype.addDriveCrank = function(centerHinge, outsideHinge, link){
+    if (!centerHinge || !outsideHinge || !link) return console.warn("drive crank parameter is missing");
+    var driveCrank = new DriveCrank(centerHinge, outsideHinge, link);
+    this._driveCrank = driveCrank;
+    return driveCrank;
+};
+
+Linkage.prototype.link = function(hingeA, hingeB, distance){
+    var link = new Link(hingeA, hingeB, distance);
+    this._links.push(link);
+    return link;
+};
+
+
+
+//Mating
+
+Linkage.prototype.mate = function(mate){
+
+};
+
+
+
+//Fitness
+
+Linkage.prototype.getFitness = function(){
+    if (!this._fitness) this._fitness = this._calcFitness();
+    return this._fitness;
+};
+
+Linkage.prototype._calcFitness = function(){
+    return 4;//todo actually calc fitness here
+};
+
+
+
+//Draw
 
 Linkage.prototype.setWidth = function(width){
     this._iterateAllHingesAndLinks(function(object){
@@ -25,54 +74,47 @@ Linkage.prototype.setDepth = function(depth){
     });
 };
 
-Linkage.prototype.addHingeAtPosition = function(position){
-    var hinge = new Hinge(position);
-    this.hinges.push(hinge);
-    return hinge;
-};
-
-Linkage.prototype.addDriveCrank = function(centerHinge, outsideHinge, link){
-    if (!centerHinge || !outsideHinge || !link) return console.warn("drive crank parameter is missing");
-    var driveCrank = new DriveCrank(centerHinge, outsideHinge, link);
-    this.driveCrank = driveCrank;
-    return driveCrank;
-};
-
-Linkage.prototype.link = function(hingeA, hingeB, distance){
-    var link = new Link(hingeA, hingeB, distance);
-    this.links.push(link);
-    return link;
-};
-
-Linkage.prototype.destroy = function(){
-    this._iterateAllHingesAndLinks(function(object){
-        object.destroy();
-    });
-    this.hinges = [];
-    this.links = [];
-    if (this.driveCrank) this.driveCrank.destroy();
-    this.driveCrank = null;
-    globals.appState.set("isAnimating", false);
-};
-
-Linkage.prototype._iterateAllHingesAndLinks = function(callback){
-    _.each(this.hinges, function (hinge) {
-        callback(hinge);
-    });
-    _.each(this.links, function (link) {
-        callback(link);
-    });
-};
-
 Linkage.prototype.render = function(){//called from render loop in threeView
 
     //rotate crank
-    if (globals.appState.get("isAnimating") && this.driveCrank){
-        this.driveCrank.rotate(globals.appState.get("thetaStep"));
+    if (globals.appState.get("isAnimating") && this._driveCrank){
+        this._driveCrank.rotate(globals.appState.get("thetaStep"));
         globals.physics.update();
 
         this._iterateAllHingesAndLinks(function(object){
             object.render();
         });
     }
+};
+
+
+
+//Deallocate
+
+Linkage.prototype.destroy = function(){
+    this._iterateAllHingesAndLinks(function(object){
+        object.destroy();
+    });
+    this._hinges = [];
+    this._links = [];
+    if (this._driveCrank) this._driveCrank.destroy();
+    this._driveCrank = null;
+    this._fitness = null;
+    globals.appState.set("isAnimating", false);//todo move this
+};
+
+
+//Utilities
+
+Linkage.prototype._iterateAllHingesAndLinks = function(callback){
+    _.each(this._hinges, function (hinge) {
+        callback(hinge);
+    });
+    _.each(this._links, function (link) {
+        callback(link);
+    });
+};
+
+Linkage.prototype._clone = function(){
+    var clone = new Linkage();
 };

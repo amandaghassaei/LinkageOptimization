@@ -3,12 +3,16 @@
  */
 
 function DriveCrank(centerHinge, outsideHinge, link){
-    this.centerHinge = centerHinge;
-    this.outsideHinge = outsideHinge;
-    this.link = link;
-    this.body = this._buildBody(centerHinge, link);
-    this.constraints = this._buildConstraints(this.body, centerHinge, outsideHinge);
+    this._centerHinge = centerHinge;
+    this._outsideHinge = outsideHinge;
+    this._link = link;
+    this._body = this._buildBody(centerHinge, link);
+    this._constraints = this._buildConstraints(this._body, centerHinge, outsideHinge);
 }
+
+
+
+//Physics
 
 DriveCrank.prototype._buildBody = function(centerHinge, link){
     return globals.physics.makeDriveCrankBody(centerHinge.getPosition(), link.getLength());
@@ -17,10 +21,43 @@ DriveCrank.prototype._buildBody = function(centerHinge, link){
 DriveCrank.prototype._buildConstraints = function(body, centerHinge, outsideHinge){
     centerHinge.setStatic(true);
     var constraints = [];
-    constraints.push(globals.physics.makeConstraint(body, centerHinge.body, 0));//pin center of drive crank to center hinge
-    constraints.push(globals.physics.makeConstraint(body, outsideHinge.body, 0,
+    constraints.push(globals.physics.makeConstraint(body, centerHinge.getBody(), 0));//pin center of drive crank to center hinge
+    constraints.push(globals.physics.makeConstraint(body, outsideHinge.getBody(), 0,
         this._diff(outsideHinge.getPosition(), centerHinge.getPosition())));//pin outside hinge to outside of driveCrank
     return constraints;
+};
+
+DriveCrank.prototype.rotate = function(thetaStep){
+    globals.physics.rotate(this._body, thetaStep);
+};
+
+
+
+//Deallocate
+
+DriveCrank.prototype.destroy = function(){//deallocate everything
+    _.each(this._constraints, function(constraint){
+        globals.physics.worldRemove(constraint);
+        constraint = null;
+    });
+    this._constraints = null;
+    globals.physics.worldRemove(this._body);
+    this._body = null;
+    this._centerHinge = null;
+    this._outsideHinge = null;
+    this._link = null;
+};
+
+
+
+//Utilities
+
+DriveCrank.prototype.toJSON = function(){
+    return {
+        centerHinge: this._centerHinge.getId(),
+        outsideHinge: this._outsideHinge.getId(),
+        length: this._link.length
+    };
 };
 
 DriveCrank.prototype._diff = function(position1, position2){
@@ -29,29 +66,4 @@ DriveCrank.prototype._diff = function(position1, position2){
         diff[key] = position1[key] - position2[key];
     });
     return diff;
-};
-
-DriveCrank.prototype.rotate = function(thetaStep){
-    globals.physics.rotate(this.body, thetaStep);
-};
-
-DriveCrank.prototype.destroy = function(){//deallocate everything
-    _.each(this.constraints, function(constraint){
-        globals.physics.worldRemove(constraint);
-        constraint = null;
-    });
-    this.constraints = null;
-    globals.physics.worldRemove(this.body);
-    this.body = null;
-    this.centerHinge = null;
-    this.outsideHinge = null;
-    this.link = null;
-};
-
-DriveCrank.prototype.toJSON = function(){
-    return {
-        centerHinge: this.centerHinge.getId(),
-        outsideHinge: this.outsideHinge.getId(),
-        length: this.link.length
-    };
 };
