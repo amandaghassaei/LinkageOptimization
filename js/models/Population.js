@@ -15,10 +15,10 @@ Population.prototype.calcNextGen = function(){
     }
     var matingPool = this._createMatingPool(this.linkages);
     var nextGenLinkages = [];
-    for (var i=0;i<this.linkages.length;i++){//next generation is the same size and this one
+    for (var i=0;i<this.linkages.length;i++){//next generation is the same size as this one
         var parent1 = this._drawFromMatingPool(matingPool);
         var parent2 = this._drawFromMatingPool(matingPool);
-        nextGenLinkages.push()
+        nextGenLinkages.push(parent1.mate(parent2));
     }
     return nextGenLinkages;
 };

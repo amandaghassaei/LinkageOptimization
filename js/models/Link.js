@@ -33,6 +33,10 @@ Link.prototype.getLength = function(){
     return this._constraint.length;
 };
 
+Link.prototype.setLength = function(length){
+    this._constraint.length = length;
+};
+
 
 
 
