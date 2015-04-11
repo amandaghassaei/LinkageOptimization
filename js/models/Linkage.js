@@ -95,10 +95,11 @@ Linkage.prototype.mutate = function(mutationRate){
     _.each(this._links, function(link){
         if (Math.random()<mutationRate){
             var linkLength = link.getLength();
-            //mutate linkLengths
+            //mutate linkLength
             link.setLength(linkLength);
         }
     });
+    return this;
 };
 
 

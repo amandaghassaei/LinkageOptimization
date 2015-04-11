@@ -35,6 +35,9 @@ AppState = Backbone.Model.extend({
             }
         },
 
+        isHillClimbing: false,
+        mutationRate: 0.05,
+
         is3D: false,
         isAnimating: true,//play/pause animation
         thetaStep: 0.01,
