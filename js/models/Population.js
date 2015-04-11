@@ -20,7 +20,7 @@ Population.prototype.calcNextGen = function(){
     if (globals.appState.get("isHillClimbing")){
         var parent = this._getBestLinkage(this.linkages);
         nextGenLinkages.push(parent);
-        nextGenLinkages.push(parent.hillClimb(mutationRate));//we should add simulated annealing ot this as well
+        nextGenLinkages.push(parent.hillClimb(mutationRate));
         return nextGenLinkages;
     }
 
@@ -31,9 +31,10 @@ Population.prototype.calcNextGen = function(){
         var parent2 = this._drawFromMatingPool(matingPool);
         nextGenLinkages.push(parent1.mate(parent2, mutationRate));
     }
-
     return nextGenLinkages;
 };
+
+
 
 
 //Hill Climbing Selection (get the best)
@@ -50,6 +51,7 @@ Population.prototype._getBestLinkage = function(linkages){
     if (!bestLinkage) console.warn("no linkages have fitness > 0");
     return bestLinkage;
 };
+
 
 
 

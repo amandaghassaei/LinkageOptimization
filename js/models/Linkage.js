@@ -39,6 +39,7 @@ function Linkage(hinges, links, driveCrank, okToPassRefs){//init a linkage with 
 
 
 
+
 //Construct
 
 Linkage.prototype.addHingeAtPosition = function(position){
@@ -64,7 +65,7 @@ Linkage.prototype.link = function(hingeA, hingeB, distance){
 
 //Mating
 
-Linkage.prototype.hillClimb = function(mutationRate){
+Linkage.prototype.hillClimb = function(mutationRate){//todo we should add simulated annealing ot this as well
     return this._clone()._mutate(mutationRate);
 };
 
@@ -89,6 +90,7 @@ Linkage.prototype.getLinkAtIndex = function(index){
 
 
 
+
 //Mutation
 
 Linkage.prototype._mutate = function(mutationRate){
@@ -101,6 +103,7 @@ Linkage.prototype._mutate = function(mutationRate){
     });
     return this;
 };
+
 
 
 
@@ -118,6 +121,7 @@ Linkage.prototype._calcFitness = function(){
 Linkage.prototype.getTrajectory = function(){//trajectory of the linkage as an 2xn array
     return [[null, null]];
 };
+
 
 
 
@@ -150,6 +154,7 @@ Linkage.prototype.render = function(){//called from render loop in threeView
 
 
 
+
 //Deallocate
 
 Linkage.prototype.destroy = function(){
@@ -163,6 +168,7 @@ Linkage.prototype.destroy = function(){
     this._fitness = null;
     globals.appState.set("isAnimating", false);//todo move this
 };
+
 
 
 
