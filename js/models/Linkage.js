@@ -5,11 +5,11 @@
 
 function Linkage(hinges, links, driveCrank, okToPassRefs){//init a linkage with optional hinges, links, and driveCrank
 
-    if (hinges == undefined && links === undefined && driveCrank === undefined) okToPassRefs = true;
+    if (hinges === undefined && links === undefined && driveCrank === undefined) okToPassRefs = true;
 
     if (hinges === undefined) hinges = [];
     if (links === undefined) links = [];
-    if (driveCrank == undefined) driveCrank = null;
+    if (driveCrank === undefined) driveCrank = null;
 
     this._fitness = null;
 
@@ -47,9 +47,9 @@ Linkage.prototype.addHingeAtPosition = function(position){
     return hinge;
 };
 
-Linkage.prototype.addDriveCrank = function(centerHinge, outsideHinge, link){
-    if (!centerHinge || !outsideHinge || !link) return console.warn("drive crank parameter is missing");
-    var driveCrank = new DriveCrank(centerHinge, outsideHinge, link);
+Linkage.prototype.addDriveCrank = function(centerHinge, outsideHinge, length){
+    if (!centerHinge || !outsideHinge || !length) return console.warn("drive crank parameter is missing");
+    var driveCrank = new DriveCrank(centerHinge, outsideHinge, length);
     this._driveCrank = driveCrank;
     return driveCrank;
 };
