@@ -139,16 +139,15 @@ Linkage.prototype.setDepth = function(depth){
     });
 };
 
+Linkage.prototype.drive = function(){
+    if (this._driveCrank) this._driveCrank.rotate(globals.appState.get("thetaStep"));
+};
+
 Linkage.prototype.render = function(screenCoordinates){//called from render loop in threeView
-
-    //rotate crank
-    if (this._driveCrank){
-        this._driveCrank.rotate(globals.appState.get("thetaStep"));
-
-        this._iterateAllHingesAndLinks(function(object){
-            object.render(screenCoordinates);
-        });
-    }
+    this.drive();
+    this._iterateAllHingesAndLinks(function(object){
+        object.render(screenCoordinates);
+    });
 };
 
 
