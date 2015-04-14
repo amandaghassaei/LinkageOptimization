@@ -144,7 +144,6 @@ Linkage.prototype.render = function(screenCoordinates){//called from render loop
     //rotate crank
     if (this._driveCrank){
         this._driveCrank.rotate(globals.appState.get("thetaStep"));
-        globals.physics.update();
 
         this._iterateAllHingesAndLinks(function(object){
             object.render(screenCoordinates);

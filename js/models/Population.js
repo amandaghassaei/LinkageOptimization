@@ -11,7 +11,7 @@ function Population(linkages){//init a linkage with optional hinges, links, and 
 
 Population.prototype.initFirstGeneration = function(){
     var firstGeneration = [];
-    for (var i=0;i<20;i++){
+    for (var i=0;i<50;i++){
         var linkage = new Linkage();
         var hinge1 = linkage.addHingeAtPosition({x:0,y:Math.random()*10+20});
         var hinge2 = linkage.addHingeAtPosition({x:0,y:-20});
@@ -102,6 +102,7 @@ Population.prototype._drawFromMatingPool = function(pool){
 
 Population.prototype.render = function(){
     if (globals.appState.get("isAnimating")){
+        globals.physics.update();
         var populationNum = this._linkages.length;
         var numPerRow = Math.ceil(Math.sqrt(populationNum));
         var width = window.innerWidth/numPerRow;
