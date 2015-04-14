@@ -40,7 +40,7 @@ AppState = Backbone.Model.extend({
 
         is3D: false,
         isAnimating: true,//play/pause animation
-        thetaStep: 0.01,
+        thetaStep: 0.02,
 
         linkWidth: 3,
         zDepth: 3

@@ -24,7 +24,7 @@ ThreeView = Backbone.View.extend({
         this.listenTo(globals.appState, "change:is3D", this._changeDimension);
 
         this.controls = new THREE.OrbitControls(this.model.camera, this.$el.get(0));
-        this.controls.addEventListener('change', this.model.render);
+//        this.controls.addEventListener('change', this.model.render);
 
         this.$el.append(this.model.domElement);//append only once
 
@@ -48,7 +48,7 @@ ThreeView = Backbone.View.extend({
         if (!state) {
             var camPosition = this.model.camera.position;
             var distFromOrigin = Math.sqrt(Math.pow(camPosition.x,2)+Math.pow(camPosition.y,2)+Math.pow(camPosition.z,2));
-            if (distFromOrigin < 2) distFromOrigin = 100;
+            if (distFromOrigin < 2) distFromOrigin = 1200;
             this.model.camera.position.set(0,0,distFromOrigin);
             this.controls.update();
         }

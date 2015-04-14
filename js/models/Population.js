@@ -11,7 +11,22 @@ function Population(linkages){//init a linkage with optional hinges, links, and 
 
 Population.prototype.initFirstGeneration = function(){
     var firstGeneration = [];
-    //init first generation
+    for (var i=0;i<25;i++){
+        var linkage = new Linkage();
+        var hinge1 = linkage.addHingeAtPosition({x:0,y:Math.random()*10+20});
+        var hinge2 = linkage.addHingeAtPosition({x:0,y:-20});
+        var hinge3 = linkage.addHingeAtPosition({x:-10,y:0});
+        var hinge4 = linkage.addHingeAtPosition({x:14,y:Math.random()*5}).setStatic(true);
+        var hinge5 = linkage.addHingeAtPosition({x:-20,y:-Math.random()*5});
+
+        linkage.link(hinge1, hinge3);//add an optional third param to set to a specific length
+        linkage.link(hinge3, hinge2);
+        linkage.link(hinge2, hinge4);
+        linkage.link(hinge4, hinge1);
+        var link35 = linkage.link(hinge3, hinge5);
+        linkage.addDriveCrank(hinge5, hinge3, link35.getLength());
+        firstGeneration.push(linkage);
+    }
     return firstGeneration;
 };
 
@@ -87,8 +102,15 @@ Population.prototype._drawFromMatingPool = function(pool){
 
 Population.prototype.render = function(){
     if (globals.appState.get("isAnimating")){
-        _.each(this._linkages, function(linkage){
-            linkage.render();
+        var populationNum = this._linkages.length;
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        var numPerRow = 10;
+        var numPerCol = numPerRow;
+        _.each(this._linkages, function(linkage, index){
+            var position = {x:(index%numPerRow-numPerRow/2)*100,
+                y:(Math.floor(index/numPerRow)-numPerCol/2)*100};
+            linkage.render(position);
         });
     }
 };
@@ -112,6 +134,9 @@ Population.prototype.setDepth = function(depth){
         linkage.setDepth(depth);
     });
 };
+
+
+
 
 
 //Meta

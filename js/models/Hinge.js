@@ -4,7 +4,7 @@
 
 var hingeGeometry = new THREE.CylinderGeometry(1,1,1,20,20);
 hingeGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
-var hingeMaterial = new THREE.MeshNormalMaterial();
+var hingeMaterial = new THREE.MeshBasicMaterial();
 
 function Hinge(position, parentLinkage){
     if (parentLinkage === undefined) console.warn("no parent linkage supplied for hinge");
@@ -63,9 +63,9 @@ Hinge.prototype.getPosition = function(){//position from definition
     return _.clone(this._position);
 };
 
-Hinge.prototype.render = function(){
+Hinge.prototype.render = function(screenCoordinates){
     var position = this._body.position;//get position from body and update mesh
-    this._mesh.position.set(position.x, position.y, 0);
+    this._mesh.position.set(position.x+screenCoordinates.x, position.y+screenCoordinates.y, 0);
 };
 
 

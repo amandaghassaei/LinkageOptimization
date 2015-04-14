@@ -4,7 +4,7 @@
 
 
 var linkGeometry = new THREE.BoxGeometry(1,1,1);
-var material = new THREE.MeshNormalMaterial();
+var material = new THREE.MeshBasicMaterial();
 
 function Link(hingeA, hingeB, length){//optional parameter "length" sets distance constraint,
 // otherwise calculated from initial positions of hinges
@@ -57,13 +57,13 @@ Link.prototype.setDepth = function(depth){
     this._mesh.scale.z = depth;
 };
 
-Link.prototype.render = function(){
+Link.prototype.render = function(screenCoordinates){
     var hingeAPos = this._hingeA.getCurrentPosition();
     var hingeBPos = this._hingeB.getCurrentPosition();
 
     //get center of mass position
     var centerPos = this._avg(hingeAPos, hingeBPos);
-    this._mesh.position.set(centerPos.x, centerPos.y, 0);
+    this._mesh.position.set(centerPos.x+screenCoordinates.x, centerPos.y+screenCoordinates.y, 0);
 
     //get rotation of link - negative y comes from canvas using neg y for rendering (i think)
     this._mesh.rotation.z = Math.atan2(hingeAPos.x-hingeBPos.x, -(hingeAPos.y-hingeBPos.y));

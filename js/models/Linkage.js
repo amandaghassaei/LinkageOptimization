@@ -139,7 +139,7 @@ Linkage.prototype.setDepth = function(depth){
     });
 };
 
-Linkage.prototype.render = function(){//called from render loop in threeView
+Linkage.prototype.render = function(screenCoordinates){//called from render loop in threeView
 
     //rotate crank
     if (this._driveCrank){
@@ -147,7 +147,7 @@ Linkage.prototype.render = function(){//called from render loop in threeView
         globals.physics.update();
 
         this._iterateAllHingesAndLinks(function(object){
-            object.render();
+            object.render(screenCoordinates);
         });
     }
 };
