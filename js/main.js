@@ -23,8 +23,6 @@ $(function(){
     new Ribbon({model:globals.appState});
 
 
-
-
     //the lack of indenting is on purpose - looks weird in the script editor otherwise
 globals.script = function(){
     //nothing here for now
