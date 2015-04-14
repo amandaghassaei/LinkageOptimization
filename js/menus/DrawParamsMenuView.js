@@ -43,7 +43,7 @@ DrawParamsMenuView = Backbone.View.extend({
 
     _clearAll: function(e){
         e.preventDefault();
-        globals.linkage.destroy();
+        globals.population.clearAll();
     },
 
     render: function(){

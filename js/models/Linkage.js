@@ -142,7 +142,7 @@ Linkage.prototype.setDepth = function(depth){
 Linkage.prototype.render = function(){//called from render loop in threeView
 
     //rotate crank
-    if (globals.appState.get("isAnimating") && this._driveCrank){
+    if (this._driveCrank){
         this._driveCrank.rotate(globals.appState.get("thetaStep"));
         globals.physics.update();
 

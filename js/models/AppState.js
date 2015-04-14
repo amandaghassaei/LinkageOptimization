@@ -72,11 +72,11 @@ AppState = Backbone.Model.extend({
     //Draw
 
     _setWidth: function(){
-        globals.linkage.setWidth(this.get("linkWidth"));
+        globals.population.setWidth(this.get("linkWidth"));
     },
 
     _setDepth: function(){
-        globals.linkage.setDepth(this.getDepth());
+        globals.population.setDepth(this.getDepth());
     },
 
     getDepth: function(){
@@ -181,7 +181,7 @@ AppState = Backbone.Model.extend({
 
     saveJSON: function(name){
         if (!name) name = "linkage";
-        var data = JSON.stringify(globals.linkage.toJSON());
+        var data = JSON.stringify(globals.population.toJSON());
         this.saveFile(data, name, ".json");
     },
 
@@ -196,7 +196,7 @@ AppState = Backbone.Model.extend({
     },
 
     runScript: function(script){
-        globals.linkage.destroy();
+        globals.population.clearAll();
         if (script) this.syncScript(script);
         globals.script();
         this.set("isAnimating", true);

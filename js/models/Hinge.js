@@ -92,7 +92,7 @@ Hinge.prototype.toJSON = function(){
     return {position:this._position};
 };
 
-Hinge.prototype.getId = function(){//position of this instance in the hinges array on the globals.linkage
+Hinge.prototype.getId = function(){//position of this instance in the hinges array on the parent linkage
     return this._parentLinkage.getHingeId(this);
 };
 

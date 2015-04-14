@@ -37,7 +37,7 @@ ThreeView = Backbone.View.extend({
     ////////////////////////////////////////////////////////////////////////////////
 
     _render: function(){//start render loop
-        globals.linkage.render();
+        globals.population.render();
         this.model.render();
         requestAnimationFrame(this._render);
     },

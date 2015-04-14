@@ -5,11 +5,18 @@
 
 function Population(linkages){//init a linkage with optional hinges, links, and driveCrank
 
-    this.linkages = linkages;
+    if (linkages === undefined) linkages = this.initFirstGeneration();
+    this._linkages = linkages;
+}
+
+Population.prototype.initFirstGeneration = function(){
+    var firstGeneration = [];
+    //init first generation
+    return firstGeneration;
 }
 
 Population.prototype.calcNextGen = function(){
-    if (!this.linkages || this.linkages.length == 0){
+    if (!this._linkages || this._linkages.length == 0){
         console.warn("this population has no linkages");
         return [];
     }
@@ -18,15 +25,15 @@ Population.prototype.calcNextGen = function(){
 
     //hill climbing mode
     if (globals.appState.get("isHillClimbing")){
-        var parent = this._getBestLinkage(this.linkages);
+        var parent = this._getBestLinkage(this._linkages);
         nextGenLinkages.push(parent);
         nextGenLinkages.push(parent.hillClimb(mutationRate));
         return nextGenLinkages;
     }
 
     //genetic algorithm mode
-    var matingPool = this._createMatingPool(this.linkages);
-    for (var i=0;i<this.linkages.length;i++){//next generation is the same size as this one
+    var matingPool = this._createMatingPool(this._linkages);
+    for (var i=0;i<this._linkages.length;i++){//next generation is the same size as this one
         var parent1 = this._drawFromMatingPool(matingPool);
         var parent2 = this._drawFromMatingPool(matingPool);
         nextGenLinkages.push(parent1.mate(parent2, mutationRate));
@@ -71,4 +78,45 @@ Population.prototype._createMatingPool = function(linkages){//create mating pool
 Population.prototype._drawFromMatingPool = function(pool){
     var index = Math.floor(Math.random()*pool.length);
     return pool[index];
+};
+
+
+
+
+//Draw
+
+Population.prototype.render = function(){
+    if (globals.appState.get("isAnimating")){
+        _.each(this._linkages, function(linkage){
+            linkage.render();
+        });
+    }
+};
+
+Population.prototype.clearAll = function(){
+    console.log("clearAll");
+};
+
+Population.prototype.setWidth = function(width){
+    _.each(this._linkages, function(linkage){
+        linkage.setWidth(width);
+    });
+};
+
+Population.prototype.setDepth = function(depth){
+    _.each(this._linkages, function(linkage){
+        linkage.setDepth(depth);
+    });
+};
+
+
+//meta
+
+Population.prototype.toJSON = function(){
+    console.log("toJSON");
+    return {};
+};
+
+Population.prototype.destroy = function(){
+    console.log("need this?");
 };
