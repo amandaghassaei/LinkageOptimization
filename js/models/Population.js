@@ -13,7 +13,7 @@ Population.prototype.initFirstGeneration = function(){
     var firstGeneration = [];
     //init first generation
     return firstGeneration;
-}
+};
 
 Population.prototype.calcNextGen = function(){
     if (!this._linkages || this._linkages.length == 0){
@@ -94,7 +94,11 @@ Population.prototype.render = function(){
 };
 
 Population.prototype.clearAll = function(){
-    console.log("clearAll");
+    _.each(this._linkages, function(linkage){
+        linkage.destroy();
+        linkage = null
+    });
+    this._linkages = [];
 };
 
 Population.prototype.setWidth = function(width){
@@ -110,7 +114,7 @@ Population.prototype.setDepth = function(depth){
 };
 
 
-//meta
+//Meta
 
 Population.prototype.toJSON = function(){
     console.log("toJSON");
