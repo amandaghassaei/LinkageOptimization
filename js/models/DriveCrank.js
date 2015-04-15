@@ -60,11 +60,11 @@ DriveCrank.prototype.toJSON = function(){
     };
 };
 
-Link.prototype.getCenterHingeId = function(){
-    return this.centerHinge.getId();
+DriveCrank.prototype.getCenterHingeId = function(){
+    return this._centerHinge.getId();
 };
 
-Link.prototype.getOutsideHingeId = function(){
+DriveCrank.prototype.getOutsideHingeId = function(){
     return this._outsideHinge.getId();
 };
 

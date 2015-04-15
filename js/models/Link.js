@@ -11,7 +11,7 @@ function Link(hingeA, hingeB, length){//optional parameter "length" sets distanc
     this._hingeA = hingeA;
     this._hingeB = hingeB;
 
-    if (length === undefined) length = this._dist(hingeA.getPosition(), hingeB.getPosition());
+    if (length === undefined || length === null || !length) length = this._dist(hingeA.getPosition(), hingeB.getPosition());
     else this._length = length;//save special length param for save file, otherwise it can be recalculated
     this._constraint = this._buildConstraint(hingeA, hingeB, length);
 

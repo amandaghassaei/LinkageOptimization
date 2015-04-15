@@ -3,15 +3,35 @@
  */
 
 
-function Linkage(hinges, links, driveCrank, okToPassRefs){//init a linkage with optional hinges, links, and driveCrank
+function Linkage(json){//init a linkage with optional json
+
+    this.setHingesLinksCrank();//set all properties to []
+    this._fitness = null;
+    if (json === undefined) return;
+
+    //parse json
+//    hinges: this._hinges,
+//    links: this._links,
+//    driveCrank: this._driveCrank.toJSON()
+
+    var self = this;
+    _.each(json.hinges, function(hinge){//{position:this._position}
+        self.addHingeAtPosition(hinge.position);
+    });
+    _.each(json.links, function(link){//{hinges: [this.getHingeAId(), this.getHingeBId()], length: this._length}
+        self.link(self._hinges[link.hinges[0]], self._hinges[link.hinges[1]], link.length);
+    });
+    //{centerHinge: this.getCenterHingeId(), outsideHinge: this.getOutsideHingeId(), length: this._length}
+    this.addDriveCrank(this.hinges[json.driveCrank.centerHinge], this.hinges[json.driveCrank.outsideHinge], json.driveCrank.length);
+}
+
+Linkage.prototype.setHingesLinksCrank = function(hinges, links, driveCrank, okToPassRefs){//used for clone operation
 
     if (hinges === undefined && links === undefined && driveCrank === undefined) okToPassRefs = true;
 
     if (hinges === undefined) hinges = [];
     if (links === undefined) links = [];
     if (driveCrank === undefined) driveCrank = null;
-
-    this._fitness = null;
 
     if (okToPassRefs){
         this._hinges = hinges;
@@ -34,8 +54,7 @@ function Linkage(hinges, links, driveCrank, okToPassRefs){//init a linkage with 
         self._hinges[driveCrank.getCenterHingeId()],
         self._hinges[driveCrank.getOutsideHingeId()]
     );
-    else console.warn("linkage inited without drive crank");
-}
+};
 
 
 
@@ -197,5 +216,7 @@ Linkage.prototype.getHingeId = function(hinge){//used for saving
 
 Linkage.prototype._clone = function(links){
     if (links === undefined) links = this._links;
-    return new Linkage(this._hinges, links, this._driveCrank);
+    var linkage = new Linkage();
+    linkage.setHingesLinksCrank(this._hinges, links, this._driveCrank);
+    return linkage;
 };

@@ -145,8 +145,7 @@ Population.prototype.setDepth = function(depth){
 //Meta
 
 Population.prototype.toJSON = function(){
-    console.log("toJSON");
-    return {};
+    return this._linkages;
 };
 
 Population.prototype.destroy = function(){
