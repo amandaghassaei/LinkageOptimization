@@ -85,7 +85,7 @@ Linkage.prototype.hillClimb = function(mutationRate){//todo we should add simula
 };
 
 Linkage.prototype.mate = function(mate, mutationRate){
-    return this._clone(this._crossoverLinks(mate)._mutate(mutationRate));//child is a clone of parent1, with links crossed with parent2
+    return this._clone(this._crossoverLinks(mate))._mutate(mutationRate);//child is a clone of parent1, with links crossed with parent2
 };
 
 Linkage.prototype._crossoverLinks = function(mate){//be careful here, crossed links array references parent links

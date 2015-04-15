@@ -8,6 +8,7 @@ PopulationMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
+        "click #stepNextGen":                                   "_stepNextGeneration"
     },
 
     initialize: function(){
@@ -41,6 +42,11 @@ PopulationMenuView = Backbone.View.extend({
         globals.appState.set(property, newVal);
     },
 
+    _stepNextGeneration: function(e){
+        e.preventDefault();
+        globals.population.step();
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "population") return;
         if ($("input").is(":focus")) return;
@@ -49,6 +55,7 @@ PopulationMenuView = Backbone.View.extend({
 
     template: _.template('\
         Population Size: &nbsp;&nbsp;<input data-type="populationSize" value="<%= populationSize %>" placeholder="Size" class="form-control numberInput" type="text"><br/><br/>\
+        <a href="#" id="stepNextGen" class=" btn btn-block btn-lg btn-default">Step to Next Generation</a><br/>\
         ')
 
 });

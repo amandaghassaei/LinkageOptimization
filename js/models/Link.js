@@ -128,6 +128,6 @@ Link.prototype._dist = function(positionA, positionB){
     return Math.sqrt(diffSq);
 };
 
-Link.prototype._clone = function(hingeA, hingeB){
+Link.prototype.clone = function(hingeA, hingeB){
     return new Link(hingeA, hingeB, this._length);
 };
