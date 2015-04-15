@@ -100,13 +100,44 @@ Linkage.prototype._mutate = function(json, mutationRate){
 //Fitness
 
 Linkage.prototype.getFitness = function(){
-    if (!this._fitness) this._fitness = this._calcFitness();
+    if (!this._fitness) this._fitness = this._calcFitness(globals.targetCurve, this.getTrajectory());
     return this._fitness;
 };
 
-Linkage.prototype._calcFitness = function(){
-    return 4;//todo actually calc fitness here
+Linkage.prototype._calcFitness = function(target, test){
+
+    var distances = [];
+
+    // for each of the points in the proposed solution
+    for (i=0; i<test.length; i++) {
+
+        var min_distance = Infinity;
+
+        // find the shortest distance to the other points
+        for (j=0; j<target.length; j++) {
+            var calc_distance = this._getFitness(test[i], target[j]);
+            if (calc_distance < min_distance) {
+                min_distance = calc_distance;
+            }
+        }
+
+        // store this distance
+        distances[i] = min_distance;
+        
+    }
+
+    // return the sum of the shortest distances
+    return distances.reduce(function(a, b) {
+      return a + b;
+    });
+
 };
+
+Linkage.prototype._calcDistance = function(a,b) {
+
+    // currently just use euclidean distance
+    return Math.sqrt(pow(a.x-b.x, 2) + pow(a.y-b.y, 2));
+}
 
 Linkage.prototype.getTrajectory = function(){//trajectory of the linkage as an 2xn array
     return [[null, null]];
