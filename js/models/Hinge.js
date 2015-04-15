@@ -13,12 +13,31 @@ function Hinge(position, parentLinkage){
     this._position = position;//draw at this position when paused
     this._static = false;
     this._body = this._buildBody(position);
+    this._trackedPositions = [];//holds the position of this hinge for n times steps of a cycle, wait until initial perturbations from changing link lengths die off
 
     this._mesh = this._buildMesh();
     this.setWidth(globals.appState.get("linkWidth"));
     this.setDepth(globals.appState.getDepth());
     globals.three.sceneAdd(this._mesh);
 }
+
+
+
+
+//Motion Tracking
+
+Hinge.prototype.trackPosition = function(){
+    this._trackedPositions.push(this.getCurrentPosition());
+    if (this._trackedPositions.length > globals.appState.get("numPositionSteps")) console.warn("too many positions stored for hinge");
+};
+
+Hinge.prototype.getTrackedPositions = function(){
+    var positions = [];
+    _.each(this._trackedPositions, function(position){
+        positions.push(_.clone(position));
+    });
+    return positions;
+};
 
 
 
@@ -76,7 +95,7 @@ Hinge.prototype.render = function(screenCoordinates){
 //Deallocate
 
 Hinge.prototype.destroy = function(){
-    //todo send message to link saying it is no longer valid
+    //todo send message to link saying it is no longer valid?
     this._position = null;
     globals.physics.worldRemove(this._body);
     this._body = null;
@@ -90,7 +109,7 @@ Hinge.prototype.destroy = function(){
 
 //Utilities
 
-Hinge.prototype.toJSON = function(){
+Hinge.prototype.toJSON = function(){//todo position should be recalc-ed based on stable state
     return {position: _.clone(this._position), static:this._static};
 };
 

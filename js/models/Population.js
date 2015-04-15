@@ -5,6 +5,8 @@
 
 function Population(linkages){//init a linkage with optional hinges, links, and driveCrank
 
+    this._theta = 0;
+
     if (linkages === undefined) linkages = this._initFirstGeneration();
     this._linkages = linkages;
 }
@@ -112,6 +114,9 @@ Population.prototype.render = function(){
 //            linkage.drive();
 //        });
         globals.physics.update();
+
+        var angle = this._getCurrentDriveCrankAngle();
+
         var populationNum = this._linkages.length;
         var numPerRow = Math.ceil(Math.sqrt(populationNum));
         var width = window.innerWidth/numPerRow;
@@ -119,9 +124,16 @@ Population.prototype.render = function(){
         _.each(this._linkages, function(linkage, index){
             var position = {x:(index%numPerRow-numPerRow/2)*100,
                 y:(Math.floor(index/numPerRow)-numPerCol/2)*100};
-            linkage.render(position);
+            linkage.render(position, angle);
         });
     }
+};
+
+Population.prototype._getCurrentDriveCrankAngle = function(){
+    var step = Math.PI*2/globals.appState.get("numPositionSteps");
+    this._theta += step;
+    if (this._theta > Math.PI*2) this._theta = 0;
+    return this._theta;
 };
 
 Population.prototype.setWidth = function(width){

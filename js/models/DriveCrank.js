@@ -27,8 +27,8 @@ DriveCrank.prototype._buildConstraints = function(body, centerHinge, outsideHing
     return constraints;
 };
 
-DriveCrank.prototype.rotate = function(thetaStep){
-    globals.physics.rotate(this._body, thetaStep);
+DriveCrank.prototype.rotate = function(angle){
+    globals.physics.rotate(this._body, angle);
 };
 
 

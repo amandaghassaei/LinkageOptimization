@@ -48,8 +48,8 @@ function PhysicsModel(){
         return constraint;
     }
 
-    function rotate(object, thetaStep){
-        Body.rotate(object, thetaStep);
+    function rotate(object, angle){
+        Body.rotate(object, angle - object.angle);
     }
 
     function update(){
