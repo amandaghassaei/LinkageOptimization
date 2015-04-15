@@ -34,7 +34,6 @@ Population.prototype.step = function(){
     var nextGen = this.calcNextGen(this._linkages);
     this.clearAll();
     this._linkages = nextGen;
-    console.log(this._linkages);
 };
 
 Population.prototype.calcNextGen = function(linkages){

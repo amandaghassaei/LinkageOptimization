@@ -91,7 +91,7 @@ Hinge.prototype.destroy = function(){
 //Utilities
 
 Hinge.prototype.toJSON = function(){
-    return {position:this._position, static:this._static};
+    return {position: _.clone(this._position), static:this._static};
 };
 
 Hinge.prototype.getId = function(){//position of this instance in the hinges array on the parent linkage
