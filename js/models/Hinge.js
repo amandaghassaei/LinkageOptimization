@@ -4,20 +4,40 @@
 
 var hingeGeometry = new THREE.CylinderGeometry(1,1,1,20,20);
 hingeGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
-var hingeMaterial = new THREE.MeshNormalMaterial();
+var hingeMaterial = new THREE.MeshBasicMaterial();
 
 function Hinge(position, parentLinkage){
     if (parentLinkage === undefined) console.warn("no parent linkage supplied for hinge");
     this._parentLinkage = parentLinkage;
     //todo update this._position from physics after motion settles
     this._position = position;//draw at this position when paused
+    this._static = false;
     this._body = this._buildBody(position);
+    this._trackedPositions = [];//holds the position of this hinge for n times steps of a cycle, wait until initial perturbations from changing link lengths die off
 
     this._mesh = this._buildMesh();
     this.setWidth(globals.appState.get("linkWidth"));
     this.setDepth(globals.appState.getDepth());
     globals.three.sceneAdd(this._mesh);
 }
+
+
+
+
+//Motion Tracking
+
+Hinge.prototype.trackPosition = function(){
+    this._trackedPositions.push(this.getCurrentPosition());
+    if (this._trackedPositions.length > globals.appState.get("numPositionSteps")) console.warn("too many positions stored for hinge");
+};
+
+Hinge.prototype.getTrackedPositions = function(){
+    var positions = [];
+    _.each(this._trackedPositions, function(position){
+        positions.push(_.clone(position));
+    });
+    return positions;
+};
 
 
 
@@ -34,6 +54,7 @@ Hinge.prototype.getBody = function(){
 
 Hinge.prototype.setStatic = function(isStatic){//body cannot move
     globals.physics.setStatic(this._body, isStatic);
+    this._static = true;
     return this;
 };
 
@@ -63,9 +84,9 @@ Hinge.prototype.getPosition = function(){//position from definition
     return _.clone(this._position);
 };
 
-Hinge.prototype.render = function(){
+Hinge.prototype.render = function(screenCoordinates){
     var position = this._body.position;//get position from body and update mesh
-    this._mesh.position.set(position.x, position.y, 0);
+    this._mesh.position.set(position.x+screenCoordinates.x, position.y+screenCoordinates.y, 0);
 };
 
 
@@ -74,7 +95,7 @@ Hinge.prototype.render = function(){
 //Deallocate
 
 Hinge.prototype.destroy = function(){
-    //todo send message to link saying it is no longer valid
+    //todo send message to link saying it is no longer valid?
     this._position = null;
     globals.physics.worldRemove(this._body);
     this._body = null;
@@ -88,11 +109,11 @@ Hinge.prototype.destroy = function(){
 
 //Utilities
 
-Hinge.prototype.toJSON = function(){
-    return {position:this._position};
+Hinge.prototype.toJSON = function(){//todo position should be recalc-ed based on stable state
+    return {position: _.clone(this._position), static:this._static};
 };
 
-Hinge.prototype.getId = function(){//position of this instance in the hinges array on the globals.linkage
+Hinge.prototype.getId = function(){//position of this instance in the hinges array on the parent linkage
     return this._parentLinkage.getHingeId(this);
 };
 

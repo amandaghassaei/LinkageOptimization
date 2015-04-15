@@ -27,8 +27,8 @@ DriveCrank.prototype._buildConstraints = function(body, centerHinge, outsideHing
     return constraints;
 };
 
-DriveCrank.prototype.rotate = function(thetaStep){
-    globals.physics.rotate(this._body, thetaStep);
+DriveCrank.prototype.rotate = function(angle){
+    globals.physics.rotate(this._body, angle);
 };
 
 
@@ -60,11 +60,11 @@ DriveCrank.prototype.toJSON = function(){
     };
 };
 
-Link.prototype.getCenterHingeId = function(){
-    return this.centerHinge.getId();
+DriveCrank.prototype.getCenterHingeId = function(){
+    return this._centerHinge.getId();
 };
 
-Link.prototype.getOutsideHingeId = function(){
+DriveCrank.prototype.getOutsideHingeId = function(){
     return this._outsideHinge.getId();
 };
 

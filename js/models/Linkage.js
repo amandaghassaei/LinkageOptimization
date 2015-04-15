@@ -3,39 +3,29 @@
  */
 
 
-function Linkage(hinges, links, driveCrank, okToPassRefs){//init a linkage with optional hinges, links, and driveCrank
+function Linkage(json){//init a linkage with optional json
 
-    if (hinges === undefined && links === undefined && driveCrank === undefined) okToPassRefs = true;
-
-    if (hinges === undefined) hinges = [];
-    if (links === undefined) links = [];
-    if (driveCrank === undefined) driveCrank = null;
-
+    this._hinges = [];
+    this._links = [];
+    this._driveCrank = null;
     this._fitness = null;
-
-    if (okToPassRefs){
-        this._hinges = hinges;
-        this._links = links;
-        this._driveCrank = driveCrank;
+    if (json === undefined) {
+        console.warn("inited with no json");
         return;
     }
 
-    //be sure to clone everything that's passed in to remove references
     var self = this;
-    this._hinges = [];
-    _.each(hinges, function(hinge){
-        self._hinges.push(hinge.clone(self));
+    _.each(json.hinges, function(hinge){//{position:this._position, static:this._static}
+        var newHinge = self.addHingeAtPosition(hinge.position);
+        if (hinge.static) newHinge.setStatic(true);
     });
-    this._links = [];
-    _.each(links, function(link){
-        self._links.push(link.clone(self._hinges[link.getHingeAId()], self._hinges[link.getHingeBId()]));
+    _.each(json.links, function(link){//{hinges: [this.getHingeAId(), this.getHingeBId()], length: this._length}
+        self.link(self._hinges[link.hinges[0]], self._hinges[link.hinges[1]], link.length);
     });
-    if (driveCrank) this._driveCrank = driveCrank.clone(
-        self._hinges[driveCrank.getCenterHingeId()],
-        self._hinges[driveCrank.getOutsideHingeId()]
-    );
-    else console.warn("linkage inited without drive crank");
+    //{centerHinge: this.getCenterHingeId(), outsideHinge: this.getOutsideHingeId(), length: this._length}
+    this.addDriveCrank(this._hinges[json.driveCrank.centerHinge], this._hinges[json.driveCrank.outsideHinge], json.driveCrank.length);
 }
+
 
 
 
@@ -64,43 +54,46 @@ Linkage.prototype.link = function(hingeA, hingeB, distance){
 
 //Mating
 
-Linkage.prototype.hillClimb = function(mutationRate){
-    return this._clone()._mutate(mutationRate);
+Linkage.prototype.hillClimb = function(mutationRate){//todo we should add simulated annealing ot this as well
+    return this._clone(this._mutate(this.toJSON(), mutationRate));
 };
 
 Linkage.prototype.mate = function(mate, mutationRate){
-    return this._clone(this._crossoverLinks(mate)._mutate(mutationRate));//child is a clone of parent1, with links crossed with parent2
+    var mateJSON = mate.toJSON();
+    var json = this.toJSON();
+    json.links = this._crossoverLinks(json.links, mateJSON.links);
+    return this._clone(this._mutate(json, mutationRate));//child is a clone of parent1, with links crossed with parent2
 };
 
-Linkage.prototype._crossoverLinks = function(mate){//be careful here, crossed links array references parent links
+Linkage.prototype._crossoverLinks = function(links1JSON, links2JSON){
+    if (links1JSON[0].mesh || links2JSON[0].mesh) console.warn("object literals being passed");
     //cross link arrays, here's one way to do it, there may be others to explore
-    var crossoverIndex = Math.floor(Math.random()*(this._links.length+1));
+    var crossoverIndex = Math.floor(Math.random()*(links1JSON.length+1));
     var crossedLinks = [];
-    for (var i=0;i<this._links.length;i++){
-        if (i<crossoverIndex) crossedLinks.push(this._links[i]);
-        else crossedLinks.push(mate.getLinkAtIndex(i));
+    for (var i=0;i<links1JSON.length;i++){
+        if (i<crossoverIndex) crossedLinks.push(links1JSON[i]);
+        else crossedLinks.push(links2JSON[i]);
     }
     return crossedLinks;
 };
 
-Linkage.prototype.getLinkAtIndex = function(index){
-    return this._links[index];
-};
+
 
 
 
 //Mutation
 
-Linkage.prototype._mutate = function(mutationRate){
-    _.each(this._links, function(link){
+Linkage.prototype._mutate = function(json, mutationRate){
+    _.each(json.links, function(link){
         if (Math.random()<mutationRate){
-            var linkLength = link.getLength();
-            //mutate linkLength
-            link.setLength(linkLength);
+            link.length += (Math.random()*2-1)*link.length*0.25;//mutate linkLength
+            var minLength = globals.appState.get("minLinkLength");
+            if (link.length < minLength) link.length = minLength;
         }
     });
-    return this;
+    return json;
 };
+
 
 
 
@@ -121,6 +114,7 @@ Linkage.prototype.getTrajectory = function(){//trajectory of the linkage as an 2
 
 
 
+
 //Draw
 
 Linkage.prototype.setWidth = function(width){
@@ -135,18 +129,17 @@ Linkage.prototype.setDepth = function(depth){
     });
 };
 
-Linkage.prototype.render = function(){//called from render loop in threeView
-
-    //rotate crank
-    if (globals.appState.get("isAnimating") && this._driveCrank){
-        this._driveCrank.rotate(globals.appState.get("thetaStep"));
-        globals.physics.update();
-
-        this._iterateAllHingesAndLinks(function(object){
-            object.render();
-        });
-    }
+Linkage.prototype.drive = function(angle){
+    if (this._driveCrank) this._driveCrank.rotate(angle);
 };
+
+Linkage.prototype.render = function(screenCoordinates, angle){//called from render loop in threeView
+    this.drive(angle);
+    this._iterateAllHingesAndLinks(function(object){
+        object.render(screenCoordinates);
+    });
+};
+
 
 
 
@@ -161,8 +154,8 @@ Linkage.prototype.destroy = function(){
     if (this._driveCrank) this._driveCrank.destroy();
     this._driveCrank = null;
     this._fitness = null;
-    globals.appState.set("isAnimating", false);//todo move this
 };
+
 
 
 
@@ -178,9 +171,17 @@ Linkage.prototype._iterateAllHingesAndLinks = function(callback){
 };
 
 Linkage.prototype.toJSON = function(){
+    var hingesJSON = [];
+    _.each(this._hinges, function(hinge){
+        hingesJSON.push(hinge.toJSON());
+    });
+    var linksJSON = [];
+    _.each(this._links, function(link){
+        linksJSON.push(link.toJSON());
+    });
     return {
-        hinges: this._hinges,
-        links: this._links,
+        hinges: hingesJSON,
+        links: linksJSON,
         driveCrank: this._driveCrank.toJSON()
     }
 };
@@ -191,7 +192,7 @@ Linkage.prototype.getHingeId = function(hinge){//used for saving
     return index;
 };
 
-Linkage.prototype._clone = function(links){
-    if (links === undefined) links = this._links;
-    return new Linkage(this._hinges, links, this._driveCrank);
+Linkage.prototype._clone = function(json){
+    if (json === undefined) json = this.toJSON();
+    return new Linkage(json);
 };

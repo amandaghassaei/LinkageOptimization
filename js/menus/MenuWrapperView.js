@@ -18,6 +18,7 @@ MenuWrapper = Backbone.View.extend({
         //init all tab view controllers
         this.drawParams = new DrawParamsMenuView({model:this.model});
         this.script = new ScriptMenuView({model:this.model});
+        this.population = new PopulationMenuView({model:this.model});
 
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);
@@ -50,6 +51,8 @@ MenuWrapper = Backbone.View.extend({
             this.drawParams.render();
         } else if (tabName == "script"){
             this.$el.parent().animate({width:"970px"}, {done:this.script.render});
+        } else if (tabName == "population"){
+            this.population.render();
         } else {
             console.warn("no tab initialized!");
             $("#menuContent").html('Coming Soon.');//clear out content from menu

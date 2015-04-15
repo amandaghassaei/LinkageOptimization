@@ -13,7 +13,7 @@ AppState = Backbone.Model.extend({
 
         //last tab that one open in each of the main menus
         lastDesignTab: "drawParams",
-        lastEvoTab: "physics",
+        lastEvoTab: "population",
         lastExportTab: "print",
 
         menuIsVisible: true,
@@ -24,10 +24,10 @@ AppState = Backbone.Model.extend({
                 script:"Script"
             },
             navEvo:{
-                physics:"Fitness",
-                part:"Population",
-                material:"Mutation",
-                optimize:"Run"
+                population:"Population",
+                fitness:"Fitness",
+                mutation:"Mutation",
+                run:"Run"
             },
             navExport:{
                 print: "3D Print",
@@ -40,10 +40,13 @@ AppState = Backbone.Model.extend({
 
         is3D: false,
         isAnimating: true,//play/pause animation
-        thetaStep: 0.01,
+        numPositionSteps: 100,
 
         linkWidth: 3,
-        zDepth: 3
+        zDepth: 3,
+
+        populationSize: 20,
+        minLinkLength: 5
 
     },
 
@@ -63,8 +66,18 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:linkWidth", this._setWidth);
         this.listenTo(this, "change:zDepth", this._setDepth);
         this.listenTo(this, "change:is3D", this._setDepth);
+        this.listenTo(this, "change:populationSize", this._populationSizeChanged);
 
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
+    },
+
+
+
+
+    //Events
+
+    _populationSizeChanged: function(){
+        globals.population.reset()
     },
 
 
@@ -72,11 +85,11 @@ AppState = Backbone.Model.extend({
     //Draw
 
     _setWidth: function(){
-        globals.linkage.setWidth(this.get("linkWidth"));
+        globals.population.setWidth(this.get("linkWidth"));
     },
 
     _setDepth: function(){
-        globals.linkage.setDepth(this.getDepth());
+        globals.population.setDepth(this.getDepth());
     },
 
     getDepth: function(){
@@ -181,7 +194,7 @@ AppState = Backbone.Model.extend({
 
     saveJSON: function(name){
         if (!name) name = "linkage";
-        var data = JSON.stringify(globals.linkage.toJSON());
+        var data = JSON.stringify({population:globals.population.toJSON()});
         this.saveFile(data, name, ".json");
     },
 
@@ -196,20 +209,15 @@ AppState = Backbone.Model.extend({
     },
 
     runScript: function(script){
-        globals.linkage.destroy();
+        globals.population.clearAll();
         if (script) this.syncScript(script);
         globals.script();
         this.set("isAnimating", true);
     },
 
     loadFileFromJSON: function(data){
-        this._setData(JSON.parse(data));q
-    },
-
-    _setData: function(data){
-        _.each(_.keys(data), function(key){
-            //save keys
-        });
+        var json = JSON.parse(data);
+        globals.population.setFromJSON(json.population);
     }
 
 });
