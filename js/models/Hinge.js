@@ -11,6 +11,7 @@ function Hinge(position, parentLinkage){
     this._parentLinkage = parentLinkage;
     //todo update this._position from physics after motion settles
     this._position = position;//draw at this position when paused
+    this._static = false;
     this._body = this._buildBody(position);
 
     this._mesh = this._buildMesh();
@@ -34,6 +35,7 @@ Hinge.prototype.getBody = function(){
 
 Hinge.prototype.setStatic = function(isStatic){//body cannot move
     globals.physics.setStatic(this._body, isStatic);
+    this._static = true;
     return this;
 };
 
@@ -89,7 +91,7 @@ Hinge.prototype.destroy = function(){
 //Utilities
 
 Hinge.prototype.toJSON = function(){
-    return {position:this._position};
+    return {position:this._position, static:this._static};
 };
 
 Hinge.prototype.getId = function(){//position of this instance in the hinges array on the parent linkage

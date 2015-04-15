@@ -181,7 +181,7 @@ AppState = Backbone.Model.extend({
 
     saveJSON: function(name){
         if (!name) name = "linkage";
-        var data = JSON.stringify(globals.population.toJSON());
+        var data = JSON.stringify({population:globals.population.toJSON()});
         this.saveFile(data, name, ".json");
     },
 
@@ -203,13 +203,8 @@ AppState = Backbone.Model.extend({
     },
 
     loadFileFromJSON: function(data){
-        this._setData(JSON.parse(data));q
-    },
-
-    _setData: function(data){
-        _.each(_.keys(data), function(key){
-            //save keys
-        });
+        var json = JSON.parse(data);
+        globals.population.setFromJSON(json.population);
     }
 
 });

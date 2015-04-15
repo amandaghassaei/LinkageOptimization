@@ -9,20 +9,16 @@ function Linkage(json){//init a linkage with optional json
     this._fitness = null;
     if (json === undefined) return;
 
-    //parse json
-//    hinges: this._hinges,
-//    links: this._links,
-//    driveCrank: this._driveCrank.toJSON()
-
     var self = this;
-    _.each(json.hinges, function(hinge){//{position:this._position}
-        self.addHingeAtPosition(hinge.position);
+    _.each(json.hinges, function(hinge){//{position:this._position, static:this._static}
+        var newHinge = self.addHingeAtPosition(hinge.position);
+        if (hinge.static) newHinge.setStatic(true);
     });
     _.each(json.links, function(link){//{hinges: [this.getHingeAId(), this.getHingeBId()], length: this._length}
         self.link(self._hinges[link.hinges[0]], self._hinges[link.hinges[1]], link.length);
     });
     //{centerHinge: this.getCenterHingeId(), outsideHinge: this.getOutsideHingeId(), length: this._length}
-    this.addDriveCrank(this.hinges[json.driveCrank.centerHinge], this.hinges[json.driveCrank.outsideHinge], json.driveCrank.length);
+    this.addDriveCrank(this._hinges[json.driveCrank.centerHinge], this._hinges[json.driveCrank.outsideHinge], json.driveCrank.length);
 }
 
 Linkage.prototype.setHingesLinksCrank = function(hinges, links, driveCrank, okToPassRefs){//used for clone operation
@@ -183,7 +179,6 @@ Linkage.prototype.destroy = function(){
     if (this._driveCrank) this._driveCrank.destroy();
     this._driveCrank = null;
     this._fitness = null;
-    globals.appState.set("isAnimating", false);//todo move this
 };
 
 

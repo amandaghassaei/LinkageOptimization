@@ -11,7 +11,7 @@ function Population(linkages){//init a linkage with optional hinges, links, and 
 
 Population.prototype.initFirstGeneration = function(){
     var firstGeneration = [];
-    for (var i=0;i<30;i++){
+    for (var i=0;i<2;i++){
         var linkage = new Linkage();
         var hinge1 = linkage.addHingeAtPosition({x:0,y:Math.random()*10+20});
         var hinge2 = linkage.addHingeAtPosition({x:0,y:-20});
@@ -28,6 +28,14 @@ Population.prototype.initFirstGeneration = function(){
         firstGeneration.push(linkage);
     }
     return firstGeneration;
+};
+
+Population.prototype.setFromJSON = function(json){
+    this.clearAll();
+    var self = this;
+    _.each(json, function(linkageJSON){
+        self._linkages.push(new Linkage(linkageJSON));
+    });
 };
 
 Population.prototype.calcNextGen = function(){
