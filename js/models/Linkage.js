@@ -139,8 +139,12 @@ Linkage.prototype._calcDistance = function(a,b) {
     return Math.sqrt(pow(a.x-b.x, 2) + pow(a.y-b.y, 2));
 }
 
-Linkage.prototype.getTrajectory = function(){//trajectory of the linkage as an 2xn array
-    return [[null, null]];
+Linkage.prototype.getTrajectory = function(hingeIndex){//trajectory of the linkage as an 2xn array
+    return this._hinges[hingeIndex].getTrackedPositions();
+};
+
+Linkage.prototype.drawTrajectory = function(hingeIndex){
+    this._hinges[hingeIndex].drawTrajectory();
 };
 
 

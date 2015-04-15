@@ -6,6 +6,10 @@ var hingeGeometry = new THREE.CylinderGeometry(1,1,1,20,20);
 hingeGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
 var hingeMaterial = new THREE.MeshBasicMaterial();
 
+var trajectoryMaterial = new THREE.LineBasicMaterial({
+	color: 0x000000
+});
+
 function Hinge(position, parentLinkage){
     if (parentLinkage === undefined) console.warn("no parent linkage supplied for hinge");
     this._parentLinkage = parentLinkage;
@@ -37,6 +41,15 @@ Hinge.prototype.getTrackedPositions = function(){
         positions.push(_.clone(position));
     });
     return positions;
+};
+
+Hinge.prototype.drawTrajectory = function(){
+    if (this._trajectory) globals.three.sceneRemove(this._trajectory);
+    var geometry = new THREE.Geometry();
+    _.each(this._trackedPositions, function(position){
+        geometry.vertices.push(new THREE.Vector3(position.x, position.y, 0));
+    });
+    this._trajectory = new THREE.Line(geometry, trajectoryMaterial);
 };
 
 
@@ -87,6 +100,7 @@ Hinge.prototype.getPosition = function(){//position from definition
 Hinge.prototype.render = function(screenCoordinates){
     var position = this._body.position;//get position from body and update mesh
     this._mesh.position.set(position.x+screenCoordinates.x, position.y+screenCoordinates.y, 0);
+    if (globals.population.shouldStorePosition()) this.trackPosition();
 };
 
 
@@ -101,6 +115,12 @@ Hinge.prototype.destroy = function(){
     this._body = null;
     globals.three.sceneRemove(this._mesh);
     this._mesh = null;
+    globals.three.sceneRemove(this._trajectory);
+    this._trajectory = null;
+    _.each(this._trackedPositions, function(position){
+        position = null;
+    });
+    this._trackedPositions = null;
     this._parentLinkage = null;
 };
 

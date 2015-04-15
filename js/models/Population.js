@@ -5,10 +5,8 @@
 
 function Population(linkages){//init a linkage with optional hinges, links, and driveCrank
 
-    this._theta = 0;
-
     if (linkages === undefined) linkages = this._initFirstGeneration();
-    this._linkages = linkages;
+    this._setLinkages(linkages);
 }
 
 Population.prototype._initFirstGeneration = function(){
@@ -30,6 +28,13 @@ Population.prototype._initFirstGeneration = function(){
         firstGeneration.push(linkage);
     }
     return firstGeneration;
+};
+
+Population.prototype._setLinkages = function(linkages){
+    this._waitTimePassed = false;//wait for transient motion from new linkage lengths to pass before collecting position info
+    this._allHingePositionsStored = false;
+    this._theta = 0;
+    this._linkages = linkages;
 };
 
 Population.prototype.step = function(){
@@ -132,7 +137,16 @@ Population.prototype.render = function(){
 Population.prototype._getCurrentDriveCrankAngle = function(){
     var step = Math.PI*2/globals.appState.get("numPositionSteps");
     this._theta += step;
-    if (this._theta > Math.PI*2) this._theta = 0;
+    if (this._theta > Math.PI*2) {
+        if (!this._waitTimePassed) this._waitTimePassed = true;//wait for one rotation of crank to start storing hinge pos data
+        else {
+            this._allHingePositionsStored = true;
+            _.each(this._linkages, function(linkage){
+                linkage.drawTrajectory(2);
+            });
+        }
+        this._theta = 0;
+    }
     return this._theta;
 };
 
@@ -146,6 +160,10 @@ Population.prototype.setDepth = function(depth){
     _.each(this._linkages, function(linkage){
         linkage.setDepth(depth);
     });
+};
+
+Population.prototype.shouldStorePosition = function(){
+    return this._waitTimePassed && !this._allHingePositionsStored;
 };
 
 
@@ -171,12 +189,12 @@ Population.prototype.clearAll = function(){
         linkage.destroy();
         linkage = null
     });
-    this._linkages = [];
+    this._setLinkages([]);
 };
 
 Population.prototype.reset = function(){
     this.clearAll();
-    this._linkages = this._initFirstGeneration();
+    this._setLinkages(this._initFirstGeneration());
 };
 
 Population.prototype.destroy = function(){
