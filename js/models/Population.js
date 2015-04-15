@@ -9,9 +9,9 @@ function Population(linkages){//init a linkage with optional hinges, links, and 
     this._linkages = linkages;
 }
 
-Population.prototype.initFirstGeneration = function(){
+Population.prototype.initFirstGeneration = function(shouldSetLinkagesArray){
     var firstGeneration = [];
-    for (var i=0;i<2;i++){
+    for (var i=0;i<globals.appState.get("populationSize");i++){
         var linkage = new Linkage();
         var hinge1 = linkage.addHingeAtPosition({x:0,y:Math.random()*10+20});
         var hinge2 = linkage.addHingeAtPosition({x:0,y:-20});
@@ -27,6 +27,7 @@ Population.prototype.initFirstGeneration = function(){
         linkage.addDriveCrank(hinge5, hinge3, link35.getLength());
         firstGeneration.push(linkage);
     }
+    if (shouldSetLinkagesArray) this._linkages = firstGeneration;
     return firstGeneration;
 };
 

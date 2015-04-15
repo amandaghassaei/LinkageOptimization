@@ -13,7 +13,7 @@ AppState = Backbone.Model.extend({
 
         //last tab that one open in each of the main menus
         lastDesignTab: "drawParams",
-        lastEvoTab: "physics",
+        lastEvoTab: "population",
         lastExportTab: "print",
 
         menuIsVisible: true,
@@ -24,10 +24,10 @@ AppState = Backbone.Model.extend({
                 script:"Script"
             },
             navEvo:{
-                physics:"Fitness",
-                part:"Population",
-                material:"Mutation",
-                optimize:"Run"
+                population:"Population",
+                fitness:"Fitness",
+                mutation:"Mutation",
+                run:"Run"
             },
             navExport:{
                 print: "3D Print",
@@ -43,7 +43,9 @@ AppState = Backbone.Model.extend({
         thetaStep: 0.02,
 
         linkWidth: 3,
-        zDepth: 3
+        zDepth: 3,
+
+        populationSize: 20
 
     },
 
@@ -63,8 +65,19 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:linkWidth", this._setWidth);
         this.listenTo(this, "change:zDepth", this._setDepth);
         this.listenTo(this, "change:is3D", this._setDepth);
+        this.listenTo(this, "change:populationSize", this._populationSizeChanged);
 
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
+    },
+
+
+
+
+    //Events
+
+    _populationSizeChanged: function(){
+        globals.population.clearAll();
+        globals.population.initFirstGeneration(true);
     },
 
 
