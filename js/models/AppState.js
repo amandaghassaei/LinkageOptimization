@@ -45,7 +45,8 @@ AppState = Backbone.Model.extend({
         linkWidth: 3,
         zDepth: 3,
 
-        populationSize: 20
+        populationSize: 20,
+        minLinkLength: 5
 
     },
 
@@ -76,8 +77,7 @@ AppState = Backbone.Model.extend({
     //Events
 
     _populationSizeChanged: function(){
-        globals.population.clearAll();
-        globals.population.initFirstGeneration(true);
+        globals.population.reset()
     },
 
 

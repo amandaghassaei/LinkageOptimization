@@ -112,7 +112,9 @@ Linkage.prototype._mutate = function(mutationRate){
     _.each(this._links, function(link){
         if (Math.random()<mutationRate){
             var linkLength = link.getLength();
-            //mutate linkLength
+            linkLength += (Math.random()*2-1)*linkLength*0.25;//mutate linkLength
+            var minLength = globals.appState.get("minLinkLength");
+            if (linkLength<minLength) linkLength = minLength;
             link.setLength(linkLength);
         }
     });

@@ -13,6 +13,14 @@ function Link(hingeA, hingeB, length){//optional parameter "length" sets distanc
 
     if (length === undefined || length === null || !length) length = this._dist(hingeA.getPosition(), hingeB.getPosition());
     else this._length = length;//save special length param for save file, otherwise it can be recalculated
+
+    if (length < globals.appState.get("minLinkLength")) {
+        length = globals.appState.get("minLinkLength");
+        if (this._length) {
+            this._length = length;
+            console.warn("specified link lengths is too short");
+        }
+    }
     this._constraint = this._buildConstraint(hingeA, hingeB, length);
 
     this._mesh = this._buildMesh(length);

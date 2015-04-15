@@ -5,11 +5,11 @@
 
 function Population(linkages){//init a linkage with optional hinges, links, and driveCrank
 
-    if (linkages === undefined) linkages = this.initFirstGeneration();
+    if (linkages === undefined) linkages = this._initFirstGeneration();
     this._linkages = linkages;
 }
 
-Population.prototype.initFirstGeneration = function(shouldSetLinkagesArray){
+Population.prototype._initFirstGeneration = function(){
     var firstGeneration = [];
     for (var i=0;i<globals.appState.get("populationSize");i++){
         var linkage = new Linkage();
@@ -27,7 +27,6 @@ Population.prototype.initFirstGeneration = function(shouldSetLinkagesArray){
         linkage.addDriveCrank(hinge5, hinge3, link35.getLength());
         firstGeneration.push(linkage);
     }
-    if (shouldSetLinkagesArray) this._linkages = firstGeneration;
     return firstGeneration;
 };
 
@@ -133,6 +132,11 @@ Population.prototype.clearAll = function(){
         linkage = null
     });
     this._linkages = [];
+};
+
+Population.prototype.reset = function(){
+    this.clearAll();
+    this._linkages = this._initFirstGeneration();
 };
 
 Population.prototype.setWidth = function(width){

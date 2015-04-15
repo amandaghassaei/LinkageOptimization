@@ -7,7 +7,8 @@ DrawParamsMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "click #clearAll":                                      "_clearAll"
+        "click #clearAll":                                      "_clearAll",
+        "click #reset":                                         "_reset"
     },
 
     initialize: function(){
@@ -46,6 +47,11 @@ DrawParamsMenuView = Backbone.View.extend({
         globals.population.clearAll();
     },
 
+    _reset: function(e){
+        e.preventDefault();
+        globals.population.reset();
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "drawParams") return;
         if ($("input").is(":focus")) return;
@@ -54,8 +60,10 @@ DrawParamsMenuView = Backbone.View.extend({
 
     template: _.template('\
         Link Width: &nbsp;&nbsp;<input data-type="linkWidth" value="<%= linkWidth %>" placeholder="Width" class="form-control numberInput" type="text"><br/><br/>\
+        Min Link Length: &nbsp;&nbsp;<input data-type="minLinkLength" value="<%= minLinkLength %>" placeholder="Length" class="form-control numberInput" type="text"><br/><br/>\
         <% if (is3D){ %>Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/><% } %>\
         <a href="#" id="clearAll" class=" btn btn-block btn-lg btn-default">Clear All</a><br/>\
+        <a href="#" id="reset" class=" btn btn-block btn-lg btn-default">Reset</a><br/>\
         ')
 
 });
