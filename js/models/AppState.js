@@ -43,7 +43,7 @@ AppState = Backbone.Model.extend({
 
         linkWidth: 3,
         zDepth: 3,
-        showHingePaths: false,
+        showHingePaths: true,
 
         populationSize: 20,
         minLinkLength: 5

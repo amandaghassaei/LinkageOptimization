@@ -67,7 +67,7 @@ DrawParamsMenuView = Backbone.View.extend({
         <% if (is3D){ %>Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/><% } %>\
         <label class="checkbox" for="showHingePaths">\
         <input type="checkbox" <% if (showHingePaths){ %>checked="checked" <% } %> value="" id="showHingePaths" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-        Show all hinge paths</label>\
+        Show all hinge trajectories</label>\
         ')
 
 });

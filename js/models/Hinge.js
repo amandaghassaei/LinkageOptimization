@@ -26,7 +26,7 @@ function Hinge(position, parentLinkage){
     this.setDepth(globals.appState.getDepth());
     globals.three.sceneAdd(this._mesh);
 
-    this._shouldShowTrajectory = false;
+    this._shouldShowTrajectory = globals.appState.get("showHingePaths");
 }
 
 
@@ -61,7 +61,7 @@ Hinge.prototype.drawTrajectory = function(offset){
 
 Hinge.prototype.setShouldShowTrajectory = function(state){
     this._shouldShowTrajectory = state;
-    this._trajectory.visible = state;
+    if (this._trajectory) this._trajectory.visible = state;
 };
 
 
