@@ -23,19 +23,24 @@ function PhysicsModel(){
     }
 
     function _makeCircularBody(position, radius){
-        var body = Bodies.circle(position.x, position.y, radius,
+        var body = Bodies.circle(position.x, position.y, 1,
             {friction:0, frictionAir:0, groupId:1});//things with the same groupId cannot collide
+        Matter.Body.scale (body, radius, radius);
         worldAdd(body);
         return body;
     }
 
-    function makeHingeBody(position){
-        return _makeCircularBody(position, 1);//rad of 1 for hinges
-        // (radius doesn't really matter since we are not doing collision detection)
+    function makeHingeBody(position, radius){
+        if (radius === undefined || radius == 0) radius = 1;
+        return _makeCircularBody(position, radius);
     }
 
     function makeDriveCrankBody(position, radius){
         return _makeCircularBody(position, radius);
+    }
+
+    function scaleBody(body, scale){
+        Matter.Body.scale (body, scale, scale);
     }
 
     function setStatic(object, isStatic){
@@ -62,6 +67,7 @@ function PhysicsModel(){
         worldRemove: worldRemove,
         makeHingeBody: makeHingeBody,
         makeDriveCrankBody: makeDriveCrankBody,
+        scaleBody: scaleBody,
         setStatic: setStatic,
         makeConstraint: makeConstraint,
         rotate: rotate,

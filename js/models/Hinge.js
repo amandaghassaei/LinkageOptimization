@@ -17,11 +17,12 @@ function Hinge(position, parentLinkage){
     //todo update this._position from physics after motion settles
     this._position = position;//draw at this position when paused
     this._static = false;
-    this._body = this._buildBody(position);
+    var width = globals.appState.get("linkWidth");
+    this._body = this._buildBody(position, width/2);
     this._trackedPositions = [];//holds the position of this hinge for n times steps of a cycle, wait until initial perturbations from changing link lengths die off
 
     this._mesh = this._buildMesh();
-    this.setWidth(globals.appState.get("linkWidth"));
+    this.setWidth(width);
     this.setDepth(globals.appState.getDepth());
     globals.three.sceneAdd(this._mesh);
 }
@@ -60,8 +61,8 @@ Hinge.prototype.drawTrajectory = function(offset){
 
 //Physics
 
-Hinge.prototype._buildBody = function(position){//hinge owns a rigid body in matter.js
-    return globals.physics.makeHingeBody(position);
+Hinge.prototype._buildBody = function(position, radius){//hinge owns a rigid body in matter.js
+    return globals.physics.makeHingeBody(position, radius);
 };
 
 Hinge.prototype.getBody = function(){
@@ -84,6 +85,7 @@ Hinge.prototype._buildMesh = function(){
 };
 
 Hinge.prototype.setWidth = function(width){
+    globals.physics.scaleBody(this._body, width/2);
     this._mesh.scale.x = width/2;//we are really setting rad here - divide by two
     this._mesh.scale.y = width/2;
 };
