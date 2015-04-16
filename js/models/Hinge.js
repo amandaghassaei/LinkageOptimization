@@ -25,6 +25,8 @@ function Hinge(position, parentLinkage){
     this.setWidth(width);
     this.setDepth(globals.appState.getDepth());
     globals.three.sceneAdd(this._mesh);
+
+    this._shouldShowTrajectory = false;
 }
 
 
@@ -53,7 +55,13 @@ Hinge.prototype.drawTrajectory = function(offset){
     });
     geometry.vertices.push(_.clone(geometry.vertices[0]));//close loop
     this._trajectory = new THREE.Line(geometry, trajectoryMaterial);
+    this.setShouldShowTrajectory(this._shouldShowTrajectory);
     globals.three.sceneAdd(this._trajectory);
+};
+
+Hinge.prototype.setShouldShowTrajectory = function(state){
+    this._shouldShowTrajectory = state;
+    this._trajectory.visible = state;
 };
 
 
@@ -98,7 +106,7 @@ Hinge.prototype.getCurrentPosition = function(){//position from animation loop
     return _.clone(this._body.position);
 };
 
-Hinge.prototype.getPosition = function(){//position from definition
+Hinge.prototype.getPosition = function(){//position from definition (not including draw offset)
     return _.clone(this._position);
 };
 

@@ -180,6 +180,15 @@ Linkage.prototype.setDrawOffset = function(offset){//called from render loop in 
     this._drawOffset = offset;
 };
 
+Linkage.prototype.getDrawOffset = function(){//called by hinges
+    return this._drawOffset;//don't worry about passing reference, this will not be manipulated
+};
+
+Linkage.prototype.setHingePathVisibility = function(visibility){
+    _.each(this._hinges, function(hinge){
+        hinge.setShouldShowTrajectory(visibility);
+    });
+};
 
 
 

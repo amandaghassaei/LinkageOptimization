@@ -7,6 +7,7 @@ DrawParamsMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
+        "change #showHingePaths":                                    "_toggleShowHingePaths"
     },
 
     initialize: function(){
@@ -45,6 +46,10 @@ DrawParamsMenuView = Backbone.View.extend({
         globals.population.clearAll();
     },
 
+    _toggleShowHingePaths: function(e){
+        this.model.set('showHingePaths', $(e.target).is(':checked'));
+    },
+
     _reset: function(e){
         e.preventDefault();
         globals.population.reset();
@@ -60,6 +65,9 @@ DrawParamsMenuView = Backbone.View.extend({
     template: _.template('\
         Link Width: &nbsp;&nbsp;<input data-type="linkWidth" value="<%= linkWidth %>" placeholder="Width" class="form-control numberInput" type="text"><br/><br/>\
         <% if (is3D){ %>Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/><% } %>\
+        <label class="checkbox" for="showHingePaths">\
+        <input type="checkbox" <% if (showHingePaths){ %>checked="checked" <% } %> value="" id="showHingePaths" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Show all hinge paths</label>\
         ')
 
 });

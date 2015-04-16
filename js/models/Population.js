@@ -174,6 +174,12 @@ Population.prototype.shouldStorePosition = function(){
     return this._waitTimePassed && !this._allHingePositionsStored;
 };
 
+Population.prototype.setHingePathVisibility = function(visibility){
+    _.each(this._linkages, function(linkage){
+        linkage.setHingePathVisibility(visibility);
+    });
+};
+
 
 
 
