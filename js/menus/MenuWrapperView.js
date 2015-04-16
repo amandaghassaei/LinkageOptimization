@@ -45,15 +45,12 @@ MenuWrapper = Backbone.View.extend({
             }
         });
 
-        if (tabName != "script") this.$el.parent().animate({width:"420px"});
-
         if (tabName == "drawParams") {
             this.drawParams.render();
-        } else if (tabName == "script"){
-            this.$el.parent().animate({width:"970px"}, {done:this.script.render});
         } else if (tabName == "population"){
             this.population.render();
         } else {
+            if (this.model.changedAttributes()["currentNav"]) return;
             console.warn("no tab initialized!");
             $("#menuContent").html('Coming Soon.');//clear out content from menu
         }
@@ -64,7 +61,7 @@ MenuWrapper = Backbone.View.extend({
         var self = this;
         this._hide(function(){
             self._populateAndShow();
-            self.model.trigger("change:currentTab");//this was updated silently before
+            self.model.trigger("change:currentTab");
         }, true);
     },
 

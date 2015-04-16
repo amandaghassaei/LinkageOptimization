@@ -21,13 +21,12 @@ AppState = Backbone.Model.extend({
         allMenuTabs: {
             navDesign:{
                 drawParams:"Params",
-                script:"Script"
-            },
-            navEvo:{
                 population:"Population",
                 fitness:"Fitness",
                 mutation:"Mutation",
                 run:"Run"
+            },
+            navEvo:{
             },
             navExport:{
                 print: "3D Print",
@@ -40,7 +39,7 @@ AppState = Backbone.Model.extend({
 
         is3D: false,
         isAnimating: true,//play/pause animation
-        numPositionSteps: 100,
+        numPositionSteps: 50,
 
         linkWidth: 3,
         zDepth: 3,
@@ -116,11 +115,11 @@ AppState = Backbone.Model.extend({
     _updateCurrentTabForNav: function(){
         var navSelection = this.get("currentNav");
         if (navSelection == "navDesign") this.set("currentTab",
-            this.get("lastDesignTab"), {silent:true});
+            this.get("lastDesignTab"));
         else if (navSelection == "navEvo") this.set("currentTab",
-            this.get("lastEvoTab"), {silent:true});
+            this.get("lastEvoTab"));
         else if (navSelection == "navExport") this.set("currentTab",
-            this.get("lastExportTab"), {silent:true});
+            this.get("lastExportTab"));
     },
 
 

@@ -48,6 +48,7 @@ PopulationMenuView = Backbone.View.extend({
     },
 
     render: function(){
+        if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "population") return;
         if ($("input").is(":focus")) return;
         this.$el.html(this.template(this.model.toJSON()));
