@@ -137,14 +137,14 @@ Linkage.prototype._calcDistance = function(a,b) {
 
     // currently just use euclidean distance
     return Math.sqrt(pow(a.x-b.x, 2) + pow(a.y-b.y, 2));
-}
+};
 
 Linkage.prototype.getTrajectory = function(hingeIndex){//trajectory of the linkage as an 2xn array
     return this._hinges[hingeIndex].getTrackedPositions();
 };
 
 Linkage.prototype.drawTrajectory = function(hingeIndex){
-    this._hinges[hingeIndex].drawTrajectory();
+    this._hinges[hingeIndex].drawTrajectory(this._drawOffset);
 };
 
 
@@ -168,12 +168,18 @@ Linkage.prototype.drive = function(angle){
     if (this._driveCrank) this._driveCrank.rotate(angle);
 };
 
-Linkage.prototype.render = function(screenCoordinates, angle){//called from render loop in threeView
+Linkage.prototype.render = function(angle){//called from render loop in threeView
     this.drive(angle);
+    var self = this;
     this._iterateAllHingesAndLinks(function(object){
-        object.render(screenCoordinates);
+        object.render(self._drawOffset);
     });
 };
+
+Linkage.prototype.setDrawOffset = function(offset){//called from render loop in threeView
+    this._drawOffset = offset;
+};
+
 
 
 
@@ -189,6 +195,7 @@ Linkage.prototype.destroy = function(){
     if (this._driveCrank) this._driveCrank.destroy();
     this._driveCrank = null;
     this._fitness = null;
+    this._drawOffset = null;
 };
 
 

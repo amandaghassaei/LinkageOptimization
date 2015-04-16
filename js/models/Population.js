@@ -34,6 +34,7 @@ Population.prototype._setLinkages = function(linkages){
     this._waitTimePassed = false;//wait for transient motion from new linkage lengths to pass before collecting position info
     this._allHingePositionsStored = false;
     this._theta = 0;
+    this._calcLinkageRederingOffsets(linkages);
     this._linkages = linkages;
 };
 
@@ -121,17 +122,22 @@ Population.prototype.render = function(){
         globals.physics.update();
 
         var angle = this._getCurrentDriveCrankAngle();
-
-        var populationNum = this._linkages.length;
-        var numPerRow = Math.ceil(Math.sqrt(populationNum));
-        var width = window.innerWidth/numPerRow;
-        var numPerCol = numPerRow;
         _.each(this._linkages, function(linkage, index){
-            var position = {x:(index%numPerRow-numPerRow/2)*100,
-                y:(Math.floor(index/numPerRow)-numPerCol/2)*100};
-            linkage.render(position, angle);
+            linkage.render(angle);
         });
     }
+};
+
+Population.prototype._calcLinkageRederingOffsets = function(linkages){//draw in grid layout on screen
+    var populationNum = linkages.length;
+    var numPerRow = Math.ceil(Math.sqrt(populationNum));
+    var width = window.innerWidth/numPerRow;
+    var numPerCol = numPerRow;
+    _.each(linkages, function(linkage, index){
+        var position = {x:(index%numPerRow-numPerRow/2)*100,
+            y:(Math.floor(index/numPerRow)-numPerCol/2)*100};
+        linkage.setDrawOffset(position);
+    });
 };
 
 Population.prototype._getCurrentDriveCrankAngle = function(){

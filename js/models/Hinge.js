@@ -7,7 +7,8 @@ hingeGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
 var hingeMaterial = new THREE.MeshBasicMaterial();
 
 var trajectoryMaterial = new THREE.LineBasicMaterial({
-	color: 0x000000
+	color: 0x000000,
+    linewidth: 3
 });
 
 function Hinge(position, parentLinkage){
@@ -43,13 +44,15 @@ Hinge.prototype.getTrackedPositions = function(){
     return positions;
 };
 
-Hinge.prototype.drawTrajectory = function(){
+Hinge.prototype.drawTrajectory = function(offset){
     if (this._trajectory) globals.three.sceneRemove(this._trajectory);
     var geometry = new THREE.Geometry();
     _.each(this._trackedPositions, function(position){
-        geometry.vertices.push(new THREE.Vector3(position.x, position.y, 0));
+        geometry.vertices.push(new THREE.Vector3(position.x+offset.x, position.y+offset.y, 0));
     });
+    geometry.vertices.push(_.clone(geometry.vertices[0]));//close loop
     this._trajectory = new THREE.Line(geometry, trajectoryMaterial);
+    globals.three.sceneAdd(this._trajectory);
 };
 
 
