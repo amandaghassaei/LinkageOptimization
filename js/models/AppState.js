@@ -51,7 +51,7 @@ AppState = Backbone.Model.extend({
         populationSize: 20,
         minLinkLength: 5,
 
-        isRunning:false
+        isRunning:false//play/pause optimization
 
     },
 

@@ -7,7 +7,9 @@ DrawParamsMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "change input:checkbox":                                    "_toggleCheckbox"
+        "change input:checkbox":                                    "_toggleCheckbox",
+        "click #pauseAnimation":                                    "_pauseAnimation",
+        "click #startAnimation":                                    "_startAnimation"
     },
 
     initialize: function(){
@@ -55,6 +57,16 @@ DrawParamsMenuView = Backbone.View.extend({
         globals.population.reset();
     },
 
+    _pauseAnimation: function(e){
+        e.preventDefault();
+        globals.appState.set("isAnimating", false);
+    },
+
+    _startAnimation: function(e){
+        e.preventDefault();
+        globals.appState.set("isAnimating", true);
+    },
+
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "drawParams") return;
@@ -63,6 +75,11 @@ DrawParamsMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
+        <% if (isAnimating) { %>\
+        <a href="#" id="pauseAnimation" class="btn-warning btn btn-block btn-lg btn-default">Pause</a><br/>\
+        <% } else  { %>\
+        <a href="#" id="startAnimation" class="btn-success btn btn-block btn-lg btn-default">Animate</a><br/>\
+        <% } %>\
         Link Width: &nbsp;&nbsp;<input data-type="linkWidth" value="<%= linkWidth %>" placeholder="Width" class="form-control numberInput" type="text"><br/><br/>\
         <% if (is3D){ %>Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/><% } %>\
         <label class="checkbox" for="showTargetPath">\
