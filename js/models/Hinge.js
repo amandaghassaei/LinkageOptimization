@@ -25,8 +25,6 @@ function Hinge(position, parentLinkage){
     this.setWidth(width);
     this.setDepth(globals.appState.getDepth());
     globals.three.sceneAdd(this._mesh);
-
-    this._shouldShowTrajectory = globals.appState.get("showHingePaths");
 }
 
 
@@ -47,7 +45,7 @@ Hinge.prototype.getTrackedPositions = function(){
     return positions;
 };
 
-Hinge.prototype.drawTrajectory = function(offset){
+Hinge.prototype.drawTrajectory = function(offset, visibility){
     if (this._trajectory) globals.three.sceneRemove(this._trajectory);
     var geometry = new THREE.Geometry();
     _.each(this._trackedPositions, function(position){
@@ -55,12 +53,11 @@ Hinge.prototype.drawTrajectory = function(offset){
     });
     geometry.vertices.push(_.clone(geometry.vertices[0]));//close loop
     this._trajectory = new THREE.Line(geometry, trajectoryMaterial);
-    this.setShouldShowTrajectory(this._shouldShowTrajectory);
+    this.setTrajectoryVisibility(visibility);
     globals.three.sceneAdd(this._trajectory);
 };
 
-Hinge.prototype.setShouldShowTrajectory = function(state){
-    this._shouldShowTrajectory = state;
+Hinge.prototype.setTrajectoryVisibility = function(state){
     if (this._trajectory) this._trajectory.visible = state;
 };
 

@@ -35,6 +35,7 @@ Population.prototype._setLinkages = function(linkages){
     this._allHingePositionsStored = false;
     this._theta = 0;
     this._calcLinkageRederingOffsets(linkages);
+    this._buildTargetPathVisualization(linkages);
     this._linkages = linkages;
 };
 
@@ -140,6 +141,15 @@ Population.prototype._calcLinkageRederingOffsets = function(linkages){//draw in 
     });
 };
 
+Population.prototype._buildTargetPathVisualization = function(linkages){
+    var path = globals.targetCurve;
+    var visibility = globals.appState.get("showTargetPath");
+    _.each(linkages, function(linkage){
+        linkage.drawTargetPath(path, visibility);
+    });
+};
+
+
 Population.prototype._getCurrentDriveCrankAngle = function(){
     var step = Math.PI*2/globals.appState.get("numPositionSteps");
     this._theta += step;
@@ -147,9 +157,10 @@ Population.prototype._getCurrentDriveCrankAngle = function(){
         if (!this._waitTimePassed) this._waitTimePassed = true;//wait for one rotation of crank to start storing hinge pos data
         else {
             this._allHingePositionsStored = true;
+            var visibility = globals.appState.get("showHingePaths");
             _.each(this._linkages, function(linkage){
                 for (var i=0;i<5;i++){
-                    linkage.drawTrajectory(i);
+                    linkage.drawTrajectory(i, visibility);
                 }
             });
         }
@@ -177,6 +188,12 @@ Population.prototype.shouldStorePosition = function(){
 Population.prototype.setHingePathVisibility = function(visibility){
     _.each(this._linkages, function(linkage){
         linkage.setHingePathVisibility(visibility);
+    });
+};
+
+Population.prototype.setTargetPathVisibility = function(visibility){
+    _.each(this._linkages, function(linkage){
+        linkage.setTargetPathVisibility(visibility);
     });
 };
 

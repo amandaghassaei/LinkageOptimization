@@ -44,6 +44,8 @@ AppState = Backbone.Model.extend({
         linkWidth: 3,
         zDepth: 3,
         showHingePaths: true,
+        showTargetPath: true,
+        precomputePath: true,
 
         populationSize: 20,
         minLinkLength: 5
@@ -68,6 +70,7 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:is3D", this._setDepth);
         this.listenTo(this, "change:populationSize", this._populationSizeChanged);
         this.listenTo(this, "change:showHingePaths", this._showHingePaths);
+        this.listenTo(this, "change:showTargetPath", this._showTargetPath);
 
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
     },
@@ -83,6 +86,10 @@ AppState = Backbone.Model.extend({
 
     _showHingePaths: function(){
         globals.population.setHingePathVisibility(this.get("showHingePaths"));
+    },
+
+    _showTargetPath: function(){
+        globals.population.setTargetPathVisibility(this.get("showTargetPath"));
     },
 
 

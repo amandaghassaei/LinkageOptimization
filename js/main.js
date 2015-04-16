@@ -15,8 +15,8 @@ $(function(){
     globals.three = new ThreeModel();
     globals.physics = new PhysicsModel();
     globals.appState = new AppState();
-    globals.population = new Population();
     globals.targetCurve = [{x:1.0,y:2.0},{x:3.0,y:4.0},{x:5.0,y:6.0}];
+    globals.population = new Population();
 
     //ui
     new MenuWrapper({model: globals.appState});
