@@ -148,7 +148,9 @@ Population.prototype._getCurrentDriveCrankAngle = function(){
         else {
             this._allHingePositionsStored = true;
             _.each(this._linkages, function(linkage){
-                linkage.drawTrajectory(2);
+                for (var i=0;i<5;i++){
+                    linkage.drawTrajectory(i);
+                }
             });
         }
         this._theta = 0;
