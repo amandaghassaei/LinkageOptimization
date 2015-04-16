@@ -28,6 +28,7 @@ $(function(){
 globals.script = function(){
     //nothing here for now
 };
+    new ScriptMenuView();
 
 //    globals.script();
 

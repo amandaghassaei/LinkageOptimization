@@ -5,7 +5,7 @@
 
 ScriptMenuView = Backbone.View.extend({
 
-    el: "#menuContent",
+    el: "#scriptView",
 
     events: {
         "click #runScript":                                       "_runScript",
@@ -18,8 +18,8 @@ ScriptMenuView = Backbone.View.extend({
         _.bindAll(this, "render", "_handleKeyStroke");
 
         //bind events
-        this.listenTo(globals.appState, "change:currentTab", this.render);
         $(document).bind('keydown', {}, this._handleKeyStroke);
+        this.render();
     },
 
     _handleKeyStroke: function(e){
@@ -55,13 +55,12 @@ ScriptMenuView = Backbone.View.extend({
     },
 
     render: function(){
-        if (this.model.get("currentTab") != "script") return;
         this.$el.html(this.template({script:globals.script}));
         globals.codeMirror = CodeMirror.fromTextArea(document.getElementById("scriptEditor"), {
             lineNumbers: true,
             mode: "javascript"
         });
-        this._setEditorHeight();
+//        this._setEditorHeight();
     },
 
     template: _.template('\
