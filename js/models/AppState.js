@@ -17,6 +17,7 @@ AppState = Backbone.Model.extend({
         lastExportTab: "print",
 
         menuIsVisible: true,
+        scriptMenuIsVisible: true,
 
         allMenuTabs: {
             navDesign:{
@@ -180,6 +181,8 @@ AppState = Backbone.Model.extend({
                     } else {
                         this.saveJSON();
                     }
+                } else {//s script menu
+                    if (!state) this.set("scriptMenuIsVisible", !this.get("scriptMenuIsVisible"));
                 }
                 break;
             case 79://o open

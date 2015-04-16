@@ -20,6 +20,9 @@ ScriptMenuView = Backbone.View.extend({
         //bind events
         $(document).bind('keydown', {}, this._handleKeyStroke);
         this.render();
+
+        this.listenTo(this.model, "change:scriptMenuIsVisible", this._setVisibility);
+//        if (this.model.get("scriptMenuIsVisible")) this._setVisibility();
     },
 
     _handleKeyStroke: function(e){
@@ -54,13 +57,27 @@ ScriptMenuView = Backbone.View.extend({
         $editor.css({height:height +"px"});
     },
 
+    _setVisibility: function(){
+        if(this.model.get("scriptMenuIsVisible")) this._show();
+        else this._hide();
+    },
+
+    _hide: function(){
+        var width = this.$el.parent().width();
+        this.$el.animate({left: "-" + width + "px"});
+    },
+
+    _show: function(){
+        this.$el.animate({left: "0"});
+    },
+
     render: function(){
         this.$el.html(this.template({script:globals.script}));
         globals.codeMirror = CodeMirror.fromTextArea(document.getElementById("scriptEditor"), {
             lineNumbers: true,
             mode: "javascript"
         });
-//        this._setEditorHeight();
+        this._setEditorHeight();
     },
 
     template: _.template('\
