@@ -80,6 +80,7 @@ DrawParamsMenuView = Backbone.View.extend({
         <% } else  { %>\
         <a href="#" id="startAnimation" class="btn-success btn btn-block btn-lg btn-default">Animate</a><br/>\
         <% } %>\
+        <!--Num Samples per Cycle: &nbsp;&nbsp;<input data-type="numPositionSteps" value="<%= numPositionSteps %>" placeholder="Num Samples" class="form-control numberInput" type="text"><br/><br/>-->\
         Link Width: &nbsp;&nbsp;<input data-type="linkWidth" value="<%= linkWidth %>" placeholder="Width" class="form-control numberInput" type="text"><br/><br/>\
         <% if (is3D){ %>Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/><% } %>\
         <label class="checkbox" for="showTargetPath">\
