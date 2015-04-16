@@ -16,10 +16,11 @@ MenuWrapper = Backbone.View.extend({
         _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility", "_hide", "_show");
 
         //init all tab view controllers
-        this.drawParams = new DrawParamsMenuView({model:this.model});
-        this.script = new ScriptMenuView({model:this.model});
-        this.population = new PopulationMenuView({model:this.model});
-        this.fitness = new FitnessMenuView({model:this.model});
+        this.drawMenu = new DrawParamsMenuView({model:this.model});
+        this.scriptMenu = new ScriptMenuView({model:this.model});
+        this.populationMenu = new PopulationMenuView({model:this.model});
+        this.fitnessMenu = new FitnessMenuView({model:this.model});
+        this.runMenu = new RunMenuView({model:this.model});
 
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);
@@ -47,11 +48,13 @@ MenuWrapper = Backbone.View.extend({
         });
 
         if (tabName == "drawParams") {
-            this.drawParams.render();
+            this.drawMenu.render();
         } else if (tabName == "population"){
-            this.population.render();
+            this.populationMenu.render();
         } else if (tabName == "fitness"){
-            this.fitness.render();
+            this.fitnessMenu.render();
+        } else if (tabName == "run"){
+            this.runMenu.render();
         } else {
             if (this.model.changedAttributes()["currentNav"]) return;
             console.warn("no tab initialized!");

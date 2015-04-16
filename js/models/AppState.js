@@ -46,9 +46,12 @@ AppState = Backbone.Model.extend({
         showHingePaths: true,
         showTargetPath: true,
         precomputePath: true,
+        shouldRenderThreeJS: true,
 
         populationSize: 20,
-        minLinkLength: 5
+        minLinkLength: 5,
+
+        isRunning:false
 
     },
 

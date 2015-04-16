@@ -39,6 +39,13 @@ Population.prototype._setLinkages = function(linkages){
     this._linkages = linkages;
 };
 
+Population.prototype.run = function(){
+    if (globals.appState.get("isRunning")){
+        this.step();
+        this.run();
+    }
+};
+
 Population.prototype.step = function(){
     var nextGen = this.calcNextGen(this._linkages);
     this.clearAll();
