@@ -20,7 +20,7 @@ AppState = Backbone.Model.extend({
 
         allMenuTabs: {
             navDesign:{
-                drawParams:"Params",
+                drawParams:"Draw",
                 population:"Population",
                 fitness:"Fitness",
                 mutation:"Mutation",

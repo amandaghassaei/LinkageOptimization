@@ -1,12 +1,14 @@
 /**
- * Created by aghassaei on 1/26/15.
+ * Created by aghassaei on 4/16/15.
  */
 
-DrawParamsMenuView = Backbone.View.extend({
+
+FitnessMenuView = Backbone.View.extend({
 
     el: "#menuContent",
 
     events: {
+        "click #stepNextGen":                                   "_stepNextGeneration"
     },
 
     initialize: function(){
@@ -20,7 +22,7 @@ DrawParamsMenuView = Backbone.View.extend({
     },
 
     _onKeyup: function(e){
-        if (this.model.get("currentTab") != "drawParams") return;
+        if (this.model.get("currentTab") != "population") return;
 
         if ($("input").is(":focus") && e.keyCode == 13) {//enter key
             $(e.target).blur();
@@ -40,26 +42,18 @@ DrawParamsMenuView = Backbone.View.extend({
         globals.appState.set(property, newVal);
     },
 
-    _clearAll: function(e){
-        e.preventDefault();
-        globals.population.clearAll();
-    },
-
-    _reset: function(e){
-        e.preventDefault();
-        globals.population.reset();
-    },
-
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
-        if (this.model.get("currentTab") != "drawParams") return;
+        if (this.model.get("currentTab") != "fitness") return;
         if ($("input").is(":focus")) return;
         this.$el.html(this.template(this.model.toJSON()));
     },
 
     template: _.template('\
-        Link Width: &nbsp;&nbsp;<input data-type="linkWidth" value="<%= linkWidth %>" placeholder="Width" class="form-control numberInput" type="text"><br/><br/>\
-        <% if (is3D){ %>Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/><% } %>\
+        Min Link Length: &nbsp;&nbsp;<input data-type="minLinkLength" value="<%= minLinkLength %>" placeholder="Length" class="form-control numberInput" type="text"><br/><br/>\
         ')
-
 });
+
+
+
+

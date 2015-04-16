@@ -233,6 +233,10 @@ input.numberInput{
     width: 31%;
 }
 
+.btn-block {
+    padding: 20px;
+}
+
 #navRibbon{
     height: 30px;
     width: 100%;
