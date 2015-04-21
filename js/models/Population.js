@@ -104,7 +104,7 @@ Population.prototype._getBestLinkage = function(linkages){
 Population.prototype._createMatingPool = function(linkages){//create mating pool using fitness proportionate selection
     var pool = [];
     _.each(linkages, function(linkage){
-        var numPoolEntries = linkage.getFitness();//this may change
+        var numPoolEntries = 1/linkage.getFitness();//this may change
         for (var i=0;i<numPoolEntries;i++){
             pool.push(linkage);
         }
