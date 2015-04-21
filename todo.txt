@@ -1,16 +1,19 @@
 todo:
 
+(joy)
+- make 'real' input curve
+(check number of pionts = 50)
+- check sensitivity/robustness of fitness function (as per steps 1-3 from below)
 
-- establish which hinge to be "following" => 
- go through hinge array and grab 1 => .getTrackedPosition
+(amanda)
+- checkweirdness ( check periodic?)
 
+(future)
 
+robustness for fitness function:
+1. translation & variance => find centerpoint first and move the centerpoint of the desired curve to the current centerpoint
+2. phase => should be covered by finding the distances
+3. scale => also do something with the centerpoint, averages
 
-
-1) assess the fitness function and whether it even works in the context
-4) find a way to describe the input curve
-
-
-2) change the hinges of linkages to make less circular paths
-3) figure out some mutation function
-
+looking at path as if ite were an oval & 
+normalizing to the length & width (max x/y deviation)
