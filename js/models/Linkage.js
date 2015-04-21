@@ -105,15 +105,23 @@ Linkage.prototype._mutate = function(json, mutationRate){
 
 //Fitness
 
+Linkage.prototype._checkWeirdness = function() {
+    return false;
+}
+
 Linkage.prototype.getFitness = function(){
     // return 4;
-    if (!this._fitness) this._fitness = this._calcFitness(globals.targetCurve, this.getTrajectory(2));
+    if (!this._fitness) this._fitness = this._calcFitness(globals.targetCurve, this.getTrajectory(1));
     return this._fitness;
 };
 
 Linkage.prototype._calcFitness = function(target, test){
 
     // console.log('getting fitness');
+
+    if (this._checkWeirdness()) {
+        return 100;
+    }
 
     var distances = [];
 

@@ -1,0 +1,16 @@
+todo:
+
+
+- establish which hinge to be "following" => 
+ go through hinge array and grab 1 => .getTrackedPosition
+
+
+
+
+1) assess the fitness function and whether it even works in the context
+4) find a way to describe the input curve
+
+
+2) change the hinges of linkages to make less circular paths
+3) figure out some mutation function
+
