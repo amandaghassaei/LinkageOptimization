@@ -69,6 +69,7 @@ FitnessMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
+        Output Hinge Index: &nbsp;&nbsp;<input data-type="outputHingeIndex" value="<%= outputHingeIndex %>" placeholder="Hinge" class="form-control numberInput" type="text"><br/><br/>\
         <a href="#" id="loadPath" class="btn pull-left btn-halfWidth btn-lg btn-default">Load Target Path</a>\
         <a href="#" id="savePath" class=" btn pull-right btn-halfWidth btn-lg btn-default">Save Path</a><br/><br/>\
         <label class="checkbox" for="showTargetPath">\

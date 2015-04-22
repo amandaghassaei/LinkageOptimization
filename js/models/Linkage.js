@@ -107,11 +107,14 @@ Linkage.prototype._mutate = function(json, mutationRate){
 
 Linkage.prototype._checkWeirdness = function() {
     return false;
-}
+};
 
 Linkage.prototype.getFitness = function(){
     // return 4;
-    if (!this._fitness) this._fitness = this._calcFitness(globals.targetCurve, this.getTrajectory(1));
+    if (!this._fitness) {
+        var hingeIndex = globals.appState.get("outputHingeIndex");
+        this._fitness = this._calcFitness(globals.targetCurve, this.getTrajectory(hingeIndex));
+    }
     return this._fitness;
 };
 

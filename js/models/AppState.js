@@ -21,7 +21,7 @@ AppState = Backbone.Model.extend({
 
         allMenuTabs: {
             navDesign:{
-                drawParams:"Draw",
+                drawParams:"View",
                 population:"Population",
                 fitness:"Fitness",
                 mutation:"Mutation",
@@ -52,6 +52,7 @@ AppState = Backbone.Model.extend({
         populationSize: 20,
         minLinkLength: 5,
         maxLinkChange: 25,//percent
+        outputHingeIndex: 1,
 
         isRunning:false//play/pause optimization
 
