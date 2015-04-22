@@ -75,7 +75,7 @@ Population.prototype.calcNextGen = function(linkages){
         console.warn("this population has no linkages");
         return [];
     }
-    var mutationRate = globals.appState.get("mutationRate");
+    var mutationRate = globals.appState.get("mutationRate")/100.0;
     var nextGenLinkages = [];
 
     //hill climbing mode

@@ -36,7 +36,7 @@ AppState = Backbone.Model.extend({
         },
 
         isHillClimbing: false,
-        mutationRate: 0.05,
+        mutationRate: 5,//percent
 
         is3D: false,
         isAnimating: true,//play/pause animation
@@ -51,6 +51,7 @@ AppState = Backbone.Model.extend({
 
         populationSize: 20,
         minLinkLength: 5,
+        maxLinkChange: 25,//percent
 
         isRunning:false//play/pause optimization
 

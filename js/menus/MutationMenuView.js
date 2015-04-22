@@ -1,9 +1,10 @@
 /**
- * Created by aghassaei on 4/16/15.
+ * Created by aghassaei on 4/22/15.
  */
 
 
-FitnessMenuView = Backbone.View.extend({
+
+MutationMenuView = Backbone.View.extend({
 
     el: "#menuContent",
 
@@ -22,7 +23,7 @@ FitnessMenuView = Backbone.View.extend({
     },
 
     _onKeyup: function(e){
-        if (this.model.get("currentTab") != "fitness") return;
+        if (this.model.get("currentTab") != "mutation") return;
 
         if ($("input").is(":focus") && e.keyCode == 13) {//enter key
             $(e.target).blur();
@@ -44,16 +45,15 @@ FitnessMenuView = Backbone.View.extend({
 
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
-        if (this.model.get("currentTab") != "fitness") return;
+        if (this.model.get("currentTab") != "mutation") return;
         if ($("input").is(":focus")) return;
         this.$el.html(this.template(this.model.toJSON()));
     },
 
     template: _.template('\
+        Mutation Rate (%): &nbsp;&nbsp;<input data-type="mutationRate" value="<%= mutationRate %>" placeholder="Mutation Rate" class="form-control numberInput" type="text"><br/><br/>\
+        Max Link Length Change (%): &nbsp;&nbsp;<input data-type="maxLinkChange" value="<%= maxLinkChange %>" placeholder="Max Change" class="form-control numberInput" type="text"><br/><br/>\
         Min Link Length: &nbsp;&nbsp;<input data-type="minLinkLength" value="<%= minLinkLength %>" placeholder="Length" class="form-control numberInput" type="text"><br/><br/>\
         ')
 });
-
-
-
 

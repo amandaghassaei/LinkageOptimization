@@ -20,6 +20,7 @@ MenuWrapper = Backbone.View.extend({
         this.scriptMenu = new ScriptMenuView({model:this.model});
         this.populationMenu = new PopulationMenuView({model:this.model});
         this.fitnessMenu = new FitnessMenuView({model:this.model});
+        this.mutationMenu = new MutationMenuView({model:this.model});
         this.runMenu = new RunMenuView({model:this.model});
 
         //bind events
@@ -53,6 +54,8 @@ MenuWrapper = Backbone.View.extend({
             this.populationMenu.render();
         } else if (tabName == "fitness"){
             this.fitnessMenu.render();
+        } else if (tabName == "mutation"){
+            this.mutationMenu.render();
         } else if (tabName == "run"){
             this.runMenu.render();
         } else {
