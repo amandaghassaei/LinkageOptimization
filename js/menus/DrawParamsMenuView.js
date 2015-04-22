@@ -86,6 +86,9 @@ DrawParamsMenuView = Backbone.View.extend({
         <label class="checkbox" for="showTargetPath">\
         <input type="checkbox" <% if (showTargetPath){ %>checked="checked" <% } %> value="" id="showTargetPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Show target path</label>\
+        <label class="checkbox" for="showOutputPath">\
+        <input type="checkbox" <% if (showOutputPath){ %>checked="checked" <% } %> value="" id="showOutputPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Show output hinge trajectory</label>\
         <label class="checkbox" for="showHingePaths">\
         <input type="checkbox" <% if (showHingePaths){ %>checked="checked" <% } %> value="" id="showHingePaths" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Show all hinge trajectories</label>\

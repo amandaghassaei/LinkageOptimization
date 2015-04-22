@@ -211,7 +211,11 @@ Linkage.prototype.setDrawOffset = function(offset){//called from render loop in 
 //    return this._drawOffset;//don't worry about passing reference, this will not be manipulated
 //};
 
-Linkage.prototype.setHingePathVisibility = function(visibility){
+Linkage.prototype.setHingePathVisibility = function(visibility, index){
+    if (index){
+        this._hinges[index].setTrajectoryVisibility(visibility);
+        return;
+    }
     _.each(this._hinges, function(hinge){
         hinge.setTrajectoryVisibility(visibility);
     });

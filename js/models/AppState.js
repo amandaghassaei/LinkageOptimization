@@ -44,9 +44,12 @@ AppState = Backbone.Model.extend({
 
         linkWidth: 3,
         zDepth: 3,
-        showHingePaths: true,
+
+        //view
+        showHingePaths: false,
+        showOutputPath: true,//output hinge
         showTargetPath: true,
-        precomputePath: true,
+        precomputePath: false,
         shouldRenderThreeJS: true,
 
         populationSize: 20,
@@ -76,6 +79,7 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:is3D", this._setDepth);
         this.listenTo(this, "change:populationSize", this._populationSizeChanged);
         this.listenTo(this, "change:showHingePaths", this._showHingePaths);
+        this.listenTo(this, "change:showOutputPath", this._showOutputPaths);
         this.listenTo(this, "change:showTargetPath", this._showTargetPath);
 
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
@@ -92,6 +96,12 @@ AppState = Backbone.Model.extend({
 
     _showHingePaths: function(){
         globals.population.setHingePathVisibility(this.get("showHingePaths"));
+        this._showOutputPaths();
+    },
+
+    _showOutputPaths: function(){
+        if (!this.get("showOutputPath") && this.get("showHingePaths")) return;
+        globals.population.setOutputPathVisibility(this.get("showOutputPath"));
     },
 
     _showTargetPath: function(){
@@ -122,6 +132,11 @@ AppState = Backbone.Model.extend({
     _tabChanged: function(){
         var currentTab = this.get("currentTab");
         this._storeTab(this.get("currentNav"), currentTab);
+        if (currentTab == "fitness") {
+            globals.population.setHingePathVisibility(false);
+            this._showOutputPaths();
+        }
+        else this._showHingePaths();
     },
 
     _storeTab: function(currentNav, currentTab){

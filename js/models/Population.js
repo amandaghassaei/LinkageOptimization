@@ -180,7 +180,7 @@ Population.prototype._getCurrentDriveCrankAngle = function(){
     this._theta += step;
     if (this._theta > Math.PI*2) {
         if (!this._waitTimePassed) this._waitTimePassed = true;//wait for one rotation of crank to start storing hinge pos data
-        else {
+        else if (!this._allHingePositionsStored) {
             this._allHingePositionsStored = true;
             var visibility = globals.appState.get("showHingePaths");
             _.each(this._linkages, function(linkage){
@@ -188,6 +188,7 @@ Population.prototype._getCurrentDriveCrankAngle = function(){
                     linkage.drawTrajectory(i, visibility);
                 }
             });
+            this.setOutputPathVisibility(globals.appState.get("showOutputPath"));
         }
         this._theta = 0;
     }
@@ -213,6 +214,13 @@ Population.prototype.shouldStorePosition = function(){
 Population.prototype.setHingePathVisibility = function(visibility){
     _.each(this._linkages, function(linkage){
         linkage.setHingePathVisibility(visibility);
+    });
+};
+
+Population.prototype.setOutputPathVisibility = function(visibility){
+    var outputIndex = globals.appState.get("outputHingeIndex");
+    _.each(this._linkages, function(linkage){
+        linkage.setHingePathVisibility(visibility, outputIndex);
     });
 };
 
