@@ -15,6 +15,18 @@ html, body {
     opacity:0.8;
 }
 
+.checkbox input[type="checkbox"].custom-checkbox:checked + .icons .icon-checked, .radio input[type="checkbox"].custom-checkbox:checked + .icons .icon-checked, .checkbox input[type="radio"].custom-radio:checked + .icons .icon-checked, .radio input[type="radio"].custom-radio:checked + .icons .icon-checked {
+    color: #888;
+}
+
+.checkbox .icons {
+    top: 2px;
+}
+
+.checkbox {
+    font-size: 16px;
+}
+
 .navMenu {
     display: none;
     z-index: 1;
