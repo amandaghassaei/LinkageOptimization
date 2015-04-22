@@ -42,7 +42,7 @@ ScriptMenuView = Backbone.View.extend({
     _saveScript: function(e){
         e.preventDefault();
         globals.appState.syncScript(globals.codeMirror.getValue());
-        globals.appState.saveFile(globals.script, "linkageScript", ".js");
+        globals.saveFile(globals.script, "linkageScript", ".js");
     },
 
     _loadScript: function(e){

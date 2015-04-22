@@ -20,7 +20,8 @@ NavBar = Backbone.View.extend({
         "shown.bs.modal .modal":                                "_showModal",
         "hide.bs.modal .modal":                                 "_hideModal",
         "click .importJSON":                                    "_importJSON",
-        "change #fileInput":                                    "_selectJSONFiles"
+        "change #fileInput":                                    "_selectJSONFiles",
+        "click #navSavePath":                                   "_saveTargetPath"
     },
 
     initialize: function(){
@@ -102,12 +103,25 @@ NavBar = Backbone.View.extend({
                 var fileParts = filename.split(".");
                 var extension = fileParts[fileParts.length -1];
                 if (extension == "json"){
-                    globals.appState.loadFileFromJSON(e.target.result);
+                    var json = JSON.parse(e.target.result);
+                    if (json.targetPath){
+                        console.log(json.targetPath);
+                        globals.targetCurve = json.targetPath;
+                    } else {
+                        globals.appState.loadFileFromJSON(e.target.result);
+                    }
                 } else if (extension == "js"){
                     globals.appState.loadScript(e.target.result);
                 } else console.warn("file type not recognized");
             }
         })();
+    },
+
+    _saveTargetPath: function(e){
+        e.preventDefault();
+        globals.saveFile(JSON.stringify({
+            targetPath: globals.targetCurve
+        }), "targetPath", ".json");
     },
 
     _save: function(e){

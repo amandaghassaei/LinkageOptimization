@@ -8,7 +8,10 @@ FitnessMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "click #stepNextGen":                                   "_stepNextGeneration"
+        "click #stepNextGen":                                       "_stepNextGeneration",
+        "change input:checkbox":                                    "_toggleCheckbox",
+        "click #savePath":                                          "_saveTargetPath",
+        "click #loadPath":                                          "_loadTargetPath"
     },
 
     initialize: function(){
@@ -42,6 +45,22 @@ FitnessMenuView = Backbone.View.extend({
         globals.appState.set(property, newVal);
     },
 
+    _toggleCheckbox: function(e){
+        this.model.set($(e.target).attr('id'), $(e.target).is(':checked'));
+    },
+
+    _saveTargetPath: function(e){
+        e.preventDefault();
+        globals.saveFile(JSON.stringify({
+            targetPath: globals.targetCurve
+        }), "targetPath", ".json");
+    },
+
+    _loadTargetPath: function(e){
+        e.preventDefault();
+        $("#fileInput").click();
+    },
+
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "fitness") return;
@@ -50,7 +69,11 @@ FitnessMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
-        Min Link Length: &nbsp;&nbsp;<input data-type="minLinkLength" value="<%= minLinkLength %>" placeholder="Length" class="form-control numberInput" type="text"><br/><br/>\
+        <a href="#" id="loadPath" class="btn pull-left btn-halfWidth btn-lg btn-default">Load Target Path</a>\
+        <a href="#" id="savePath" class=" btn pull-right btn-halfWidth btn-lg btn-default">Save Path</a><br/><br/>\
+        <label class="checkbox" for="showTargetPath">\
+        <input type="checkbox" <% if (showTargetPath){ %>checked="checked" <% } %> value="" id="showTargetPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Show target path</label>\
         ')
 });
 

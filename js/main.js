@@ -11,6 +11,11 @@ $(function(){
     //init web workers
 //    window.workers = persistentWorkers(8);
 
+    globals.saveFile = function(data, name, extension){
+        var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, name + extension);
+    };
+
     //init global singletons
     globals.three = new ThreeModel();
     globals.physics = new PhysicsModel();

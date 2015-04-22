@@ -206,15 +206,10 @@ AppState = Backbone.Model.extend({
 
     //Open/Save
 
-    saveFile: function(data, name, extension){
-        var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, name + extension);
-    },
-
     saveJSON: function(name){
         if (!name) name = "linkage";
         var data = JSON.stringify({population:globals.population.toJSON()});
-        this.saveFile(data, name, ".json");
+        globals.saveFile(data, name, ".json");
     },
 
     syncScript: function(script){
@@ -234,8 +229,7 @@ AppState = Backbone.Model.extend({
         this.set("isAnimating", true);
     },
 
-    loadFileFromJSON: function(data){
-        var json = JSON.parse(data);
+    loadFileFromJSON: function(json){
         globals.population.setFromJSON(json.population);
     }
 

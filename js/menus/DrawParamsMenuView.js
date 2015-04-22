@@ -76,7 +76,7 @@ DrawParamsMenuView = Backbone.View.extend({
 
     template: _.template('\
         <% if (isAnimating) { %>\
-        <a href="#" id="pauseAnimation" class="btn-warning btn btn-block btn-lg btn-default">Pause</a><br/>\
+        <a href="#" id="pauseAnimation" class="btn-warning btn btn-block btn-lg btn-default">Pause Animation</a><br/>\
         <% } else  { %>\
         <a href="#" id="startAnimation" class="btn-success btn btn-block btn-lg btn-default">Animate</a><br/>\
         <% } %>\
