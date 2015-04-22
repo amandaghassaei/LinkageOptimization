@@ -43,18 +43,8 @@ DrawParamsMenuView = Backbone.View.extend({
         globals.appState.set(property, newVal);
     },
 
-    _clearAll: function(e){
-        e.preventDefault();
-        globals.population.clearAll();
-    },
-
     _toggleCheckbox: function(e){
         this.model.set($(e.target).attr('id'), $(e.target).is(':checked'));
-    },
-
-    _reset: function(e){
-        e.preventDefault();
-        globals.population.reset();
     },
 
     _pauseAnimation: function(e){
@@ -91,7 +81,7 @@ DrawParamsMenuView = Backbone.View.extend({
         Show output hinge trajectory</label>\
         <label class="checkbox" for="showHingePaths">\
         <input type="checkbox" <% if (showHingePaths){ %>checked="checked" <% } %> value="" id="showHingePaths" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-        Show all hinge trajectories</label>\
+        Show all hinge trajectories</label><br/>\
         <label class="checkbox" for="precomputePath">\
         <input type="checkbox" <% if (precomputePath){ %>checked="checked" <% } %> value="" id="precomputePath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Precompute linkage path (more efficient)</label>\

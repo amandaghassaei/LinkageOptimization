@@ -49,6 +49,16 @@ PopulationMenuView = Backbone.View.extend({
         globals.population.step();
     },
 
+    _reset: function(e){
+        e.preventDefault();
+        globals.population.reset();
+    },
+
+    _clearAll: function(e){
+        e.preventDefault();
+        globals.population.clearAll();
+    },
+
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "population") return;
