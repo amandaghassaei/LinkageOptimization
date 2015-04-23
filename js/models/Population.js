@@ -30,13 +30,13 @@ Population.prototype._initFirstGeneration = function(){
     var mutationRate = globals.appState.get("mutationRate");
     if (globals.appState.get("isHillClimbing")){
         firstGeneration.push(archetype);
-        firstGeneration.push(archetype.mutate(mutationRate));
+        firstGeneration.push(archetype.forceMutate(mutationRate));
         return firstGeneration;
     }
 
     //init a proper population
     for (var i=0;i<globals.appState.get("populationSize");i++){
-        firstGeneration.push(archetype.mutate(mutationRate));
+        firstGeneration.push(archetype.forceMutate(mutationRate));
     }
     archetype.destroy();
     return firstGeneration;

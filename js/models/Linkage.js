@@ -63,7 +63,7 @@ Linkage.prototype.link = function(hingeA, hingeB, distance){
 //Mating
 
 Linkage.prototype.hillClimb = function(mutationRate){//todo we should add simulated annealing to this as well
-    return this.mutate(mutationRate)
+    return this.forceMutate(mutationRate)
 };
 
 Linkage.prototype.mate = function(mate, mutationRate){
@@ -91,15 +91,26 @@ Linkage.prototype._crossoverLinks = function(links1JSON, links2JSON){
 
 //Mutation
 
-Linkage.prototype._mutate = function(json, mutationRate){
+Linkage.prototype._mutate = function(json, mutationRate, forceMutate){
+    var mutationOccurred = false;
+    var self = this;
     _.each(json.links, function(link){
         if (Math.random()<mutationRate/100.0){
-            link.length += (Math.random()*2-1)*link.length*0.25;//mutate linkLength
-            var minLength = globals.appState.get("minLinkLength");
-            if (link.length < minLength) link.length = minLength;
+            self._mutateLink(link);
+            mutationOccurred = true;
         }
     });
+    if (forceMutate && !mutationOccurred) {
+        this._mutateLink(json.links[Math.floor(Math.random()*json.links.length)]);
+    }
     return json;
+};
+
+Linkage.prototype._mutateLink = function(link){
+    link.length += (Math.random()*2-1)*link.length*0.25;//mutate linkLength
+    var minLength = globals.appState.get("minLinkLength");
+    if (link.length < minLength) link.length = minLength;
+    return link;
 };
 
 Linkage.prototype.mutate = function(mutationRate){
@@ -107,7 +118,9 @@ Linkage.prototype.mutate = function(mutationRate){
     return this.clone(this._mutate(this.toJSON(), mutationRate))
 };
 
-
+Linkage.prototype.forceMutate = function(mutationRate){//used for hill climbing
+    return this.clone(this._mutate(this.toJSON(), mutationRate, true))
+};
 
 
 //Fitness
