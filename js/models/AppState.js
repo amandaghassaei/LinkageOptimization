@@ -81,6 +81,7 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:showHingePaths", this._showHingePaths);
         this.listenTo(this, "change:showOutputPath", this._showOutputPaths);
         this.listenTo(this, "change:showTargetPath", this._showTargetPath);
+        this.listenTo(this, "change:isHillClimbing", this._hillClimbingMode)
 
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
     },
@@ -106,6 +107,10 @@ AppState = Backbone.Model.extend({
 
     _showTargetPath: function(){
         globals.population.setTargetPathVisibility(this.get("showTargetPath"));
+    },
+
+    _hillClimbingMode: function(){
+        globals.population.reset();
     },
 
 

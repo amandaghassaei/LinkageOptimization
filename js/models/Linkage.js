@@ -62,15 +62,15 @@ Linkage.prototype.link = function(hingeA, hingeB, distance){
 
 //Mating
 
-Linkage.prototype.hillClimb = function(mutationRate){//todo we should add simulated annealing ot this as well
-    return this._clone(this._mutate(this.toJSON(), mutationRate));
+Linkage.prototype.hillClimb = function(mutationRate){//todo we should add simulated annealing to this as well
+    return this.mutate(mutationRate)
 };
 
 Linkage.prototype.mate = function(mate, mutationRate){
     var mateJSON = mate.toJSON();
     var json = this.toJSON();
     json.links = this._crossoverLinks(json.links, mateJSON.links);
-    return this._clone(this._mutate(json, mutationRate));//child is a clone of parent1, with links crossed with parent2
+    return this.clone(this._mutate(json, mutationRate));//child is a clone of parent1, with links crossed with parent2
 };
 
 Linkage.prototype._crossoverLinks = function(links1JSON, links2JSON){
@@ -93,13 +93,18 @@ Linkage.prototype._crossoverLinks = function(links1JSON, links2JSON){
 
 Linkage.prototype._mutate = function(json, mutationRate){
     _.each(json.links, function(link){
-        if (Math.random()<mutationRate){
+        if (Math.random()<mutationRate/100.0){
             link.length += (Math.random()*2-1)*link.length*0.25;//mutate linkLength
             var minLength = globals.appState.get("minLinkLength");
             if (link.length < minLength) link.length = minLength;
         }
     });
     return json;
+};
+
+Linkage.prototype.mutate = function(mutationRate){
+    if (mutationRate === undefined) mutationRate = globals.appState.get("mutationRate");
+    return this.clone(this._mutate(this.toJSON(), mutationRate))
 };
 
 
@@ -240,8 +245,11 @@ Linkage.prototype.getTrajectory = function(hingeIndex){//trajectory of the linka
     return this._hinges[hingeIndex].getTrackedPositions();
 };
 
-Linkage.prototype.drawTrajectory = function(hingeIndex, visibility){
-    this._hinges[hingeIndex].drawTrajectory(this._drawOffset, visibility);
+Linkage.prototype.drawTrajectories = function(visibility){
+    var self = this;
+    _.each(this._hinges, function(hinge){
+        hinge.drawTrajectory(self._drawOffset, visibility);
+    });
 };
 
 Linkage.prototype.checkContinuity = function(outputIndex){
@@ -370,7 +378,7 @@ Linkage.prototype.getHingeId = function(hinge){//used for saving
     return index;
 };
 
-Linkage.prototype._clone = function(json){
+Linkage.prototype.clone = function(json){
     if (json === undefined) json = this.toJSON();
     return new Linkage(json);
 };

@@ -11,40 +11,34 @@ function Population(linkages){//init a linkage with optional hinges, links, and 
 
 Population.prototype._initFirstGeneration = function(){
     var firstGeneration = [];
-    for (var i=0;i<globals.appState.get("populationSize");i++){
 
-        var linkage = new Linkage();
+    var archetype = new Linkage();
+    var hinge1 = archetype.addHingeAtPosition({x:15,y:30});
+    var hinge2 = archetype.addHingeAtPosition({x:0,y:40});
+    var hinge3 = archetype.addHingeAtPosition({x:-10,y:0});
+    var hinge4 = archetype.addHingeAtPosition({x:14,y:2}).setStatic(true);
+    var hinge5 = archetype.addHingeAtPosition({x:-20,y:-2});
 
-        var hinge1 = linkage.addHingeAtPosition({x:0,y:Math.random()*10+20});
-        var hinge2 = linkage.addHingeAtPosition({x:0,y:40});
-        var hinge3 = linkage.addHingeAtPosition({x:-10,y:0});
-        var hinge4 = linkage.addHingeAtPosition({x:14,y:Math.random()*5}).setStatic(true);
-        var hinge5 = linkage.addHingeAtPosition({x:-20,y:-Math.random()*5});
+    archetype.link(hinge1, hinge3);//add an optional third param to set to a specific length
+    archetype.link(hinge4, hinge1);
+    archetype.link(hinge2, hinge1);
+    archetype.link(hinge2, hinge3);
 
-        linkage.link(hinge1, hinge3);//add an optional third param to set to a specific length
-        linkage.link(hinge4, hinge1);
-        linkage.link(hinge2, hinge1);
-        linkage.link(hinge2, hinge3);
+    var link35 = archetype.link(hinge3, hinge5);
+    archetype.addDriveCrank(hinge5, hinge3, link35.getLength());
 
-        var link35 = linkage.link(hinge3, hinge5);
-        linkage.addDriveCrank(hinge5, hinge3, link35.getLength());
-        firstGeneration.push(linkage);
-
-        // var linkage = new Linkage();
-        // var hinge1 = linkage.addHingeAtPosition({x:0,y:Math.random()*10+20});
-        // var hinge2 = linkage.addHingeAtPosition({x:0,y:-20});
-        // var hinge3 = linkage.addHingeAtPosition({x:-10,y:0});
-        // var hinge4 = linkage.addHingeAtPosition({x:14,y:Math.random()*5}).setStatic(true);
-        // var hinge5 = linkage.addHingeAtPosition({x:-20,y:-Math.random()*5});
-
-        // linkage.link(hinge1, hinge3);//add an optional third param to set to a specific length
-        // linkage.link(hinge3, hinge2);
-        // linkage.link(hinge2, hinge4);
-        // linkage.link(hinge4, hinge1);
-        // var link35 = linkage.link(hinge3, hinge5);
-        // linkage.addDriveCrank(hinge5, hinge3, link35.getLength());
-        // firstGeneration.push(linkage);
+    var mutationRate = globals.appState.get("mutationRate");
+    if (globals.appState.get("isHillClimbing")){
+        firstGeneration.push(archetype);
+        firstGeneration.push(archetype.mutate(mutationRate));
+        return firstGeneration;
     }
+
+    //init a proper population
+    for (var i=0;i<globals.appState.get("populationSize");i++){
+        firstGeneration.push(archetype.mutate(mutationRate));
+    }
+    archetype.destroy();
     return firstGeneration;
 };
 
@@ -59,8 +53,8 @@ Population.prototype._setLinkages = function(linkages){
 
 Population.prototype.run = function(){
     if (globals.appState.get("isRunning")){
-        this.step();
-        this.run();
+//        this.step();
+//        this.run();
     }
 };
 
@@ -75,13 +69,13 @@ Population.prototype.calcNextGen = function(linkages){
         console.warn("this population has no linkages");
         return [];
     }
-    var mutationRate = globals.appState.get("mutationRate")/100.0;
+    var mutationRate = globals.appState.get("mutationRate");
     var nextGenLinkages = [];
 
     //hill climbing mode
     if (globals.appState.get("isHillClimbing")){
         var parent = this._getBestLinkage(linkages);
-        nextGenLinkages.push(parent);
+        nextGenLinkages.push(parent.clone());
         nextGenLinkages.push(parent.hillClimb(mutationRate));
         return nextGenLinkages;
     }
@@ -188,9 +182,7 @@ Population.prototype._getCurrentDriveCrankAngle = function(){
             var visibility = globals.appState.get("showHingePaths");
             var outputIndex = globals.appState.get("outputHingeIndex");
             _.each(this._linkages, function(linkage){
-                for (var i=0;i<5;i++){
-                    linkage.drawTrajectory(i, visibility);
-                }
+                linkage.drawTrajectories(visibility);
                 linkage.checkContinuity(outputIndex);
             });
             this.setOutputPathVisibility(globals.appState.get("showOutputPath"));
