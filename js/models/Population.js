@@ -176,17 +176,18 @@ Population.prototype._buildTargetPathVisualization = function(linkages){
 
 
 Population.prototype._getCurrentDriveCrankAngle = function(){
-    var step = Math.PI*2/globals.appState.get("numPositionSteps");
-    this._theta += step;
+    this._theta += Math.PI*2/globals.appState.get("numPositionSteps");
     if (this._theta > Math.PI*2) {
         if (!this._waitTimePassed) this._waitTimePassed = true;//wait for one rotation of crank to start storing hinge pos data
         else if (!this._allHingePositionsStored) {
             this._allHingePositionsStored = true;
             var visibility = globals.appState.get("showHingePaths");
+            var outputIndex = globals.appState.get("outputHingeIndex");
             _.each(this._linkages, function(linkage){
                 for (var i=0;i<5;i++){
                     linkage.drawTrajectory(i, visibility);
                 }
+                linkage.checkContinuity(outputIndex);
             });
             this.setOutputPathVisibility(globals.appState.get("showOutputPath"));
         }

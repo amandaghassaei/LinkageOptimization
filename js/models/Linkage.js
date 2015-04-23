@@ -14,6 +14,7 @@ function Linkage(json){//init a linkage with optional json
     this._links = [];
     this._driveCrank = null;
     this._fitness = null;
+    this._outputContinuity = false;
     this._targetPath = null;
     this._material = new THREE.MeshBasicMaterial({color:0xffffff});
     if (json === undefined) {
@@ -107,7 +108,7 @@ Linkage.prototype._mutate = function(json, mutationRate){
 //Fitness
 
 Linkage.prototype._checkWeirdness = function() {
-    return false;
+    return !this._outputContinuity;
 };
 
 Linkage.prototype.getFitness = function(){
@@ -175,6 +176,12 @@ Linkage.prototype.drawTrajectory = function(hingeIndex, visibility){
     this._hinges[hingeIndex].drawTrajectory(this._drawOffset, visibility);
 };
 
+Linkage.prototype.checkContinuity = function(outputIndex){
+    var path = this._hinges[outputIndex].getTrackedPositions();
+    this._outputContinuity =  this._calcDistance(path[0], path[path.length-1]) < 10;
+    if (!this._outputContinuity) this.setColor(0xff0000);
+};
+
 
 
 
@@ -208,10 +215,6 @@ Linkage.prototype.setDrawOffset = function(offset){//called from render loop in 
     this._drawOffset = offset;
 };
 
-//Linkage.prototype.getDrawOffset = function(){
-//    return this._drawOffset;//don't worry about passing reference, this will not be manipulated
-//};
-
 Linkage.prototype.setHingePathVisibility = function(visibility, index){
     if (index){
         this._hinges[index].setTrajectoryVisibility(visibility);
@@ -240,7 +243,7 @@ Linkage.prototype.setTargetPathVisibility = function(visibility){
 };
 
 Linkage.prototype.setColor = function(color){
-    this._material.color = color;
+    this._material.color.setHex(color);
 };
 
 
