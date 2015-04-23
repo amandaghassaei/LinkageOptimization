@@ -60,7 +60,7 @@ Population.prototype.run = function(){
 
 Population.prototype.step = function(){
     var nextGen = this.calcNextGen(this._linkages);
-    globals.runStatistics.push(this._getCurrentStatistics(this._linkages));
+    globals.runStatistics.push(this.getCurrentStatistics(this._linkages));
     this.clearAll();
     this._setLinkages(nextGen);
 };
@@ -91,7 +91,8 @@ Population.prototype.calcNextGen = function(linkages){
     return nextGenLinkages;
 };
 
-Population.prototype._getCurrentStatistics = function(linkages){
+Population.prototype.getCurrentStatistics = function(linkages){
+    if (linkages === undefined) linkages = this._linkages;
     var minFitness = 1000000;
     var maxFitness = 0;
     var bestLinkage = linkages[0];
@@ -276,6 +277,8 @@ Population.prototype.clearAll = function(){
 };
 
 Population.prototype.reset = function(){
+    console.warn("reset");
+    globals.runStatistics = [];
     this.clearAll();
     this._setLinkages(this._initFirstGeneration());
 };

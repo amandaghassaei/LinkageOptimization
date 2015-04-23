@@ -21,7 +21,8 @@ NavBar = Backbone.View.extend({
         "hide.bs.modal .modal":                                 "_hideModal",
         "click .importJSON":                                    "_importJSON",
         "change #fileInput":                                    "_selectJSONFiles",
-        "click #navSavePath":                                   "_saveTargetPath"
+        "click #navSavePath":                                   "_saveTargetPath",
+        "click #saveRunStats":                                  "_saveRunStats"
     },
 
     initialize: function(){
@@ -122,6 +123,20 @@ NavBar = Backbone.View.extend({
         globals.saveFile(JSON.stringify({
             path: globals.targetCurve
         }), "targetPath", ".json");
+    },
+
+    _saveRunStats: function(e){
+        e.preventDefault();
+        globals.runStatistics.push(globals.population.getCurrentStatistics());//save current generation
+        globals.saveFile(JSON.stringify({
+            numGenerations:globals.runStatistics.length,
+            mutationRatePercent:globals.appState.get("mutationRate"),
+            populationSize:globals.appState.get("populationSize"),
+            isHillClimbing: globals.appState.get("isHillClimbing"),
+            minLinkLength: globals.appState.get("minLinkLength"),
+            maxLinkChangePercent: globals.appState.get("maxLinkChange"),
+            data:globals.runStatistics
+        }), "runStatistics", ".json");
     },
 
     _save: function(e){
