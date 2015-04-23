@@ -60,6 +60,7 @@ Population.prototype.run = function(){
 
 Population.prototype.step = function(){
     var nextGen = this.calcNextGen(this._linkages);
+    globals.runStatistics.push(this._getCurrentStatistics(this._linkages));
     this.clearAll();
     this._setLinkages(nextGen);
 };
@@ -88,6 +89,23 @@ Population.prototype.calcNextGen = function(linkages){
         nextGenLinkages.push(parent1.mate(parent2, mutationRate));
     }
     return nextGenLinkages;
+};
+
+Population.prototype._getCurrentStatistics = function(linkages){
+    var minFitness = 1000000;
+    var maxFitness = 0;
+    var bestLinkage = linkages[0];
+    var fitnessSum = 0;
+    _.each(linkages, function(linkage){
+        var fitness = linkage.getFitness();
+        if (fitness < minFitness) minFitness = fitness;
+        if (fitness > maxFitness) {
+            maxFitness = fitness;
+            bestLinkage = linkage;
+        }
+        fitnessSum += fitness;
+    });
+    return {minFitness:minFitness, maxFitness:maxFitness, avgFitness:fitnessSum/linkages.length, bestLinkage:bestLinkage.toJSON()}
 };
 
 

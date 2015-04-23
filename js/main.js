@@ -17,6 +17,7 @@ $(function(){
     };
 
     //init global singletons
+    globals.runStatistics = [];
     globals.three = new ThreeModel();
     globals.physics = new PhysicsModel();
     globals.appState = new AppState();
