@@ -123,6 +123,8 @@ Linkage.prototype.forceMutate = function(mutationRate){//used for hill climbing
 };
 
 
+
+
 //Fitness
 
 Linkage.prototype._checkWeirdness = function() {
@@ -340,6 +342,11 @@ Linkage.prototype.setColor = function(color){
     this._material.color.setHex(color);
 };
 
+Linkage.prototype.relaxHingePositions = function(){
+    _.each(this._hinges, function(hinge){
+        hinge.relaxPosition();
+    });
+};
 
 
 

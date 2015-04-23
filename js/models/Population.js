@@ -186,6 +186,7 @@ Population.prototype._getCurrentDriveCrankAngle = function(){
             var outputIndex = globals.appState.get("outputHingeIndex");
             _.each(this._linkages, function(linkage){
                 linkage.drawTrajectories(visibility);
+                linkage.relaxHingePositions();
                 linkage.checkContinuity(outputIndex);
             });
             this.setOutputPathVisibility(globals.appState.get("showOutputPath"));

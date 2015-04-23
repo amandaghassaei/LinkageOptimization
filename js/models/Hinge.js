@@ -14,7 +14,7 @@ function Hinge(position, parentLinkage, material){
     if (parentLinkage === undefined) console.warn("no parent linkage supplied for hinge");
     this._parentLinkage = parentLinkage;
     //todo update this._position from physics after motion settles
-    this._position = position;//draw at this position when paused
+    this._position = position;
     this._static = false;
     var width = globals.appState.get("linkWidth");
     this._body = this._buildBody(position, width/2);
@@ -45,7 +45,10 @@ Hinge.prototype.getTrackedPositions = function(){
 };
 
 Hinge.prototype.drawTrajectory = function(offset, visibility){
-    if (this._trajectory) globals.three.sceneRemove(this._trajectory);
+    if (this._trajectory) {
+        console.warn("already drew trajectory");
+        globals.three.sceneRemove(this._trajectory);
+    }
     var geometry = new THREE.Geometry();
     _.each(this._trackedPositions, function(position){
         geometry.vertices.push(new THREE.Vector3(position.x+offset.x, position.y+offset.y, 0));
@@ -77,6 +80,10 @@ Hinge.prototype.setStatic = function(isStatic){//body cannot move
     globals.physics.setStatic(this._body, isStatic);
     this._static = true;
     return this;
+};
+
+Hinge.prototype.relaxPosition = function(){
+    this._position = this.getCurrentPosition();
 };
 
 
