@@ -106,11 +106,14 @@ NavBar = Backbone.View.extend({
                 var extension = fileParts[fileParts.length -1];
                 if (extension == "json"){
                     var json = JSON.parse(e.target.result);
+                    console.log(json);
                     if (json.path){
                         globals.targetCurve = json.path;
                         globals.population.newTargetPathLoaded();
-                    } else {
-                        globals.appState.loadFileFromJSON(e.target.result);
+                    } else if (json.population) {
+                        globals.appState.loadFileFromJSON(json);
+                    } else if (json.linkage){
+                        globals.population.reset(new Linkage(json.linkage));
                     }
                 } else if (extension == "js"){
                     globals.appState.loadScript(e.target.result);

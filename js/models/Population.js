@@ -9,23 +9,25 @@ function Population(linkages){//init a linkage with optional hinges, links, and 
     this._setLinkages(linkages);
 }
 
-Population.prototype._initFirstGeneration = function(){
+Population.prototype._initFirstGeneration = function(archetype){
     var firstGeneration = [];
 
-    var archetype = new Linkage();
-    var hinge1 = archetype.addHingeAtPosition({x:15,y:30});
-    var hinge2 = archetype.addHingeAtPosition({x:0,y:40});
-    var hinge3 = archetype.addHingeAtPosition({x:-10,y:0});
-    var hinge4 = archetype.addHingeAtPosition({x:14,y:2}).setStatic(true);
-    var hinge5 = archetype.addHingeAtPosition({x:-20,y:-2});
+    if (archetype === undefined){
+        archetype = new Linkage();
+        var hinge1 = archetype.addHingeAtPosition({x:15,y:30});
+        var hinge2 = archetype.addHingeAtPosition({x:0,y:40});
+        var hinge3 = archetype.addHingeAtPosition({x:-10,y:0});
+        var hinge4 = archetype.addHingeAtPosition({x:14,y:2}).setStatic(true);
+        var hinge5 = archetype.addHingeAtPosition({x:-20,y:-2});
 
-    archetype.link(hinge1, hinge3);//add an optional third param to set to a specific length
-    archetype.link(hinge4, hinge1);
-    archetype.link(hinge2, hinge1);
-    archetype.link(hinge2, hinge3);
+        archetype.link(hinge1, hinge3);//add an optional third param to set to a specific length
+        archetype.link(hinge4, hinge1);
+        archetype.link(hinge2, hinge1);
+        archetype.link(hinge2, hinge3);
 
-    var link35 = archetype.link(hinge3, hinge5);
-    archetype.addDriveCrank(hinge5, hinge3, link35.getLength());
+        var link35 = archetype.link(hinge3, hinge5);
+        archetype.addDriveCrank(hinge5, hinge3, link35.getLength());
+    }
 
     var mutationRate = globals.appState.get("mutationRate");
     if (globals.appState.get("isHillClimbing")){
@@ -266,10 +268,10 @@ Population.prototype.clearAll = function(){
     this._setLinkages([]);
 };
 
-Population.prototype.reset = function(){
+Population.prototype.reset = function(archetype){
     globals.runStatistics = [];
     this.clearAll();
-    this._setLinkages(this._initFirstGeneration());
+    this._setLinkages(this._initFirstGeneration(archetype));
 };
 
 Population.prototype.saveBestOutputPath = function(){
