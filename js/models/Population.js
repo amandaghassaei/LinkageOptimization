@@ -75,7 +75,7 @@ Population.prototype.calcNextGen = function(linkages){
 
     //hill climbing mode
     if (globals.appState.get("isHillClimbing")){
-        var parent = this._getBestLinkage(linkages);
+        var parent = this.getCurrentStatistics(linkages).bestLinkage;
         nextGenLinkages.push(parent.clone());
         nextGenLinkages.push(parent.hillClimb(mutationRate));
         return nextGenLinkages;
@@ -114,21 +114,6 @@ Population.prototype.getCurrentStatistics = function(linkages){
 
 //Hill Climbing Selection (get the best)
 
-Population.prototype._getBestLinkage = function(linkages){
-    var bestLinkage = null;
-    var bestFitness = 0;
-    _.each(linkages, function(linkage){
-        if (linkage.getFitness()>bestFitness){
-            bestFitness = linkage.getFitness();
-            bestLinkage = linkage;
-        }
-    });
-    if (!bestLinkage) {
-        console.warn("no linkages have fitness > 0");
-        return linkages[0];
-    }
-    return bestLinkage;
-};
 
 
 
@@ -277,20 +262,15 @@ Population.prototype.clearAll = function(){
 };
 
 Population.prototype.reset = function(){
-    console.warn("reset");
     globals.runStatistics = [];
     this.clearAll();
     this._setLinkages(this._initFirstGeneration());
 };
 
-Population.prototype.destroy = function(){
-    console.log("need this?");
-};
-
 Population.prototype.saveBestOutputPath = function(){
-    var best = this._getBestLinkage(this._linkages);
+    var bestLinkage = this.getCurrentStatistics(this._linkages).bestLinkage;
     globals.saveFile(JSON.stringify({
-        path: best.getTrajectory(globals.appState.get("outputHingeIndex"))
+        path: bestLinkage.getTrajectory(globals.appState.get("outputHingeIndex"))
     }), "outputPath", ".json");
 };
 
