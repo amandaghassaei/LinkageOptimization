@@ -305,7 +305,7 @@ Linkage.prototype.setDrawOffset = function(offset){//called from render loop in 
 };
 
 Linkage.prototype.setHingePathVisibility = function(visibility, index){
-    if (index){
+    if (index !== undefined){
         this._hinges[index].setTrajectoryVisibility(visibility);
         return;
     }
