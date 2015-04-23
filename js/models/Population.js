@@ -104,7 +104,10 @@ Population.prototype._getBestLinkage = function(linkages){
             bestLinkage = linkage;
         }
     });
-    if (!bestLinkage) console.warn("no linkages have fitness > 0");
+    if (!bestLinkage) {
+        console.warn("no linkages have fitness > 0");
+        return linkages[0];
+    }
     return bestLinkage;
 };
 
@@ -260,4 +263,19 @@ Population.prototype.reset = function(){
 
 Population.prototype.destroy = function(){
     console.log("need this?");
+};
+
+Population.prototype.saveBestOutputPath = function(){
+    var best = this._getBestLinkage(this._linkages);
+    globals.saveFile(JSON.stringify({
+        path: best.getTrajectory(globals.appState.get("outputHingeIndex"))
+    }), "outputPath", ".json");
+};
+
+Population.prototype.newTargetPathLoaded = function(){
+    var newTargetPath = globals.targetCurve;
+    var visibility = globals.appState.get("showTargetPath");
+    _.each(this._linkages, function(linkage){
+        linkage.drawTargetPath(newTargetPath, visibility);
+    });
 };

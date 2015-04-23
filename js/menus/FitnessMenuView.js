@@ -11,7 +11,8 @@ FitnessMenuView = Backbone.View.extend({
         "click #stepNextGen":                                       "_stepNextGeneration",
         "change input:checkbox":                                    "_toggleCheckbox",
         "click #savePath":                                          "_saveTargetPath",
-        "click #loadPath":                                          "_loadTargetPath"
+        "click #loadPath":                                          "_loadTargetPath",
+        "click #saveOutputPath":                                    "_saveOutputPath"
     },
 
     initialize: function(){
@@ -52,8 +53,13 @@ FitnessMenuView = Backbone.View.extend({
     _saveTargetPath: function(e){
         e.preventDefault();
         globals.saveFile(JSON.stringify({
-            targetPath: globals.targetCurve
+            path: globals.targetCurve
         }), "targetPath", ".json");
+    },
+
+    _saveOutputPath: function(e){
+        e.preventDefault();
+        globals.population.saveBestOutputPath();
     },
 
     _loadTargetPath: function(e){
@@ -70,8 +76,9 @@ FitnessMenuView = Backbone.View.extend({
 
     template: _.template('\
         Output Hinge Index: &nbsp;&nbsp;<input data-type="outputHingeIndex" value="<%= outputHingeIndex %>" placeholder="Hinge" class="form-control numberInput" type="text"><br/><br/>\
-        <a href="#" id="loadPath" class="btn pull-left btn-halfWidth btn-lg btn-default">Load Target Path</a>\
-        <a href="#" id="savePath" class=" btn pull-right btn-halfWidth btn-lg btn-default">Save Path</a><br/><br/>\
+        <a href="#" id="loadPath" class="btn btn-block btn-lg btn-default">Load Target Path</a><br/>\
+        <a href="#" id="savePath" class=" btn pull-left btn-halfWidth btn-lg btn-default">Save Target Path</a>\
+        <a href="#" id="saveOutputPath" class="btn pull-right btn-halfWidth btn-lg btn-default">Save Best Output Path</a><br/><br/>\
         <label class="checkbox" for="showTargetPath">\
         <input type="checkbox" <% if (showTargetPath){ %>checked="checked" <% } %> value="" id="showTargetPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Show target path</label>\

@@ -104,9 +104,9 @@ NavBar = Backbone.View.extend({
                 var extension = fileParts[fileParts.length -1];
                 if (extension == "json"){
                     var json = JSON.parse(e.target.result);
-                    if (json.targetPath){
-                        console.log(json.targetPath);
-                        globals.targetCurve = json.targetPath;
+                    if (json.path){
+                        globals.targetCurve = json.path;
+                        globals.population.newTargetPathLoaded();
                     } else {
                         globals.appState.loadFileFromJSON(e.target.result);
                     }
@@ -120,7 +120,7 @@ NavBar = Backbone.View.extend({
     _saveTargetPath: function(e){
         e.preventDefault();
         globals.saveFile(JSON.stringify({
-            targetPath: globals.targetCurve
+            path: globals.targetCurve
         }), "targetPath", ".json");
     },
 

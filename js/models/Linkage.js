@@ -315,8 +315,8 @@ Linkage.prototype.setHingePathVisibility = function(visibility, index){
 };
 
 Linkage.prototype.drawTargetPath = function(path, visibility){
+    if (this._targetPath) this._removeTargetPath();
     var offset = this._drawOffset;
-    if (this._targetPath) globals.three.sceneRemove(this._targetPath);
     var geometry = new THREE.Geometry();
     _.each(path, function(position){
         geometry.vertices.push(new THREE.Vector3(position.x+offset.x, position.y+offset.y, 0));
@@ -325,6 +325,11 @@ Linkage.prototype.drawTargetPath = function(path, visibility){
     this._targetPath = new THREE.Line(geometry, targetTrajectoryMaterial);
     this.setTargetPathVisibility(visibility);
     globals.three.sceneAdd(this._targetPath);
+};
+
+Linkage.prototype._removeTargetPath = function(){
+    globals.three.sceneRemove(this._targetPath);
+    this._targetPath = null;
 };
 
 Linkage.prototype.setTargetPathVisibility = function(visibility){
@@ -350,8 +355,7 @@ Linkage.prototype.destroy = function(){
     this._driveCrank = null;
     this._fitness = null;
     this._drawOffset = null;
-    if (this._targetPath) globals.three.sceneRemove(this._targetPath);
-    this._targetPath = null;
+    if (this._targetPath) this._removeTargetPath();
     this._material = null;
 };
 
