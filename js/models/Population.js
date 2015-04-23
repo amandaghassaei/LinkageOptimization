@@ -75,7 +75,7 @@ Population.prototype.calcNextGen = function(linkages){
 
     //hill climbing mode
     if (globals.appState.get("isHillClimbing")){
-        var parent = this.getCurrentStatistics(linkages).bestLinkage;
+        var parent = this.getBestLinkage(linkages);
         nextGenLinkages.push(parent.clone());
         nextGenLinkages.push(parent.hillClimb(mutationRate));
         return nextGenLinkages;
@@ -91,7 +91,11 @@ Population.prototype.calcNextGen = function(linkages){
     return nextGenLinkages;
 };
 
-Population.prototype.getCurrentStatistics = function(linkages){
+Population.prototype.getBestLinkage = function(linkages){
+    return this.getCurrentStatistics(linkages, true);
+};
+
+Population.prototype.getCurrentStatistics = function(linkages, returnLinkageObject){
     if (linkages === undefined) linkages = this._linkages;
     var minFitness = 1000000;
     var maxFitness = 0;
@@ -106,6 +110,7 @@ Population.prototype.getCurrentStatistics = function(linkages){
         }
         fitnessSum += fitness;
     });
+    if (returnLinkageObject) return bestLinkage;
     return {minFitness:minFitness, maxFitness:maxFitness, avgFitness:fitnessSum/linkages.length, bestLinkage:bestLinkage.toJSON()}
 };
 
@@ -268,7 +273,7 @@ Population.prototype.reset = function(){
 };
 
 Population.prototype.saveBestOutputPath = function(){
-    var bestLinkage = this.getCurrentStatistics(this._linkages).bestLinkage;
+    var bestLinkage = this.getBestLinkage(this._linkages);
     globals.saveFile(JSON.stringify({
         path: bestLinkage.getTrajectory(globals.appState.get("outputHingeIndex"))
     }), "outputPath", ".json");

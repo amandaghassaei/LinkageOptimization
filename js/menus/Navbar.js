@@ -22,7 +22,8 @@ NavBar = Backbone.View.extend({
         "click .importJSON":                                    "_importJSON",
         "change #fileInput":                                    "_selectJSONFiles",
         "click #navSavePath":                                   "_saveTargetPath",
-        "click #saveRunStats":                                  "_saveRunStats"
+        "click #saveRunStats":                                  "_saveRunStats",
+        "click #saveLinkage":                                   "_saveBestLinkage"
     },
 
     initialize: function(){
@@ -137,6 +138,13 @@ NavBar = Backbone.View.extend({
             maxLinkChangePercent: globals.appState.get("maxLinkChange"),
             data:globals.runStatistics
         }), "runStatistics", ".json");
+    },
+
+    _saveBestLinkage: function(e){
+        e.preventDefault();
+        globals.saveFile(JSON.stringify({
+            linkage: globals.population.getCurrentStatistics().bestLinkage
+        }), "linkage", ".json");
     },
 
     _save: function(e){

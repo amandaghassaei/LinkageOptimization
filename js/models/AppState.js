@@ -234,7 +234,7 @@ AppState = Backbone.Model.extend({
     //Open/Save
 
     saveJSON: function(name){
-        if (!name) name = "linkage";
+        if (!name) name = "population";
         var data = JSON.stringify({population:globals.population.toJSON()});
         globals.saveFile(data, name, ".json");
     },
