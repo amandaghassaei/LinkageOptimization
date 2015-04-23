@@ -148,13 +148,29 @@ Linkage.prototype._calcMidpoint = function(points) {
 
 };
 
-Linkage.prototype._shiftMidpoint = function(midpoint, target) {
+Linkage.prototype._calcRadius = function(midpoint, points) {
+
+    // var rad_sum = points.reduce(function(a, b) {
+    //     return this._calcDistance(a, midpoint) + this._calcDistance
+    //     return this._calcDistance(a, midpoint) + this._calcDistance(b, midpoint);
+    // });
+    var rad_sum = 0.0;
+    for (var i=0; i<points.length; i++) {
+        rad_sum += this._calcDistance(points[i], midpoint);
+    }
+    return rad_sum/points.length;
+}
+
+Linkage.prototype._shiftMidpoint = function(midpoint, radius, target) {
     // move the midpoint of the target curve to the midpoint of the test curves
     // return a set of point of the shifted curve
 
+    console.log(midpoint, radius, target);
+
     var shifted_target = [];
     for (var i=0; i<target.length; i++) {
-        shifted_target[i] = {x: target[i].x+midpoint.x, y: target[i].y+midpoint.y};
+        var radius_ratio = radius / this._calcDistance(target[i], midpoint);
+        shifted_target[i] = {x: target[i].x*radius_ratio+midpoint.x, y: target[i].y*radius_ratio+midpoint.y};
     }
     return shifted_target;
 };
@@ -169,7 +185,8 @@ Linkage.prototype._calcFitness = function(target, test){
     }
 
     var midpoint = this._calcMidpoint(test);
-    var shifted_target = this._shiftMidpoint(midpoint, target);
+    var radius = this._calcRadius(midpoint, test);
+    var shifted_target = this._shiftMidpoint(midpoint, radius, target);
 
     // TODO: redisplay the target curve with the shifted midpoint??
     // this.drawTargetPath(shifted_target, true);
