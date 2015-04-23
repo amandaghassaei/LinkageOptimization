@@ -170,6 +170,10 @@ Population.prototype._buildTargetPathVisualization = function(linkages){
     var path = globals.targetCurve;
     var visibility = globals.appState.get("showTargetPath");
     _.each(linkages, function(linkage){
+        var shifted_target = linkage.getShiftedTarget();
+        // TODO: this shifted_target is not rendering properly
+        // console.log(shifted_target);
+        // linkage.drawTargetPath(shifted_target, visibility);
         linkage.drawTargetPath(path, visibility);
     });
 };

@@ -120,13 +120,60 @@ Linkage.prototype.getFitness = function(){
     return this._fitness;
 };
 
+Linkage.prototype.getShiftedTarget = function() {
+    var hingeIndex = globals.appState.get("outputHingeIndex");
+    var traj = this.getTrajectory(hingeIndex);
+    // console.log(hingeIndex, derp);
+    // TODO: this trajectory seems to be empty
+    var midpoint = this._calcMidpoint(traj);
+    // console.log(midpoint);
+    return this._shiftMidpoint(midpoint, globals.targetCurve);
+}
+
+Linkage.prototype._calcMidpoint = function(points) {
+
+    // console.log(points);
+
+    // calculated the midpoint of a set of points
+    // TODO: WHY IS THIS SO INEFFICIENT
+    var x_sum = 0.0;
+    var y_sum = 0.0;
+    for (var i=0; i<points.length; i++) {
+        // console.log(points);
+        x_sum += points[i].x;
+        y_sum += points[i].y;
+    }
+    // console.log(x_sum,y_sum);
+    return {x:x_sum/points.length, y:y_sum/points.length};
+
+};
+
+Linkage.prototype._shiftMidpoint = function(midpoint, target) {
+    // move the midpoint of the target curve to the midpoint of the test curves
+    // return a set of point of the shifted curve
+
+    var shifted_target = [];
+    for (var i=0; i<target.length; i++) {
+        shifted_target[i] = {x: target[i].x+midpoint.x, y: target[i].y+midpoint.y};
+    }
+    return shifted_target;
+};
+
 Linkage.prototype._calcFitness = function(target, test){
 
     // console.log('getting fitness');
 
     if (this._checkWeirdness()) {
+        console.log('weird');
         return 100;
     }
+
+    var midpoint = this._calcMidpoint(test);
+    var shifted_target = this._shiftMidpoint(midpoint, target);
+
+    // TODO: redisplay the target curve with the shifted midpoint??
+    // this.drawTargetPath(shifted_target, true);
+
 
     var distances = [];
 
@@ -136,8 +183,8 @@ Linkage.prototype._calcFitness = function(target, test){
         var min_distance = Infinity;
 
         // find the shortest distance to the other points
-        for (j=0; j<target.length; j++) {
-            var calc_distance = this._calcDistance(test[i], target[j]);
+        for (j=0; j<shifted_target.length; j++) {
+            var calc_distance = this._calcDistance(test[i], shifted_target[j]);
             if (calc_distance < min_distance) {
                 min_distance = calc_distance;
             }
@@ -147,15 +194,19 @@ Linkage.prototype._calcFitness = function(target, test){
         distances[i] = min_distance;
         
     }
-    // console.log(distances);
+    console.log(distances);
 
     if (distances.length > 0) {
-        return distances.reduce(function(a, b) {
+        var dist_sum = distances.reduce(function(a, b) {
           return a + b;
         });
+        console.log(dist_sum);
+        return dist_sum;
     }
-    else
-        return 0.01;
+    else {
+        console.log('empty');
+        return 100;
+    }
 
     // return the sum of the shortest distances
     
