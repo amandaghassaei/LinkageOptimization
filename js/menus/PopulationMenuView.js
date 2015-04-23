@@ -10,7 +10,8 @@ PopulationMenuView = Backbone.View.extend({
     events: {
         "click #stepNextGen":                                   "_stepNextGeneration",
         "click #clearAll":                                      "_clearAll",
-        "click #reset":                                         "_reset"
+        "click #reset":                                         "_reset",
+        "change input:checkbox":                                "_toggleCheckbox"
     },
 
     initialize: function(){
@@ -44,6 +45,10 @@ PopulationMenuView = Backbone.View.extend({
         globals.appState.set(property, newVal);
     },
 
+    _toggleCheckbox: function(e){
+        this.model.set($(e.target).attr('id'), $(e.target).is(':checked'));
+    },
+
     _stepNextGeneration: function(e){
         e.preventDefault();
         globals.population.step();
@@ -62,12 +67,17 @@ PopulationMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "population") return;
-        if ($("input").is(":focus")) return;
+        if ($(".numberInput").is(":focus")) return;
         this.$el.html(this.template(this.model.toJSON()));
     },
 
     template: _.template('\
+        <label class="checkbox" for="isHillClimbing">\
+        <input type="checkbox" <% if (isHillClimbing){ %>checked="checked" <% } %> value="" id="isHillClimbing" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Hill Climbing Mode</label><br/>\
+        <% if (!isHillClimbing){ %>\
         Population Size: &nbsp;&nbsp;<input data-type="populationSize" value="<%= populationSize %>" placeholder="Size" class="form-control numberInput" type="text"><br/><br/>\
+        <% } %>\
         <a href="#" id="clearAll" class="btn pull-left btn-halfWidth btn-lg btn-default">Clear All</a>\
         <a href="#" id="reset" class=" btn pull-right btn-halfWidth btn-lg btn-default">Re-Init Population</a><br/><br/>\
         <a href="#" id="stepNextGen" class="btn-success btn btn-block btn-lg btn-default">Step to Next Generation</a><br/>\
