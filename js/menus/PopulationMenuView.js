@@ -11,7 +11,8 @@ PopulationMenuView = Backbone.View.extend({
         "click #stepNextGen":                                   "_stepNextGeneration",
         "click #clearAll":                                      "_clearAll",
         "click #reset":                                         "_reset",
-        "change input:checkbox":                                "_toggleCheckbox"
+        "change input:checkbox":                                "_toggleCheckbox",
+        "click #resetFromMostFit":                              "_resetFromMostFit"
     },
 
     initialize: function(){
@@ -59,6 +60,11 @@ PopulationMenuView = Backbone.View.extend({
         globals.population.reset();
     },
 
+    _resetFromMostFit: function(e){
+        e.preventDefault();
+        globals.population.reset(globals.population.getBestLinkage());
+    },
+
     _clearAll: function(e){
         e.preventDefault();
         globals.population.clearAll();
@@ -80,6 +86,8 @@ PopulationMenuView = Backbone.View.extend({
         <% } %>\
         <a href="#" id="clearAll" class="btn pull-left btn-halfWidth btn-lg btn-default">Clear All</a>\
         <a href="#" id="reset" class=" btn pull-right btn-halfWidth btn-lg btn-default">Re-Init Population</a><br/><br/>\
+        <a href="#" class="importJSON btn pull-left btn-halfWidth btn-lg btn-default">Re-Init from Linkage</a>\
+        <a href="#" id="resetFromMostFit" class="btn pull-right btn-halfWidth btn-lg btn-default">Re-Init from Most Fit</a><br/><br/>\
         <a href="#" id="stepNextGen" class="btn-success btn btn-block btn-lg btn-default">Step to Next Generation</a><br/>\
         ')
 

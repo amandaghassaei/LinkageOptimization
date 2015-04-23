@@ -270,8 +270,9 @@ Population.prototype.clearAll = function(){
 
 Population.prototype.reset = function(archetype){
     globals.runStatistics = [];
+    var firstGeneration = this._initFirstGeneration(archetype);
     this.clearAll();
-    this._setLinkages(this._initFirstGeneration(archetype));
+    this._setLinkages(firstGeneration);
 };
 
 Population.prototype.saveBestOutputPath = function(){
