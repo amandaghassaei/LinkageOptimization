@@ -4,14 +4,13 @@
 
 var hingeGeometry = new THREE.CylinderGeometry(1,1,1,20,20);
 hingeGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
-var hingeMaterial = new THREE.MeshBasicMaterial();
 
 var trajectoryMaterial = new THREE.LineBasicMaterial({
 	color: 0x000000,
     linewidth: 3
 });
 
-function Hinge(position, parentLinkage){
+function Hinge(position, parentLinkage, material){
     if (parentLinkage === undefined) console.warn("no parent linkage supplied for hinge");
     this._parentLinkage = parentLinkage;
     //todo update this._position from physics after motion settles
@@ -21,7 +20,7 @@ function Hinge(position, parentLinkage){
     this._body = this._buildBody(position, width/2);
     this._trackedPositions = [];//holds the position of this hinge for n times steps of a cycle, wait until initial perturbations from changing link lengths die off
 
-    this._mesh = this._buildMesh();
+    this._mesh = this._buildMesh(material);
     this.setWidth(width);
     this.setDepth(globals.appState.getDepth());
     globals.three.sceneAdd(this._mesh);
@@ -85,8 +84,8 @@ Hinge.prototype.setStatic = function(isStatic){//body cannot move
 
 //Draw
 
-Hinge.prototype._buildMesh = function(){
-    return new THREE.Mesh(hingeGeometry, hingeMaterial);
+Hinge.prototype._buildMesh = function(material){
+    return new THREE.Mesh(hingeGeometry, material);
 };
 
 Hinge.prototype.setWidth = function(width){
@@ -145,8 +144,4 @@ Hinge.prototype.toJSON = function(){//todo position should be recalc-ed based on
 
 Hinge.prototype.getId = function(){//position of this instance in the hinges array on the parent linkage
     return this._parentLinkage.getHingeId(this);
-};
-
-Hinge.prototype.clone = function(parentLinkage){
-    return new Hinge(_.clone(this._position), parentLinkage);
 };

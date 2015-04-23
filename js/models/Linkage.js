@@ -15,6 +15,7 @@ function Linkage(json){//init a linkage with optional json
     this._driveCrank = null;
     this._fitness = null;
     this._targetPath = null;
+    this._material = new THREE.MeshBasicMaterial({color:0xffffff});
     if (json === undefined) {
         console.warn("inited with no json");
         return;
@@ -38,7 +39,7 @@ function Linkage(json){//init a linkage with optional json
 //Construct
 
 Linkage.prototype.addHingeAtPosition = function(position){
-    var hinge = new Hinge(position, this);
+    var hinge = new Hinge(position, this, this._material);
     this._hinges.push(hinge);
     return hinge;
 };
@@ -51,7 +52,7 @@ Linkage.prototype.addDriveCrank = function(centerHinge, outsideHinge, length){
 };
 
 Linkage.prototype.link = function(hingeA, hingeB, distance){
-    var link = new Link(hingeA, hingeB, distance);
+    var link = new Link(hingeA, hingeB, this._material, distance);
     this._links.push(link);
     return link;
 };
@@ -238,6 +239,10 @@ Linkage.prototype.setTargetPathVisibility = function(visibility){
     if (this._targetPath) this._targetPath.visible = visibility;
 };
 
+Linkage.prototype.setColor = function(color){
+    this._material.color = color;
+};
+
 
 
 
@@ -255,6 +260,7 @@ Linkage.prototype.destroy = function(){
     this._drawOffset = null;
     if (this._targetPath) globals.three.sceneRemove(this._targetPath);
     this._targetPath = null;
+    this._material = null;
 };
 
 
