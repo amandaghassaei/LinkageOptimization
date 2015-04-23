@@ -29,6 +29,7 @@ $(function(){
 
     //ui
     new MenuWrapper({model: globals.appState});
+    globals.error = new MenuErrorView();
     new NavBar({model:globals.appState});
 //    new Ribbon({model:globals.appState});
 

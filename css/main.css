@@ -294,6 +294,8 @@ input.numberInput{
     margin: 0 20px 0 -10px;
 }
 
-/*label.checkbox {*/
-    /*font-size: 20px;*/
-/*}*/
+#menuErrors {
+    width: 100%;
+    background-color: rgba(255,0,0,0.2);
+    /*height: 200px;*/
+}

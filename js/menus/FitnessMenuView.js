@@ -34,14 +34,15 @@ FitnessMenuView = Backbone.View.extend({
             return;
         }
 
-        if ($(".numberInput").is(":focus")) this._updateNumber(e);
+        if ($(".numberInput").is(":focus")) this._updateOutputHingeIndex(e);
     },
 
-    _updateNumber: function(e){
+    _updateOutputHingeIndex: function(e){
         e.preventDefault();
         var newVal = parseFloat($(e.target).val());
         if (isNaN(newVal)) return;
-        newVal = parseFloat(newVal.toFixed(4));
+        newVal = parseInt(newVal);
+        if (newVal < 0) globals.error.throwError("index must be a positive integer");
         var property = $(e.target).data("type");
         globals.appState.set(property, newVal);
     },
