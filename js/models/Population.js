@@ -53,17 +53,19 @@ Population.prototype._setLinkages = function(linkages){
     this._calcLinkageRederingOffsets(linkages);
     this._buildTargetPathVisualization(linkages);
     this._linkages = linkages;
+    this._renderIndex = 0;
     this._calculateTrajectory();
 };
 
 Population.prototype.run = function(){
     if (globals.appState.get("isRunning")){
-//        this.step();
-//        this.run();
+        globals.population.step();
+        setTimeout(globals.population.run, 0);
     }
 };
 
 Population.prototype.step = function(){
+    console.log("step");
     if (!this.readyToCalcNextGen()) {
         console.warn("paths not finished computing yet");
         return;
@@ -79,7 +81,6 @@ Population.prototype.readyToCalcNextGen = function(){
 };
 
 Population.prototype.onDoneCalculatingTrajectory = function(){
-    this._renderIndex = 0;
 };
 
 Population.prototype._calculateTrajectory = function(){

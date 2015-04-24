@@ -185,7 +185,7 @@ Linkage.prototype._shiftMidpoint = function(midpoint, radius, target) {
     // move the midpoint of the target curve to the midpoint of the test curves
     // return a set of point of the shifted curve
 
-    console.log(midpoint, radius, target);
+//    console.log(midpoint, radius, target);
 
     var shifted_target = [];
     for (var i=0; i<target.length; i++) {
@@ -231,13 +231,13 @@ Linkage.prototype._calcFitness = function(target, test){
         distances[i] = min_distance;
         
     }
-    console.log(distances);
+//    console.log(distances);
 
     if (distances.length > 0) {
         var dist_sum = distances.reduce(function(a, b) {
           return a + b;
         });
-        console.log(dist_sum);
+//        console.log(dist_sum);
         return dist_sum;
     }
     else {
