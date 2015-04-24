@@ -11,6 +11,7 @@ $(function(){
     //init web workers
 //    window.workers = persistentWorkers(8);
 
+    console.log(document.domain);
 //    $(window).bind('beforeunload', function(){
 //      return 'Are you sure you want to leave?';
 //    });
