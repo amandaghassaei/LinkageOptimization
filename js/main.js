@@ -34,7 +34,7 @@ $(function(){
         _.each(curve, function(point){
             point.x -= centerX;
             point.y -= centerY;
-        })
+        });
         globals.targetCurve = curve;
     };
 

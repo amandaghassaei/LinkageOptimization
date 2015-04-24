@@ -52,7 +52,6 @@ AppState = Backbone.Model.extend({
         showHingePaths: false,
         showOutputPath: true,//output hinge
         showTargetPath: true,
-        precomputePath: false,
         shouldRenderThreeJS: true,
 
         populationSize: 20,
@@ -250,13 +249,26 @@ AppState = Backbone.Model.extend({
     //Open/Save
 
     saveJSON: function(name){
-        console.log("save run");
         if (!name) name = "run";
         var data = JSON.stringify({
             run:{
-                appState: this.toJSON(),
-                stats: globals.runStatistics,
-                population: globals.population.toJSON()
+                appState: {
+                    isHillClimbing: this.get("isHillClimbing"),
+                    linkWidth: this.get("linkWidth"),
+                    maxLinkChange: this.get("maxLinkChange"),
+                    minLinkLength: this.get("minLinkLength"),
+                    mutationRate: this.get("mutationRate"),
+                    numPositionSteps: this.get("numPositionSteps"),
+                    outputHingeIndex: this.get("outputHingeIndex"),
+                    populationSize: this.get("populationSize"),
+                    showHingePaths: this.get("showHingePaths"),
+                    showOutputPath: this.get("showOutputPath"),
+                    showTargetPath: this.get("showTargetPath"),
+                    zDepth: this.get("zDepth")
+                },
+                runStatistics: globals.runStatistics,
+                population: globals.population.toJSON(),
+                targetCurve: globals.targetCurve
             }
         });
         globals.saveFile(data, name, ".json");
@@ -279,8 +291,17 @@ AppState = Backbone.Model.extend({
         this.set("isAnimating", true);
     },
 
-    loadFileFromJSON: function(json){
-
+    loadRunFromJSON: function(json){
+        globals.population.clearAll();
+        globals.setTargetCurve(json.targetCurve);
+        globals.runStatistics = json.runStatistics;
+        _.each(_.keys(json.appState), function(key){
+            globals.appState.set(key, json.appState[key], {silent:true});
+        });
+        globals.appState.set("isRunning", false);
+        globals.appState.set("isAnimating", true);
+        globals.appState.trigger("change");
+        globals.population.setFromJSON(json.population);
     }
 
 });

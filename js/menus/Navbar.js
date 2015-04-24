@@ -114,6 +114,8 @@ NavBar = Backbone.View.extend({
                         globals.population.setFromJSON(json.population);
                     } else if (json.linkage){
                         globals.population.reset(new Linkage(json.linkage));
+                    } else if (json.run){
+                        globals.appState.loadRunFromJSON(json.run);
                     }
                 } else if (extension == "js"){
                     globals.appState.loadScript(e.target.result);
