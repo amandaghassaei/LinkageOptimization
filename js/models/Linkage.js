@@ -140,14 +140,14 @@ Linkage.prototype.getFitness = function(){
     return this._fitness;
 };
 
-Linkage.prototype.getTranslationalOffset = function() {
+Linkage.prototype.getTranslationScaleRotation = function() {
     var hingeIndex = globals.appState.get("outputHingeIndex");
     var traj = this.getTrajectory(hingeIndex);
     // console.log(hingeIndex, derp);
     // TODO: this trajectory seems to be empty
     var midpoint = this._calcMidpoint(traj);
     // console.log(midpoint);\
-    return midpoint;
+    return {translation:midpoint};//, scale:scale, rotation:rotation};
 //    return this._shiftMidpoint(midpoint, targetCurve);
 }
 
@@ -279,13 +279,15 @@ Linkage.prototype.checkContinuity = function(outputIndex){
 
 //Trajectories
 
-Linkage.prototype.drawTargetPath = function(path, translationalOffset, visibility){
+Linkage.prototype.drawTargetPath = function(path, offsets, visibility){
     if (this._targetPath) this._removeTargetPath();
     var offset = this._drawOffset;
     var geometry = new THREE.Geometry();
+    if (offsets.scale) console.log("add scale in target rendering");
+    if (offsets.rotation) console.log("add rotation in target rendering");
     _.each(path, function(position){
-        geometry.vertices.push(new THREE.Vector3(position.x+offset.x+translationalOffset.x,
-            position.y+offset.y+translationalOffset.y, 0));
+        geometry.vertices.push(new THREE.Vector3(position.x+offset.x+offsets.translation.x,
+            position.y+offset.y+offsets.translation.y, 0));
     });
     geometry.vertices.push(_.clone(geometry.vertices[0]));//close loop
     this._targetPath = new THREE.Line(geometry, targetTrajectoryMaterial);
