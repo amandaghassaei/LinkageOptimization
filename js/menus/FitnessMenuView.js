@@ -34,7 +34,8 @@ FitnessMenuView = Backbone.View.extend({
             return;
         }
 
-        if ($(".numberInput").is(":focus")) this._updateOutputHingeIndex(e);
+        if ($("#outputHingeIndex").is(":focus")) this._updateOutputHingeIndex(e);
+        if ($(".numberInput").is(":focus")) this._updateNumber(e);
     },
 
     _updateOutputHingeIndex: function(e){
@@ -43,6 +44,15 @@ FitnessMenuView = Backbone.View.extend({
         if (isNaN(newVal)) return;
         newVal = parseInt(newVal);
         if (newVal < 0) globals.error.throwError("index must be a positive integer");
+        var property = $(e.target).data("type");
+        globals.appState.set(property, newVal);
+    },
+
+    _updateNumber: function(e){
+        e.preventDefault();
+        var newVal = parseFloat($(e.target).val());
+        if (isNaN(newVal)) return;
+        newVal = parseInt(newVal);
         var property = $(e.target).data("type");
         globals.appState.set(property, newVal);
     },
@@ -76,7 +86,8 @@ FitnessMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
-        Output Hinge Index: &nbsp;&nbsp;<input data-type="outputHingeIndex" value="<%= outputHingeIndex %>" placeholder="Hinge" class="form-control numberInput" type="text"><br/><br/>\
+        Output Hinge Index: &nbsp;&nbsp;<input id="outputHingeIndex" data-type="outputHingeIndex" value="<%= outputHingeIndex %>" placeholder="Hinge" class="form-control numberInput" type="text"><br/><br/>\
+        <!--Num Trajectory Samples: &nbsp;&nbsp;<input data-type="numPositionSteps" value="<%= numPositionSteps %>" placeholder="Num Samples" class="form-control numberInput" type="text"><br/><br/>-->\
         <a href="#" id="loadPath" class="btn btn-block btn-lg btn-default">Load Target Path</a><br/>\
         <a href="#" id="savePath" class=" btn pull-left btn-halfWidth btn-lg btn-default">Save Target Path</a>\
         <a href="#" id="saveOutputPath" class="btn pull-right btn-halfWidth btn-lg btn-default">Save Best Output Path</a><br/><br/>\

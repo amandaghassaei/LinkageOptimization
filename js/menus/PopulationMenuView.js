@@ -41,7 +41,7 @@ PopulationMenuView = Backbone.View.extend({
         e.preventDefault();
         var newVal = parseFloat($(e.target).val());
         if (isNaN(newVal)) return;
-        newVal = parseFloat(newVal.toFixed(4));
+        newVal = parseInt(newVal);
         var property = $(e.target).data("type");
         globals.appState.set(property, newVal);
     },
