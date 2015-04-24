@@ -58,9 +58,9 @@ Link.prototype.setDepth = function(depth){
     this._mesh.scale.z = depth;
 };
 
-Link.prototype.render = function(screenCoordinates){
-    var hingeAPos = this._hingeA.getCurrentPosition();
-    var hingeBPos = this._hingeB.getCurrentPosition();
+Link.prototype.render = function(screenCoordinates, ignoreThisVar, index){
+    var hingeAPos = this._hingeA.getCurrentPosition(index);
+    var hingeBPos = this._hingeB.getCurrentPosition(index);
 
     //get center of mass position
     var centerPos = this._avg(hingeAPos, hingeBPos);

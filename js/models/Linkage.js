@@ -294,11 +294,17 @@ Linkage.prototype.drive = function(angle){
     if (this._driveCrank) this._driveCrank.rotate(angle);
 };
 
-Linkage.prototype.render = function(angle){//called from render loop in threeView
-    this.drive(angle);
+Linkage.prototype.render = function(angle, precompute){
     var self = this;
+    if (precompute){
+        this.drive(angle);
+        _.each(this._hinges, function(hinge){
+            hinge.render(self._drawOffset, true);
+        });
+        return;
+    }
     this._iterateAllHingesAndLinks(function(object){
-        object.render(self._drawOffset);
+        object.render(self._drawOffset, false, angle);
     });
 };
 

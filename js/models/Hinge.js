@@ -105,7 +105,8 @@ Hinge.prototype.setDepth = function(depth){
     this._mesh.scale.z = depth;
 };
 
-Hinge.prototype.getCurrentPosition = function(){//position from animation loop
+Hinge.prototype.getCurrentPosition = function(index){//position from animation loop
+    if (index) return this._trackedPositions[index];
     return _.clone(this._body.position);
 };
 
@@ -113,9 +114,12 @@ Hinge.prototype.getPosition = function(){//position from definition (not includi
     return _.clone(this._position);
 };
 
-Hinge.prototype.render = function(screenCoordinates){
-    var position = this._body.position;//get position from body and update mesh
-    this._mesh.position.set(position.x+screenCoordinates.x, position.y+screenCoordinates.y, 0);
+Hinge.prototype.render = function(screenCoordinates, precompute, index){
+//    var position = this._body.position;//get position from body and update mesh
+    if (!precompute) {
+        var position = this._trackedPositions[index];
+        this._mesh.position.set(position.x+screenCoordinates.x, position.y+screenCoordinates.y, 0);
+    }
     if (globals.population.shouldStorePosition()) this.trackPosition();
 };
 

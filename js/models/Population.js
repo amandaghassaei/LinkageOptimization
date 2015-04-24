@@ -3,11 +3,13 @@
  */
 
 
-function Population(linkages){//init a linkage with optional hinges, links, and driveCrank
-
-    if (linkages === undefined) linkages = this._initFirstGeneration();
-    this._setLinkages(linkages);
+function Population(){//init a linkage with optional hinges, links, and driveCrank
 }
+
+Population.prototype.init = function(){
+    var linkages = this._initFirstGeneration();
+    this._setLinkages(linkages);
+};
 
 Population.prototype._initFirstGeneration = function(archetype){
     var firstGeneration = [];
@@ -51,6 +53,7 @@ Population.prototype._setLinkages = function(linkages){
     this._calcLinkageRederingOffsets(linkages);
     this._buildTargetPathVisualization(linkages);
     this._linkages = linkages;
+    this._calculateTrajectory();
 };
 
 Population.prototype.run = function(){
@@ -61,10 +64,32 @@ Population.prototype.run = function(){
 };
 
 Population.prototype.step = function(){
+    if (!this.readyToCalcNextGen()) {
+        console.warn("paths not finished computing yet");
+        return;
+    }
     var nextGen = this.calcNextGen(this._linkages);
     globals.runStatistics.push(this.getCurrentStatistics(this._linkages));
     this.clearAll();
     this._setLinkages(nextGen);
+};
+
+Population.prototype.readyToCalcNextGen = function(){
+    return this._allHingePositionsStored;
+};
+
+Population.prototype.onDoneCalculatingTrajectory = function(){
+    this._renderIndex = 0;
+};
+
+Population.prototype._calculateTrajectory = function(){
+    globals.physics.update();//todo right order?
+    var angle = this._getCurrentDriveCrankAngle();
+    if (this.readyToCalcNextGen()) return;
+    _.each(this._linkages, function(linkage){
+        linkage.render(angle, true);
+    });
+    this._calculateTrajectory();
 };
 
 Population.prototype.calcNextGen = function(linkages){
@@ -119,7 +144,7 @@ Population.prototype.getCurrentStatistics = function(linkages, returnLinkageObje
 
 
 
-//Hill Climbing Selection (get the best)
+//Hill Climbing Selection
 
 
 
@@ -149,16 +174,13 @@ Population.prototype._drawFromMatingPool = function(pool){
 //Draw
 
 Population.prototype.render = function(){
-    if (globals.appState.get("isAnimating")){
-//        _.each(this._linkages, function(linkage){
-//            linkage.drive();
-//        });
-        globals.physics.update();
-
-        var angle = this._getCurrentDriveCrankAngle();
-        _.each(this._linkages, function(linkage, index){
-            linkage.render(angle);
+    if (globals.appState.get("isAnimating") && this.readyToCalcNextGen()){
+        var self = this;
+        _.each(this._linkages, function(linkage){
+            linkage.render(self._renderIndex, false);
         });
+        this._renderIndex++;
+        if (this._renderIndex >= globals.appState.get("numPositionSteps")) this._renderIndex = 0;
     }
 };
 
@@ -201,6 +223,7 @@ Population.prototype._getCurrentDriveCrankAngle = function(){
                 linkage.checkContinuity(outputIndex);
             });
             this.setOutputPathVisibility(globals.appState.get("showOutputPath"));
+            this.onDoneCalculatingTrajectory();
         }
         this._theta = 0;
     }

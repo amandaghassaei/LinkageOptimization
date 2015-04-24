@@ -27,6 +27,7 @@ $(function(){
         {x:-10.0,y:0.0},{x:-7.071,y:-7.071},
         {x:0.0,y:-10.0},{x:7.071,y:-7.071}];
     globals.population = new Population();
+    globals.population.init();
 
     //ui
     new MenuWrapper({model: globals.appState});
