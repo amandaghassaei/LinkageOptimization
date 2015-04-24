@@ -41,6 +41,9 @@ AppState = Backbone.Model.extend({
         is3D: false,
         isAnimating: true,//play/pause animation
         numPositionSteps: 50,
+        phase: 25,
+        shouldAutoUpdatePhase: true,
+        shouldRenderPhaseChange: false,
 
         linkWidth: 3,
         zDepth: 3,
@@ -83,6 +86,7 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:showTargetPath", this._showTargetPath);
         this.listenTo(this, "change:isHillClimbing", this._hillClimbingMode);
         this.listenTo(this, "change:outputHingeIndex", this._changeOutputHinge);
+        this.listenTo(this, "change:isAnimating", this._startStopAnimation);
 
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
     },
@@ -117,6 +121,18 @@ AppState = Backbone.Model.extend({
     _changeOutputHinge: function(){
         globals.population.setHingePathVisibility(false);
         this._showOutputPaths();
+    },
+
+    changePhase: function(phase){
+        this.set("shouldAutoUpdatePhase", false, {silent:true});
+        this.set("isAnimating", false);
+        this.set("isRunning", false);
+        globals.population.setPhase(phase);
+        this.set("shouldRenderPhaseChange", true, {silent:true});
+    },
+
+    _startStopAnimation: function(){
+        if (this.get("isAnimating")) this.set("shouldAutoUpdatePhase", true);
     },
 
 

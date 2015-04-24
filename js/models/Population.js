@@ -182,12 +182,13 @@ Population.prototype._drawFromMatingPool = function(pool){
 //Draw
 
 Population.prototype.render = function(){
-    if ((globals.appState.get("isAnimating") || globals.appState.get("isRunning")) && this.readyToCalcNextGen()){
+    if ( (globals.appState.get("shouldRenderPhaseChange") || globals.appState.get("isAnimating") || globals.appState.get("isRunning")) && this.readyToCalcNextGen()){
         var self = this;
         _.each(this._linkages, function(linkage){
             linkage.render(self._renderIndex, false);
         });
-        this._renderIndex++;
+        globals.appState.set("shouldRenderPhaseChange", false, {silent:true});
+        if (globals.appState.get("isAnimating")) this._renderIndex++;
         if (this._renderIndex >= globals.appState.get("numPositionSteps")) this._renderIndex = 0;
     }
 };
@@ -266,6 +267,10 @@ Population.prototype.setTargetPathVisibility = function(visibility){
     _.each(this._linkages, function(linkage){
         linkage.setTargetPathVisibility(visibility);
     });
+};
+
+Population.prototype.setPhase = function(phase){
+    this._renderIndex = phase;
 };
 
 
