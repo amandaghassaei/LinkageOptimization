@@ -55,6 +55,9 @@ Population.prototype._setLinkages = function(linkages){
     this._linkages = linkages;
     this._renderIndex = 0;
     this._calculateTrajectory();
+    if (linkages.length > 0 && (globals.appState.get("shouldRenderThreeJS") || !globals.appState.get("isRunning"))){
+        this.getBestLinkage(linkages).setColor("0xffff00");
+    }
 };
 
 
@@ -70,7 +73,6 @@ Population.prototype.run = function(){
 };
 
 Population.prototype.step = function(){
-    console.log("step");
     if (!this.readyToCalcNextGen()) {
         console.warn("paths not finished computing yet");
         return;
@@ -159,7 +161,7 @@ Population.prototype.getCurrentStatistics = function(linkages, returnLinkageObje
 Population.prototype._createMatingPool = function(linkages){//create mating pool using fitness proportionate selection
     var pool = [];
     _.each(linkages, function(linkage){
-        var numPoolEntries = 1/linkage.getFitness();//this may change
+        var numPoolEntries = linkage.getFitness();//this may change
         for (var i=0;i<numPoolEntries;i++){
             pool.push(linkage);
         }
