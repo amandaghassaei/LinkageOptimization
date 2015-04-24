@@ -285,10 +285,11 @@ Population.prototype.toJSON = function(){
 
 Population.prototype.setFromJSON = function(json){
     this.clearAll();
-    var self = this;
+    var linkages = [];
     _.each(json, function(linkageJSON){
-        self._linkages.push(new Linkage(linkageJSON));
+        linkages.push(new Linkage(linkageJSON));
     });
+    this._setLinkages(linkages);
 };
 
 Population.prototype.clearAll = function(){

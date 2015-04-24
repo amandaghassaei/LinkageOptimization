@@ -13,8 +13,9 @@ NavBar = Backbone.View.extend({
     events: {
         "click #showHideMenu":                                  "_setMenuVis",
         "click .menuHoverControls":                             "_setNavSelection",
-        "click #saveJSON":                                      "_save",
+        "click #navSavePopulation":                             "_savePopulation",
         "click #saveAsJSON":                                    "_saveAs",
+        "click #saveJSON":                                      "_save",
         "change #saveAsModel":                                  "_saveAs",
         "click #saveUser":                                      "_saveUserSettings",
         "shown.bs.modal .modal":                                "_showModal",
@@ -110,7 +111,7 @@ NavBar = Backbone.View.extend({
                         globals.setTargetCurve(json.path);
                         globals.population.newTargetPathLoaded();
                     } else if (json.population) {
-                        globals.appState.loadFileFromJSON(json);
+                        globals.population.setFromJSON(json.population);
                     } else if (json.linkage){
                         globals.population.reset(new Linkage(json.linkage));
                     }
@@ -147,6 +148,11 @@ NavBar = Backbone.View.extend({
         globals.saveFile(JSON.stringify({
             linkage: globals.population.getCurrentStatistics().bestLinkage
         }), "linkage", ".json");
+    },
+
+    _savePopulation: function(e){
+        e.preventDefault();
+        globals.saveFile(JSON.stringify({population:globals.population.toJSON()}), "population", ".json");
     },
 
     _save: function(e){
