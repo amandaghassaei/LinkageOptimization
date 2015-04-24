@@ -36,7 +36,9 @@ AppState = Backbone.Model.extend({
         },
 
         isHillClimbing: false,
+        isNelderMead: false,
         mutationRate: 5,//percent
+        fitnessBasedOnTargetPath: true,
 
         is3D: false,
         isAnimating: true,//play/pause animation
@@ -254,6 +256,7 @@ AppState = Backbone.Model.extend({
             run:{
                 appState: {
                     isHillClimbing: this.get("isHillClimbing"),
+                    isNelderMead: this.get("isNelderMead"),
                     linkWidth: this.get("linkWidth"),
                     maxLinkChange: this.get("maxLinkChange"),
                     minLinkLength: this.get("minLinkLength"),
@@ -264,7 +267,8 @@ AppState = Backbone.Model.extend({
                     showHingePaths: this.get("showHingePaths"),
                     showOutputPath: this.get("showOutputPath"),
                     showTargetPath: this.get("showTargetPath"),
-                    zDepth: this.get("zDepth")
+                    zDepth: this.get("zDepth"),
+                    fitnessBasedOnTargetPath: this.get("fitnessBasedOnTargetPath")
                 },
                 runStatistics: globals.runStatistics,
                 population: globals.population.toJSON(),

@@ -86,6 +86,9 @@ FitnessMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
+        <label class="checkbox" for="fitnessBasedOnTargetPath">\
+        <input type="checkbox" <% if (fitnessBasedOnTargetPath){ %>checked="checked" <% } %> value="" id="fitnessBasedOnTargetPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Fitness Based on Target Path</label><br/>\
         Output Hinge Index: &nbsp;&nbsp;<input id="outputHingeIndex" data-type="outputHingeIndex" value="<%= outputHingeIndex %>" placeholder="Hinge" class="form-control numberInput" type="text"><br/><br/>\
         <!--Num Trajectory Samples: &nbsp;&nbsp;<input data-type="numPositionSteps" value="<%= numPositionSteps %>" placeholder="Num Samples" class="form-control numberInput" type="text"><br/><br/>-->\
         <a href="#" id="loadPath" class="btn btn-block btn-lg btn-default">Load Target Path</a><br/>\
