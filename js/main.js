@@ -16,16 +16,32 @@ $(function(){
         saveAs(blob, name + extension);
     };
 
+    globals.setTargetCurve = function(curve){
+        var cumulativeX = 0;
+        var cumulativeY = 0;
+        _.each(curve, function(point){
+            cumulativeX += point.x;
+            cumulativeY += point.y;
+        });
+        var centerX = cumulativeX/curve.length;
+        var centerY = cumulativeY/curve.length;
+        _.each(curve, function(point){
+            point.x -= centerX;
+            point.y -= centerY;
+        })
+        globals.targetCurve = curve;
+    };
+
     //init global singletons
     globals.runStatistics = [];
     globals.three = new ThreeModel();
     globals.physics = new PhysicsModel();
     globals.appState = new AppState();
-    globals.targetCurve = [
+    globals.setTargetCurve([
         {x:10.0,y:0.0},{x:7.071,y:7.071},
         {x:0.0,y:10.0},{x:-7.071,y:7.071},
         {x:-10.0,y:0.0},{x:-7.071,y:-7.071},
-        {x:0.0,y:-10.0},{x:7.071,y:-7.071}];
+        {x:0.0,y:-10.0},{x:7.071,y:-7.071}]);
     globals.population = new Population();
     globals.population.init();
 

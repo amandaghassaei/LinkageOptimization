@@ -108,7 +108,7 @@ NavBar = Backbone.View.extend({
                     var json = JSON.parse(e.target.result);
                     console.log(json);
                     if (json.path){
-                        globals.targetCurve = json.path;
+                        globals.setTargetCurve(json.path);
                         globals.population.newTargetPathLoaded();
                     } else if (json.population) {
                         globals.appState.loadFileFromJSON(json);
