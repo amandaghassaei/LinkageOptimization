@@ -31,15 +31,16 @@ Population.prototype._initFirstGeneration = function(archetype){
         archetype.addDriveCrank(hinge5, hinge3, link35.getLength());
     }
 
+    firstGeneration.push(archetype.clone());
+
     var mutationRate = globals.appState.get("mutationRate");
     if (globals.appState.get("isHillClimbing")){
-        firstGeneration.push(archetype);
         firstGeneration.push(archetype.forceMutate(mutationRate));
         return firstGeneration;
     }
 
     //init a proper population
-    for (var i=0;i<globals.appState.get("populationSize");i++){
+    for (var i=1;i<globals.appState.get("populationSize");i++){
         firstGeneration.push(archetype.forceMutate(mutationRate));
     }
     archetype.destroy();

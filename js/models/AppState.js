@@ -111,7 +111,7 @@ AppState = Backbone.Model.extend({
     },
 
     _hillClimbingMode: function(){
-        globals.population.reset();
+        globals.population.reset(globals.population.getBestLinkage());
     },
 
     _changeOutputHinge: function(){
