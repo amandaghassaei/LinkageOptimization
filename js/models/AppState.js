@@ -251,9 +251,15 @@ AppState = Backbone.Model.extend({
 
     saveJSON: function(name){
         console.log("save run");
-//        if (!name) name = "population";
-//        var data = JSON.stringify({population:globals.population.toJSON()});
-//        globals.saveFile(data, name, ".json");
+        if (!name) name = "run";
+        var data = JSON.stringify({
+            run:{
+                appState: this.toJSON(),
+                stats: globals.runStatistics,
+                population: globals.population.toJSON()
+            }
+        });
+        globals.saveFile(data, name, ".json");
     },
 
     syncScript: function(script){
