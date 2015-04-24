@@ -57,6 +57,11 @@ Population.prototype._setLinkages = function(linkages){
     this._calculateTrajectory();
 };
 
+
+
+
+//Run
+
 Population.prototype.run = function(){
     if (globals.appState.get("isRunning")){
         globals.population.step();
@@ -80,11 +85,8 @@ Population.prototype.readyToCalcNextGen = function(){
     return this._allHingePositionsStored;
 };
 
-Population.prototype.onDoneCalculatingTrajectory = function(){
-};
-
 Population.prototype._calculateTrajectory = function(){
-    globals.physics.update();//todo right order?
+    globals.physics.update();
     var angle = this._getCurrentDriveCrankAngle();
     if (this.readyToCalcNextGen()) return;
     _.each(this._linkages, function(linkage){
@@ -119,6 +121,12 @@ Population.prototype.calcNextGen = function(linkages){
     return nextGenLinkages;
 };
 
+
+
+
+
+//Stats
+
 Population.prototype.getBestLinkage = function(linkages){
     return this.getCurrentStatistics(linkages, true);
 };
@@ -141,11 +149,6 @@ Population.prototype.getCurrentStatistics = function(linkages, returnLinkageObje
     if (returnLinkageObject) return bestLinkage;
     return {minFitness:minFitness, maxFitness:maxFitness, avgFitness:fitnessSum/linkages.length, bestLinkage:bestLinkage.toJSON()}
 };
-
-
-
-
-//Hill Climbing Selection
 
 
 
@@ -224,7 +227,6 @@ Population.prototype._getCurrentDriveCrankAngle = function(){
                 linkage.checkContinuity(outputIndex);
             });
             this.setOutputPathVisibility(globals.appState.get("showOutputPath"));
-            this.onDoneCalculatingTrajectory();
         }
         this._theta = 0;
     }
