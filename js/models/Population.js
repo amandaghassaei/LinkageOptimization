@@ -180,7 +180,7 @@ Population.prototype._drawFromMatingPool = function(pool){
 //Draw
 
 Population.prototype.render = function(){
-    if (globals.appState.get("isAnimating") && this.readyToCalcNextGen()){
+    if ((globals.appState.get("isAnimating") || globals.appState.get("isRunning")) && this.readyToCalcNextGen()){
         var self = this;
         _.each(this._linkages, function(linkage){
             linkage.render(self._renderIndex, false);

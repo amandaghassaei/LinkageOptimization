@@ -79,7 +79,7 @@ RunMenuView = Backbone.View.extend({
 
     template: _.template('\
         <% if (isRunning) { %>\
-        <a href="#" id="pauseGA" class="btn-warning btn btn-block btn-lg btn-default">Pause</a><br/>\
+        <a href="#" id="pauseGA" class="btn-warning btn btn-block btn-lg btn-default">Pause Run</a><br/>\
         <% } else  { %>\
         <a href="#" id="runGA" class="btn-success btn btn-block btn-lg btn-default">Run</a><br/>\
         <a href="#" id="runStepNextGen" class="btn btn-block btn-lg btn-default">Step to Next Generation</a><br/>\
