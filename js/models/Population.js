@@ -317,6 +317,6 @@ Population.prototype.newTargetPathLoaded = function(){
     var newTargetPath = globals.targetCurve;
     var visibility = globals.appState.get("showTargetPath");
     _.each(this._linkages, function(linkage){
-        linkage.drawTargetPath(newTargetPath, visibility);
+        linkage.drawTargetPath(newTargetPath, linkage.getTranslationalOffset(), visibility);
     });
 };
