@@ -140,14 +140,15 @@ Linkage.prototype.getFitness = function(){
     return this._fitness;
 };
 
-Linkage.prototype.getShiftedTarget = function() {
+Linkage.prototype.getTranslationalOffset = function() {
     var hingeIndex = globals.appState.get("outputHingeIndex");
     var traj = this.getTrajectory(hingeIndex);
     // console.log(hingeIndex, derp);
     // TODO: this trajectory seems to be empty
     var midpoint = this._calcMidpoint(traj);
-    // console.log(midpoint);
-    return this._shiftMidpoint(midpoint, globals.targetCurve);
+    // console.log(midpoint);\
+    return midpoint;
+//    return this._shiftMidpoint(midpoint, targetCurve);
 }
 
 Linkage.prototype._calcMidpoint = function(points) {
@@ -276,6 +277,34 @@ Linkage.prototype.checkContinuity = function(outputIndex){
 
 
 
+//Trajectories
+
+Linkage.prototype.drawTargetPath = function(path, translationalOffset, visibility){
+    if (this._targetPath) this._removeTargetPath();
+    var offset = this._drawOffset;
+    var geometry = new THREE.Geometry();
+    _.each(path, function(position){
+        geometry.vertices.push(new THREE.Vector3(position.x+offset.x+translationalOffset.x,
+            position.y+offset.y+translationalOffset.y, 0));
+    });
+    geometry.vertices.push(_.clone(geometry.vertices[0]));//close loop
+    this._targetPath = new THREE.Line(geometry, targetTrajectoryMaterial);
+    this.setTargetPathVisibility(visibility);
+    globals.three.sceneAdd(this._targetPath);
+};
+
+Linkage.prototype._removeTargetPath = function(){
+    globals.three.sceneRemove(this._targetPath);
+    this._targetPath = null;
+};
+
+Linkage.prototype.setTargetPathVisibility = function(visibility){
+    if (this._targetPath) this._targetPath.visible = visibility;
+};
+
+
+
+
 //Draw
 
 Linkage.prototype.setWidth = function(width){
@@ -320,28 +349,6 @@ Linkage.prototype.setHingePathVisibility = function(visibility, index){
     _.each(this._hinges, function(hinge){
         hinge.setTrajectoryVisibility(visibility);
     });
-};
-
-Linkage.prototype.drawTargetPath = function(path, visibility){
-    if (this._targetPath) this._removeTargetPath();
-    var offset = this._drawOffset;
-    var geometry = new THREE.Geometry();
-    _.each(path, function(position){
-        geometry.vertices.push(new THREE.Vector3(position.x+offset.x, position.y+offset.y, 0));
-    });
-    geometry.vertices.push(_.clone(geometry.vertices[0]));//close loop
-    this._targetPath = new THREE.Line(geometry, targetTrajectoryMaterial);
-    this.setTargetPathVisibility(visibility);
-    globals.three.sceneAdd(this._targetPath);
-};
-
-Linkage.prototype._removeTargetPath = function(){
-    globals.three.sceneRemove(this._targetPath);
-    this._targetPath = null;
-};
-
-Linkage.prototype.setTargetPathVisibility = function(visibility){
-    if (this._targetPath) this._targetPath.visible = visibility;
 };
 
 Linkage.prototype.setColor = function(color){

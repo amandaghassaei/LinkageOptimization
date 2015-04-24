@@ -51,10 +51,10 @@ Population.prototype._setLinkages = function(linkages){
     this._allHingePositionsStored = false;
     this._theta = 0;
     this._calcLinkageRederingOffsets(linkages);
-    this._buildTargetPathVisualization(linkages);
     this._linkages = linkages;
     this._renderIndex = 0;
     this._calculateTrajectory();
+    this._buildTargetPathVisualization(linkages);
     if (linkages.length > 0 && (globals.appState.get("shouldRenderThreeJS") || !globals.appState.get("isRunning"))){
         this.getBestLinkage(linkages).setColor("0xffff00");
     }
@@ -206,11 +206,7 @@ Population.prototype._buildTargetPathVisualization = function(linkages){
     var path = globals.targetCurve;
     var visibility = globals.appState.get("showTargetPath");
     _.each(linkages, function(linkage){
-        // var shifted_target = linkage.getShiftedTarget();
-        // TODO: this shifted_target is not rendering properly
-        // console.log(shifted_target);
-        // linkage.drawTargetPath(shifted_target, visibility);
-        linkage.drawTargetPath(path, visibility);
+        linkage.drawTargetPath(path, linkage.getTranslationalOffset(), visibility);
     });
 };
 
