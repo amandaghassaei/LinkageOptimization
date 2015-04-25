@@ -21,6 +21,14 @@ DriveCrank.prototype._buildBody = function(centerHinge, length){
 DriveCrank.prototype._buildConstraints = function(body, centerHinge, outsideHinge){
     var constraints = [];
     constraints.push(globals.physics.makeConstraint(body, centerHinge.getBody(), 0));//pin center of drive crank to center hinge
+    if (outsideHinge.length){
+        var self = this;
+        _.each(outsideHinge, function(hinge){
+            constraints.push(globals.physics.makeConstraint(body, hinge.getBody(), 0,
+                self._diff(hinge.getPosition(), centerHinge.getPosition())));//pin outside hinge to outside of driveCrank
+        });
+        return constraints;
+    }
     constraints.push(globals.physics.makeConstraint(body, outsideHinge.getBody(), 0,
         this._diff(outsideHinge.getPosition(), centerHinge.getPosition())));//pin outside hinge to outside of driveCrank
     return constraints;

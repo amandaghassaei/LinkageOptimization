@@ -22,8 +22,8 @@ function Walker(json){//Linkage subclass
         var outsideHingeIndex = json.driveCrank.outsideHinge;
         cranks.push(this.addHingeAtPosition(this._crankPositionForAngle(Math.PI*2/numLegs*i,
             hinges[outsideHingeIndex].position, hinges[centerHingeIndex].position)));
-        hinges[outsideHingeIndex].updatedPosition = 1;
     }
+    hinges[outsideHingeIndex].updatedPosition = 1;
 
     //then add fixedHinges
     var fixedHinges = [centerHinge];
@@ -43,9 +43,10 @@ function Walker(json){//Linkage subclass
     //then add legs
     for (var i=0;i<numLegs;i++){
         this.initLeg(hinges, json.links, numLegs, i);
-        this.addDriveCrank(centerHinge, cranks[i], json.driveCrank.length);
         this.initLeg(hinges, json.links, numLegs, i, mirrorOffset);//mirror leg
     }
+
+    this.addDriveCrank(centerHinge, cranks, json.driveCrank.length);
 
     this._makeWalkerBody(fixedHinges);
 }
@@ -101,9 +102,9 @@ Walker.prototype._makeWalkerBody = function(hinges){
     });
 };
 
-Walker.prototype.addDriveCrank = function(centerHinge, outsideHinge, length){
-    if (!centerHinge || !outsideHinge || !length) return console.warn("drive crank parameter is missing");
-    var driveCrank = new DriveCrank(centerHinge, outsideHinge, length);
+Walker.prototype.addDriveCrank = function(centerHinge, outsideHinges, length){
+    if (!centerHinge || !outsideHinges || !length || outsideHinges.length == 0) return console.warn("drive crank parameter is missing");
+    var driveCrank = new DriveCrank(centerHinge, outsideHinges, length);
     this._driveCrank = driveCrank;
     return driveCrank;
 };
