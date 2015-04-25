@@ -55,11 +55,14 @@ Population.prototype._setLinkages = function(linkages){
     this._calcLinkageRederingOffsets(linkages);
     this._linkages = linkages;
     this._renderIndex = 0;
-    this._calculateTrajectory();
-    this._buildTargetPathVisualization(linkages);
-    if (linkages.length > 0 && (globals.appState.get("shouldRenderThreeJS") || !globals.appState.get("isRunning"))){
-        this.getBestLinkage(linkages).setColor("0xffff00");
+    if (globals.appState.get("fitnessBasedOnTargetPath")) {
+        this._calculateTrajectory();
+        this._buildTargetPathVisualization(linkages);
+        if (linkages.length > 0 && (globals.appState.get("shouldRenderThreeJS") || !globals.appState.get("isRunning"))){
+            this.getBestLinkage(linkages).setColor("0xffff00");
+        }
     }
+
 };
 
 
@@ -182,14 +185,25 @@ Population.prototype._drawFromMatingPool = function(pool){
 //Draw
 
 Population.prototype.render = function(){
-    if ( (globals.appState.get("shouldRenderPhaseChange") || globals.appState.get("isAnimating") || globals.appState.get("isRunning")) && this.readyToCalcNextGen()){
+    if ((globals.appState.get("shouldRenderPhaseChange") || globals.appState.get("isAnimating") || globals.appState.get("isRunning"))
+        && (this.readyToCalcNextGen() || !(globals.appState.get("fitnessBasedOnTargetPath")))){
         var self = this;
-        _.each(this._linkages, function(linkage){
-            linkage.render(self._renderIndex, false);
-        });
+
+        if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
+            globals.physics.update();
+            var angle = this._getCurrentDriveCrankAngle(true);
+            _.each(this._linkages, function(linkage){
+                linkage.render(angle);
+            });
+        }
+        else {
+            _.each(this._linkages, function(linkage){
+                linkage.render(self._renderIndex, false);
+            });
+            if (globals.appState.get("isAnimating")) this._renderIndex++;
+            if (this._renderIndex >= globals.appState.get("numPositionSteps")) this._renderIndex = 0;
+        }
         globals.appState.set("shouldRenderPhaseChange", false, {silent:true});
-        if (globals.appState.get("isAnimating")) this._renderIndex++;
-        if (this._renderIndex >= globals.appState.get("numPositionSteps")) this._renderIndex = 0;
     }
 };
 
@@ -214,20 +228,22 @@ Population.prototype._buildTargetPathVisualization = function(linkages){
 };
 
 
-Population.prototype._getCurrentDriveCrankAngle = function(){
+Population.prototype._getCurrentDriveCrankAngle = function(isWalker){
     this._theta += Math.PI*2/globals.appState.get("numPositionSteps");
     if (this._theta > Math.PI*2) {
-        if (!this._waitTimePassed) this._waitTimePassed = true;//wait for one rotation of crank to start storing hinge pos data
-        else if (!this._allHingePositionsStored) {
-            this._allHingePositionsStored = true;
-            var visibility = globals.appState.get("showHingePaths");
-            var outputIndex = globals.appState.get("outputHingeIndex");
-            _.each(this._linkages, function(linkage){
-                linkage.drawTrajectories(visibility);
-                linkage.relaxHingePositions();
-                linkage.checkContinuity(outputIndex);
-            });
-            this.setOutputPathVisibility(globals.appState.get("showOutputPath"));
+        if (!isWalker){
+            if (!this._waitTimePassed) this._waitTimePassed = true;//wait for one rotation of crank to start storing hinge pos data
+            else if (!this._allHingePositionsStored) {
+                this._allHingePositionsStored = true;
+                var visibility = globals.appState.get("showHingePaths");
+                var outputIndex = globals.appState.get("outputHingeIndex");
+                _.each(this._linkages, function(linkage){
+                    linkage.drawTrajectories(visibility);
+                    linkage.relaxHingePositions();
+                    linkage.checkContinuity(outputIndex);
+                });
+                this.setOutputPathVisibility(globals.appState.get("showOutputPath"));
+            }
         }
         this._theta = 0;
     }
@@ -286,8 +302,10 @@ Population.prototype.toJSON = function(){
 Population.prototype.setFromJSON = function(json){
     this.clearAll();
     var linkages = [];
+    var isWalker = !(globals.appState.get("fitnessBasedOnTargetPath"));//todo
     _.each(json, function(linkageJSON){
-        linkages.push(new Linkage(linkageJSON));
+        if (isWalker) linkages.push(new Walker(linkageJSON));
+        else linkages.push(new Linkage(linkageJSON));
     });
     this._setLinkages(linkages);
 };

@@ -118,7 +118,7 @@ FitnessMenuView = Backbone.View.extend({
             <input type="checkbox" <% if (showOutputPath){ %>checked="checked" <% } %> value="" id="showOutputPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Show output hinge trajectory</label>\
         <% } else { %>\
-            Need stuff here\
+            Num Leg Pairs: &nbsp;&nbsp;<input id="numLegPairs" data-type="numLegPairs" value="<%= numLegPairs %>" placeholder="Num Pairs" class="form-control numberInput" type="text"><br/><br/>\
         <% } %>\
         ')
 });

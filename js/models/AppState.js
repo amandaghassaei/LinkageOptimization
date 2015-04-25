@@ -35,8 +35,10 @@ AppState = Backbone.Model.extend({
             }
         },
 
+        //default is ga, unless other specified
         isHillClimbing: false,
         isNelderMead: false,
+        populationSize: 20,
 
         fitnessBasedOnTargetPath: true,
         outputHingeIndex: 1,
@@ -54,6 +56,8 @@ AppState = Backbone.Model.extend({
         isAnimating: true,//play/pause animation
         isRunning:false,//play/pause optimization
 
+        numLegPairs: 3,
+
         linkWidth: 3,
         zDepth: 3,
 
@@ -61,9 +65,8 @@ AppState = Backbone.Model.extend({
         showHingePaths: false,
         showOutputPath: true,//output hinge
         showTargetPath: true,
-        shouldRenderThreeJS: true,
+        shouldRenderThreeJS: true
 
-        populationSize: 20
     },
 
     initialize: function(){
@@ -89,6 +92,7 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:isHillClimbing", this._hillClimbingMode);
         this.listenTo(this, "change:outputHingeIndex", this._changeOutputHinge);
         this.listenTo(this, "change:isAnimating", this._startStopAnimation);
+        this.listenTo(this, "change:fitnessBasedOnTargetPath", this._changeFitnessMetric);
 
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
     },
@@ -135,6 +139,11 @@ AppState = Backbone.Model.extend({
 
     _startStopAnimation: function(){
         if (this.get("isAnimating")) this.set("shouldAutoUpdatePhase", true);
+    },
+
+    _changeFitnessMetric: function(){
+        var populationJSON = JSON.stringify(globals.population.toJSON());
+        globals.population.setFromJSON(JSON.parse(populationJSON));
     },
 
 
@@ -270,7 +279,8 @@ AppState = Backbone.Model.extend({
                     showTargetPath: this.get("showTargetPath"),
                     zDepth: this.get("zDepth"),
                     fitnessBasedOnTargetPath: this.get("fitnessBasedOnTargetPath"),
-                    mutateTopology: this.get("mutateTopology")
+                    mutateTopology: this.get("mutateTopology"),
+                    numLegPairs: this.get("numLegPairs")
                 },
                 runStatistics: globals.runStatistics,
                 population: globals.population.toJSON(),

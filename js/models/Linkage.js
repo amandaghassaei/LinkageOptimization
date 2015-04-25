@@ -17,10 +17,7 @@ function Linkage(json){//init a linkage with optional json
     this._outputContinuity = false;
     this._targetPath = null;
     this._material = new THREE.MeshBasicMaterial({color:0xffffff});
-    if (json === undefined) {
-        console.warn("inited with no json");
-        return;
-    }
+    if (json === undefined) return;
 
     var self = this;
     _.each(json.hinges, function(hinge){//{position:this._position, static:this._static}
@@ -57,6 +54,7 @@ Linkage.prototype.link = function(hingeA, hingeB, distance){
     this._links.push(link);
     return link;
 };
+
 
 
 
@@ -149,7 +147,7 @@ Linkage.prototype.getTranslationScaleRotation = function() {
     // console.log(midpoint);\
     return {translation:midpoint};//, scale:scale, rotation:rotation};
 //    return this._shiftMidpoint(midpoint, targetCurve);
-}
+};
 
 Linkage.prototype._calcMidpoint = function(points) {
 
@@ -371,8 +369,8 @@ Linkage.prototype.destroy = function(){
     this._iterateAllHingesAndLinks(function(object){
         object.destroy();
     });
-    this._hinges = [];
-    this._links = [];
+    this._hinges = null;
+    this._links = null;
     if (this._driveCrank) this._driveCrank.destroy();
     this._driveCrank = null;
     this._fitness = null;
