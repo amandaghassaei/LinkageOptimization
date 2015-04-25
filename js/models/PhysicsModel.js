@@ -64,7 +64,7 @@ function PhysicsModel(){
     }
 
     function setGravity(state){
-        if (state) engine.world.gravity.y = -10000;
+        if (state) engine.world.gravity.y = -10000;//todo mess around with density, also links have no mass
         else engine.world.gravity.y = 0;
     }
 
