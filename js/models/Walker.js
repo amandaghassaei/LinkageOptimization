@@ -12,12 +12,18 @@ function Walker(json){//Linkage subclass
     //make crank center hinge #0
     var centerHingeIndex = json.driveCrank.centerHinge;
     var centerHinge = this.addHingeAtPosition(hinges[centerHingeIndex].position);
+    centerHinge.setStatic(true);
     hinges[centerHingeIndex].updatedPosition = 0;
 
-    //add crank (shared between leg pair)
-    var outsideHingeIndex = json.driveCrank.outsideHinge;
-    var crankHinge = this.addHingeAtPosition(hinges[outsideHingeIndex].position);
-    hinges[outsideHingeIndex].updatedPosition = 1;
+    //add cranks (shared between leg pair)
+    var numLegs = 3;//globals.appState.get("numLegPairs");
+    var cranks = [];
+    for (var i=0;i<numLegs;i++){
+        var outsideHingeIndex = json.driveCrank.outsideHinge;
+        cranks.push(this.addHingeAtPosition(this._crankPositionForAngle(Math.PI*2/numLegs*i,
+            hinges[outsideHingeIndex].position, hinges[centerHingeIndex].position)));
+        hinges[outsideHingeIndex].updatedPosition = 1;
+    }
 
     //then add fixedHinges
     var fixedHinges = [centerHinge];
@@ -35,23 +41,36 @@ function Walker(json){//Linkage subclass
     });
 
     //then add legs
-    this.initLeg(hinges, json.links);
-    this.addDriveCrank(centerHinge, crankHinge, json.driveCrank.length);
-    this.initLeg(hinges, json.links, mirrorOffset);//mirror leg
+    for (var i=0;i<numLegs;i++){
+        this.initLeg(hinges, json.links, numLegs, i);
+        this.addDriveCrank(centerHinge, cranks[i], json.driveCrank.length);
+        this.initLeg(hinges, json.links, numLegs, i, mirrorOffset);//mirror leg
+    }
 
     this._makeWalkerBody(fixedHinges);
 }
 Walker.prototype = Object.create(Linkage.prototype);
 
+Walker.prototype._crankPositionForAngle = function(angle, position, centerPosition){
+    angle +=  Math.atan2(position.y-centerPosition.y, position.x-centerPosition.x);
+    var radius = Math.sqrt(Math.pow(position.x-centerPosition.x, 2) + Math.pow(position.y + centerPosition.y, 2));
+    var x = centerPosition.x+Math.cos(angle)*radius;
+    var y = centerPosition.y+Math.sin(angle)*radius;
+    return {x:x, y:y};
+};
 
-Walker.prototype.initLeg = function(hinges, links, mirrorOffset){
+
+Walker.prototype.initLeg = function(hinges, links, numLegs, num, mirrorOffset){
     var self = this;
     var lookupTable = {};
     _.each(hinges, function(hinge, index){//{position:this._position, static:this._static}
         lookupTable[index] = self._hinges.length;
         if (hinge.static || hinge.updatedPosition !== undefined){
-            if (mirrorOffset && hinge.updatedPosition != 0 && hinge.updatedPosition != 1){
+            if (mirrorOffset && hinge.updatedPosition > 1){
                 lookupTable[index] = hinge.updatedPosition + 1;
+                return;
+            } else if (hinge.updatedPosition == 1){
+                lookupTable[index] = hinge.updatedPosition + num;
                 return;
             }
             lookupTable[index] = hinge.updatedPosition;
