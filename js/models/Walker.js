@@ -2,28 +2,29 @@
  * Created by aghassaei on 4/24/15.
  */
 
+//todo hinge relaxation
 
 function Walker(json){//Linkage subclass
     Linkage.call(this);//init empty linkage
     this._walkerBodyConstraints = [];
+    this._json = json;
 
     var hinges = json.hinges;
 
     //make crank center hinge #0
     var centerHingeIndex = json.driveCrank.centerHinge;
     var centerHinge = this.addHingeAtPosition(hinges[centerHingeIndex].position);
-    centerHinge.setStatic(true);
     hinges[centerHingeIndex].updatedPosition = 0;
 
     //add cranks (shared between leg pair)
-    var numLegs = 3;//globals.appState.get("numLegPairs");
+    var numLegs = globals.appState.get("numLegPairs");
     var cranks = [];
     for (var i=0;i<numLegs;i++){
         var outsideHingeIndex = json.driveCrank.outsideHinge;
         cranks.push(this.addHingeAtPosition(this._crankPositionForAngle(Math.PI*2/numLegs*i,
             hinges[outsideHingeIndex].position, hinges[centerHingeIndex].position)));
-        hinges[outsideHingeIndex].updatedPosition = 1;
     }
+    hinges[outsideHingeIndex].updatedPosition = 1;
 
     //then add fixedHinges
     var fixedHinges = [centerHinge];
@@ -43,9 +44,10 @@ function Walker(json){//Linkage subclass
     //then add legs
     for (var i=0;i<numLegs;i++){
         this.initLeg(hinges, json.links, numLegs, i);
-        this.addDriveCrank(centerHinge, cranks[i], json.driveCrank.length);
         this.initLeg(hinges, json.links, numLegs, i, mirrorOffset);//mirror leg
     }
+
+    this.addDriveCrank(centerHinge, cranks, json.driveCrank.length);
 
     this._makeWalkerBody(fixedHinges);
 }
@@ -101,9 +103,9 @@ Walker.prototype._makeWalkerBody = function(hinges){
     });
 };
 
-Walker.prototype.addDriveCrank = function(centerHinge, outsideHinge, length){
-    if (!centerHinge || !outsideHinge || !length) return console.warn("drive crank parameter is missing");
-    var driveCrank = new DriveCrank(centerHinge, outsideHinge, length);
+Walker.prototype.addDriveCrank = function(centerHinge, outsideHinges, length){
+    if (!centerHinge || !outsideHinges || !length || outsideHinges.length == 0) return console.warn("drive crank parameter is missing");
+    var driveCrank = new DriveCrank(centerHinge, outsideHinges, length);
     this._driveCrank = driveCrank;
     return driveCrank;
 };
@@ -193,22 +195,10 @@ Walker.prototype.destroy = function(){
 //Utilities
 
 Walker.prototype.toJSON = function(){
-    var hingesJSON = [];
-    _.each(this._hinges, function(hinge){
-        hingesJSON.push(hinge.toJSON());
-    });
-    var linksJSON = [];
-    _.each(this._links, function(link){
-        linksJSON.push(link.toJSON());
-    });
-    return {
-        hinges: hingesJSON,
-        links: linksJSON,
-        driveCrank: this._driveCrank.toJSON()
-    }
+    return JSON.parse(JSON.stringify(this._json));//deep copy of json
 };
 
 Walker.prototype.clone = function(json){
     if (json === undefined) json = this.toJSON();
-    return new Linkage(json);
+    return new Walker(json);
 };

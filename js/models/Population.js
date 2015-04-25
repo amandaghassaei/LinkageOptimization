@@ -120,6 +120,7 @@ Population.prototype.calcNextGen = function(linkages){
 
     //genetic algorithm mode
     var matingPool = this._createMatingPool(linkages);
+    if (matingPool.length == 0) console.warn("all linkages has zero fitness, no mating possible");
     for (var i=0;i<linkages.length;i++){//next generation is the same size as this one
         var parent1 = this._drawFromMatingPool(matingPool);
         var parent2 = this._drawFromMatingPool(matingPool);
@@ -210,6 +211,13 @@ Population.prototype.render = function(){
 };
 
 Population.prototype._calcLinkageRederingOffsets = function(linkages){//draw in grid layout on screen
+    if (!(globals.appState.get("fitnessBasedOnTargetPath"))){
+        var offset = {x:0,y:0};
+        _.each(linkages, function(linkage){
+            linkage.setDrawOffset(offset);
+        });
+        return;
+    }
     var populationNum = linkages.length;
     var numPerRow = Math.ceil(Math.sqrt(populationNum));
     var width = window.innerWidth/numPerRow;
@@ -290,6 +298,33 @@ Population.prototype.setTargetPathVisibility = function(visibility){
 Population.prototype.setPhase = function(phase){
     this._renderIndex = phase;
 };
+
+
+
+
+
+//Terrain
+
+Population.prototype.removeTerrain =  function(){
+    if (this._terrain){
+        globals.physics.worldRemove(this._terrain);
+        this._terrain = null;
+    }
+    if (this._terrainMesh){
+        globals.three.sceneRemove(this._terrainMesh);
+        this._terrainMesh = null;
+    }
+};
+
+Population.prototype.createTerrain = function(){
+    if (this._terrain) this.removeTerrain();
+    this._terrain = globals.physics.makeTerrain(globals.appState.get("terrain"));
+    globals.physics.worldAdd(this._terrain);
+    this._terrainMesh = new THREE.Mesh(new THREE.BoxGeometry(1000, 10, 1));
+    this._terrainMesh.position.set(0,-100, 0);
+    globals.three.sceneAdd(this._terrainMesh);
+};
+
 
 
 

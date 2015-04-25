@@ -39,6 +39,7 @@ AppState = Backbone.Model.extend({
         isHillClimbing: false,
         isNelderMead: false,
         populationSize: 20,
+        simulatedAnnealing: false,
 
         fitnessBasedOnTargetPath: true,
         outputHingeIndex: 1,
@@ -61,6 +62,8 @@ AppState = Backbone.Model.extend({
 
         linkWidth: 3,
         zDepth: 3,
+        flipVertical: false,
+        flipHorizontal: false,
 
         //view
         showHingePaths: false,
@@ -94,6 +97,8 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:outputHingeIndex", this._changeOutputHinge);
         this.listenTo(this, "change:isAnimating", this._startStopAnimation);
         this.listenTo(this, "change:fitnessBasedOnTargetPath", this._changeFitnessMetric);
+        this.listenTo(this, "change:flipVertical", this._flipVertically);
+        this.listenTo(this, "change:flipHorizontal", this._flipHorizontally);
 
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
     },
@@ -146,9 +151,35 @@ AppState = Backbone.Model.extend({
     },
 
     _changeFitnessMetric: function(){
-        if (this.get("fitnessBasedOnTargetPath")) globals.population.reset();
-        var populationJSON = JSON.stringify(globals.population.toJSON());
-        globals.population.setFromJSON(JSON.parse(populationJSON));
+        if (this.get("fitnessBasedOnTargetPath")) {
+            globals.physics.setGravity(false);
+            globals.population.reset();
+            globals.population.removeTerrain();
+        } else {
+            globals.physics.setGravity(true);
+            globals.population.createTerrain();
+            var populationJSON = JSON.stringify(globals.population.toJSON());
+            globals.population.setFromJSON(JSON.parse(populationJSON));
+        }
+    },
+
+    _flipVertically: function(){
+        this._flip('y');
+    },
+
+    _flipHorizontally: function(){
+        this._flip('x');
+    },
+
+    _flip: function(axis){
+        var populationJSON = JSON.parse(JSON.stringify(globals.population.toJSON()));
+        _.each(populationJSON, function(linkage){
+            var offset = linkage.hinges[linkage.driveCrank.centerHinge].position[axis]*2;
+            _.each(linkage.hinges, function(hinge){
+                hinge.position[axis] = offset - hinge.position[axis];
+            });
+        });
+        globals.population.setFromJSON(populationJSON);
     },
 
 
@@ -167,6 +198,7 @@ AppState = Backbone.Model.extend({
         if (!globals.appState.get("is3D")) return 0.000001;
         return this.get("zDepth");
     },
+
 
 
 
@@ -286,7 +318,8 @@ AppState = Backbone.Model.extend({
                     fitnessBasedOnTargetPath: this.get("fitnessBasedOnTargetPath"),
                     mutateTopology: this.get("mutateTopology"),
                     numLegPairs: this.get("numLegPairs"),
-                    terrain: this.get("terrain")
+                    terrain: this.get("terrain"),
+                    simulatedAnnealing: this.get("simulatedAnnealing")
                 },
                 runStatistics: globals.runStatistics,
                 population: globals.population.toJSON(),
