@@ -17,34 +17,36 @@ function Walker(json){//Linkage subclass
     //then add fixedHinges
     var fixedHinges = [centerHinge];
     var self = this;
+    var mirrorOffset = 2*centerHinge.getPosition().x;
     _.each(hinges, function(hinge){
         if (hinge.static && hinge.updatedPosition === undefined) {
+            hinge.updatedPosition = self._hinges.length;
             var newHinge = self.addHingeAtPosition(hinge.position);
-            hinge.updatedPosition = fixedHinges.length;
             fixedHinges.push(newHinge);
             //also add mirror
-            var mirrorXPos = 2*centerHinge.getPosition().x-hinge.position.x;
+            var mirrorXPos = mirrorOffset-hinge.position.x;
             var newHingeMirror = self.addHingeAtPosition({x:mirrorXPos, y:hinge.position.y});
             fixedHinges.push(newHingeMirror);
         }
     });
+    //add crank (shared between leg pair)
+    var outsideHingeIndex = json.driveCrank.outsideHinge;
+    hinges[outsideHingeIndex].updatedPosition = this._hinges.length;
+    var crankHinge = this.addHingeAtPosition(hinges[outsideHingeIndex].position);
 
     //then add legs
-//    var numLegs = globals.appState.get("numLegPairs");
-//    for (var i=0;i<numLegs;i++){
     this.initLeg(hinges, json.links);
+    this.addDriveCrank(centerHinge, crankHinge, json.driveCrank.length);
+//    this.initLeg(hinges, json.links, mirrorOffset);//mirror leg
 
 
-
-    //{centerHinge: this.getCenterHingeId(), outsideHinge: this.getOutsideHingeId(), length: this._length}
-    this.addDriveCrank(this._hinges[0], this._hinges[json.driveCrank.outsideHinge+fixedHinges.length], json.driveCrank.length);
 
     this._makeWalkerBody(fixedHinges);
 }
 Walker.prototype = Object.create(Linkage.prototype);
 
 
-Walker.prototype.initLeg = function(hinges, links){
+Walker.prototype.initLeg = function(hinges, links, mirrorOffset){
     var self = this;
     var lookupTable = {};
     _.each(hinges, function(hinge, index){//{position:this._position, static:this._static}
