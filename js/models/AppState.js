@@ -57,6 +57,7 @@ AppState = Backbone.Model.extend({
         isRunning:false,//play/pause optimization
 
         numLegPairs: 3,
+        terrain: "flat",
 
         linkWidth: 3,
         zDepth: 3,
@@ -284,7 +285,8 @@ AppState = Backbone.Model.extend({
                     zDepth: this.get("zDepth"),
                     fitnessBasedOnTargetPath: this.get("fitnessBasedOnTargetPath"),
                     mutateTopology: this.get("mutateTopology"),
-                    numLegPairs: this.get("numLegPairs")
+                    numLegPairs: this.get("numLegPairs"),
+                    terrain: this.get("terrain")
                 },
                 runStatistics: globals.runStatistics,
                 population: globals.population.toJSON(),

@@ -62,9 +62,9 @@ MutationMenuView = Backbone.View.extend({
         <% if (!fitnessBasedOnTargetPath) { %>\
         <label class="checkbox" for="mutateTopology">\
         <input type="checkbox" <% if (mutateTopology){ %>checked="checked" <% } %> value="" id="mutateTopology" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-        Mutate Topology</label>\
+        Mutate Topology</label><br/>\
         <% if (mutateTopology){ %>\
-        Need Stuff Here\
+            Mutation Options\
         <% } %>\
         <% } %>\
         ')

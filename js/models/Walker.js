@@ -119,7 +119,7 @@ Walker.prototype.getFitness = function(){
     return this._fitness;
 };
 
-Walker.prototype._calcFitness = function(target, test){
+Walker.prototype._calcFitness = function(){
     return 3;
 };
 
@@ -135,7 +135,7 @@ Walker.prototype.drawTargetPath = function(){
 Walker.prototype._removeTargetPath = function(){
 };
 
-Walker.prototype.setTargetPathVisibility = function(visibility){
+Walker.prototype.setTargetPathVisibility = function(){
 };
 
 Walker.prototype.checkContinuity = function(){
@@ -145,7 +145,7 @@ Walker.prototype.getTrajectory = function(){
     return [];
 };
 
-Walker.prototype.drawTrajectories = function(visibility){
+Walker.prototype.drawTrajectories = function(){
 };
 
 Walker.prototype.getTranslationScaleRotation = function() {

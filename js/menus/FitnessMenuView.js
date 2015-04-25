@@ -13,7 +13,8 @@ FitnessMenuView = Backbone.View.extend({
         "click #savePath":                                          "_saveTargetPath",
         "click #loadPath":                                          "_loadTargetPath",
         "click #saveOutputPath":                                    "_saveOutputPath",
-        "change input[name=fitnessMetrics]":                        "_changeFitnessMetrics"
+        "change input[name=fitnessMetrics]":                        "_changeFitnessMetrics",
+        "change input[name=terrainType]":                           "_changeTerrain"
     },
 
     initialize: function(){
@@ -88,6 +89,13 @@ FitnessMenuView = Backbone.View.extend({
         } else console.warn("unknown fitness metric " + val);
     },
 
+    _changeTerrain: function(e){
+        var val = $(e.target).val();
+        if (val == "flat" || val == "incline" || val == "obstacles"){
+            globals.appState.set("terrain", val);
+        } else console.warn("unknown terrain type " + val);
+    },
+
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "fitness") return;
@@ -119,6 +127,19 @@ FitnessMenuView = Backbone.View.extend({
             Show output hinge trajectory</label>\
         <% } else { %>\
             Num Leg Pairs: &nbsp;&nbsp;<input id="numLegPairs" data-type="numLegPairs" value="<%= numLegPairs %>" placeholder="Num Pairs" class="form-control numberInput" type="text"><br/><br/>\
+            Terrain Choices:\
+            <label class="radio">\
+            <input type="radio" name="terrainType" <% if (terrain == "flat"){ %> checked <% } %>value="flat" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Flat\
+            </label>\
+            <label class="radio">\
+            <input type="radio" name="terrainType" <% if (terrain == "incline"){ %>checked <% } %>value="incline" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Inclines/Declines\
+            </label>\
+            <label class="radio">\
+            <input type="radio" name="terrainType" <% if (terrain == "obstacles"){ %>checked <% } %>value="obstacles" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Obstacles\
+            </label>\
         <% } %>\
         ')
 });
