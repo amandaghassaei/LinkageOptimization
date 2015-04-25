@@ -138,10 +138,14 @@ AppState = Backbone.Model.extend({
     },
 
     _startStopAnimation: function(){
-        if (this.get("isAnimating")) this.set("shouldAutoUpdatePhase", true);
+        if (this.get("isAnimating")) {
+            this.set("shouldAutoUpdatePhase", true);
+            this.set("shouldRenderThreeJS", true);
+        }
     },
 
     _changeFitnessMetric: function(){
+        if (this.get("fitnessBasedOnTargetPath")) globals.population.reset();
         var populationJSON = JSON.stringify(globals.population.toJSON());
         globals.population.setFromJSON(JSON.parse(populationJSON));
     },
