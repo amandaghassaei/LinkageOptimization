@@ -308,13 +308,18 @@ Population.prototype.setPhase = function(phase){
 Population.prototype.removeTerrain =  function(){
     if (this._terrain){
         globals.physics.worldRemove(this._terrain);
+        this._terrain = null;
+    }
+    if (this._terrainMesh){
         globals.three.sceneRemove(this._terrainMesh);
+        this._terrainMesh = null;
     }
 };
 
 Population.prototype.createTerrain = function(){
     if (this._terrain) this.removeTerrain();
-    this._terrain = globals.physics.worldAdd(globals.physics.makeTerrain(globals.appState.get("terrain")));
+    this._terrain = globals.physics.makeTerrain(globals.appState.get("terrain"));
+    globals.physics.worldAdd(this._terrain);
     this._terrainMesh = new THREE.Mesh(new THREE.BoxGeometry(1000, 10, 1));
     this._terrainMesh.position.set(0,-100, 0);
     globals.three.sceneAdd(this._terrainMesh);
