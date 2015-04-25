@@ -17,7 +17,7 @@ function Walker(json){//Linkage subclass
     hinges[centerHingeIndex].updatedPosition = 0;
 
     //add cranks (shared between leg pair)
-    var numLegs = 3;//globals.appState.get("numLegPairs");
+    var numLegs = globals.appState.get("numLegPairs");
     var cranks = [];
     for (var i=0;i<numLegs;i++){
         var outsideHingeIndex = json.driveCrank.outsideHinge;
