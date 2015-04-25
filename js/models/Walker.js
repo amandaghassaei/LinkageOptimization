@@ -39,8 +39,6 @@ function Walker(json){//Linkage subclass
     this.addDriveCrank(centerHinge, crankHinge, json.driveCrank.length);
     this.initLeg(hinges, json.links, mirrorOffset);//mirror leg
 
-
-
     this._makeWalkerBody(fixedHinges);
 }
 Walker.prototype = Object.create(Linkage.prototype);

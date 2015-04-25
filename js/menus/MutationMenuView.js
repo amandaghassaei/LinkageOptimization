@@ -59,11 +59,13 @@ MutationMenuView = Backbone.View.extend({
         Mutation Rate (%): &nbsp;&nbsp;<input data-type="mutationRate" value="<%= mutationRate %>" placeholder="Mutation Rate" class="form-control numberInput" type="text"><br/><br/>\
         Max Link Length Change (%): &nbsp;&nbsp;<input data-type="maxLinkChange" value="<%= maxLinkChange %>" placeholder="Max Change" class="form-control numberInput" type="text"><br/><br/>\
         Min Link Length: &nbsp;&nbsp;<input data-type="minLinkLength" value="<%= minLinkLength %>" placeholder="Length" class="form-control numberInput" type="text"><br/><br/>\
+        <% if (!fitnessBasedOnTargetPath) { %>\
         <label class="checkbox" for="mutateTopology">\
         <input type="checkbox" <% if (mutateTopology){ %>checked="checked" <% } %> value="" id="mutateTopology" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Mutate Topology</label>\
         <% if (mutateTopology){ %>\
         Need Stuff Here\
+        <% } %>\
         <% } %>\
         ')
 });
