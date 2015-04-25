@@ -127,7 +127,7 @@ FitnessMenuView = Backbone.View.extend({
             Show output hinge trajectory</label>\
         <% } else { %>\
             Num Leg Pairs: &nbsp;&nbsp;<input id="numLegPairs" data-type="numLegPairs" value="<%= numLegPairs %>" placeholder="Num Pairs" class="form-control numberInput" type="text"><br/><br/>\
-            Terrain Choices:\
+            Terrain:\
             <label class="radio">\
             <input type="radio" name="terrainType" <% if (terrain == "flat"){ %> checked <% } %>value="flat" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Flat\

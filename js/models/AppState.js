@@ -9,10 +9,10 @@ AppState = Backbone.Model.extend({
     defaults: {
 
         currentNav:"navDesign",// design, evo, export
-        currentTab:"drawParams",
+        currentTab:"population",
 
         //last tab that one open in each of the main menus
-        lastDesignTab: "drawParams",
+        lastDesignTab: "population",
         lastEvoTab: "population",
         lastExportTab: "print",
 
@@ -21,10 +21,10 @@ AppState = Backbone.Model.extend({
 
         allMenuTabs: {
             navDesign:{
-                drawParams:"View",
-                population:"Population",
+                population:"Setup",
                 fitness:"Fitness",
                 mutation:"Mutation",
+                drawParams:"View",
                 run:"Run"
             },
             navEvo:{
