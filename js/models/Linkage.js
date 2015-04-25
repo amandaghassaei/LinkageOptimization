@@ -45,6 +45,7 @@ Linkage.prototype.addHingeAtPosition = function(position){
 Linkage.prototype.addDriveCrank = function(centerHinge, outsideHinge, length){
     if (!centerHinge || !outsideHinge || !length) return console.warn("drive crank parameter is missing");
     var driveCrank = new DriveCrank(centerHinge, outsideHinge, length);
+    centerHinge.setStatic(true);
     this._driveCrank = driveCrank;
     return driveCrank;
 };

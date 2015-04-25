@@ -7,34 +7,49 @@ function Walker(json){//Linkage subclass
     Linkage.call(this);//init empty linkage
     this._walkerBodyConstraints = [];
 
-    this.initLeg(json);//todo call multiple times
+    var hinges = json.hinges;
+
+    //make crank center hinge #0
+    var centerHingeIndex = json.driveCrank.centerHinge;
+    var centerHinge = this.addHingeAtPosition(hinges[centerHingeIndex].position);
+    hinges[centerHingeIndex].updatedPosition = 0;
+
+    //then add fixedHinges
+    var fixedHinges = [centerHinge];
+    var self = this;
+    _.each(hinges, function(hinge){
+        if (hinge.static && hinge.updatedPosition === undefined) {
+            var newHinge = self.addHingeAtPosition(hinge.position);
+            hinge.updatedPosition = fixedHinges.length;
+            fixedHinges.push(newHinge);
+        }
+    });
+
+    //then add legs
+    this.initLeg(hinges, json.links);//todo call multiple times
+
 
     //{centerHinge: this.getCenterHingeId(), outsideHinge: this.getOutsideHingeId(), length: this._length}
-    this.addDriveCrank(this._hinges[json.driveCrank.centerHinge], this._hinges[json.driveCrank.outsideHinge], json.driveCrank.length);
+    this.addDriveCrank(this._hinges[0], this._hinges[json.driveCrank.outsideHinge+fixedHinges.length], json.driveCrank.length);
 
-//    if (isWalker){
-//
-//        _.each(this._hinges, function(hinge, index){
-//            if (!hinge.static) return;
-//            if (self._hinges.length <= index+1) return;
-//            for (var i=index+1;i<self._hinges.length;i++){//link to all other static hinges
-//                if (self._hinges[i].static) self._makeWalkerBody(hinge, self._hinges[i]);
-//            }
-//            hinge.setStatic(false);
-//        });
-//    }
+    this._makeWalkerBody(fixedHinges);
 }
 Walker.prototype = Object.create(Linkage.prototype);
 
 
-Walker.prototype.initLeg = function(json){
+Walker.prototype.initLeg = function(hinges, links){
     var self = this;
-    _.each(json.hinges, function(hinge){//{position:this._position, static:this._static}
-        var newHinge = self.addHingeAtPosition(hinge.position);
-        if (hinge.static) newHinge.setStatic(true);
+    var lookupTable = {};
+    _.each(hinges, function(hinge, index){//{position:this._position, static:this._static}
+        lookupTable[index] = self._hinges.length;
+        if (hinge.static || hinge.updatedPosition !== undefined){
+            lookupTable[index] = hinge.updatedPosition;
+            return;
+        }
+        self.addHingeAtPosition(hinge.position);
     });
-    _.each(json.links, function(link){//{hinges: [this.getHingeAId(), this.getHingeBId()], length: this._length}
-        self.link(self._hinges[link.hinges[0]], self._hinges[link.hinges[1]], link.length);
+    _.each(links, function(link){//{hinges: [this.getHingeAId(), this.getHingeBId()], length: this._length}
+        self.link(self._hinges[lookupTable[link.hinges[0]]], self._hinges[lookupTable[link.hinges[1]]], link.length);
     });
 
 };
@@ -44,10 +59,22 @@ Walker.prototype.initLeg = function(json){
 
 //Construct
 
-Walker.prototype._makeWalkerBody = function(hingeA, hingeB){
-    var link = new Link(hingeA, hingeB, this._material);
-    this._walkerBodyConstraints.push(link);
-    return link;
+Walker.prototype._makeWalkerBody = function(hinges){
+    var self = this;
+    _.each(hinges, function(hinge, index){
+        if (hinges.length <= index + 1) return;
+        for (var i=index+1;i<hinges.length;i++){
+            var link = new Link(hinge, hinges[i], self._material);
+            self._walkerBodyConstraints.push(link);
+        }
+    });
+};
+
+Walker.prototype.addDriveCrank = function(centerHinge, outsideHinge, length){
+    if (!centerHinge || !outsideHinge || !length) return console.warn("drive crank parameter is missing");
+    var driveCrank = new DriveCrank(centerHinge, outsideHinge, length);
+    this._driveCrank = driveCrank;
+    return driveCrank;
 };
 
 
@@ -102,12 +129,14 @@ Walker.prototype.getTranslationScaleRotation = function() {
 
 Walker.prototype.render = function(angle){
     var self = this;
-    if (angle == 0) console.log(angle);
     this.drive(angle);
     _.each(this._hinges, function(hinge){
         hinge.physicsRender(self._drawOffset);
     });
     _.each( this._links, function(link){
+        link.render(self._drawOffset);
+    });
+    _.each( this._walkerBodyConstraints, function(link){
         link.render(self._drawOffset);
     });
 };

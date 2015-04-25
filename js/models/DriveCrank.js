@@ -19,7 +19,6 @@ DriveCrank.prototype._buildBody = function(centerHinge, length){
 };
 
 DriveCrank.prototype._buildConstraints = function(body, centerHinge, outsideHinge){
-    centerHinge.setStatic(true);
     var constraints = [];
     constraints.push(globals.physics.makeConstraint(body, centerHinge.getBody(), 0));//pin center of drive crank to center hinge
     constraints.push(globals.physics.makeConstraint(body, outsideHinge.getBody(), 0,
