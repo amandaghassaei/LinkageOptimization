@@ -22,11 +22,18 @@ function Walker(json){//Linkage subclass
             var newHinge = self.addHingeAtPosition(hinge.position);
             hinge.updatedPosition = fixedHinges.length;
             fixedHinges.push(newHinge);
+            //also add mirror
+            var mirrorXPos = 2*centerHinge.getPosition().x-hinge.position.x;
+            var newHingeMirror = self.addHingeAtPosition({x:mirrorXPos, y:hinge.position.y});
+            fixedHinges.push(newHingeMirror);
         }
     });
 
     //then add legs
-    this.initLeg(hinges, json.links);//todo call multiple times
+//    var numLegs = globals.appState.get("numLegPairs");
+//    for (var i=0;i<numLegs;i++){
+    this.initLeg(hinges, json.links);
+
 
 
     //{centerHinge: this.getCenterHingeId(), outsideHinge: this.getOutsideHingeId(), length: this._length}
