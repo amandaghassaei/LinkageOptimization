@@ -62,7 +62,7 @@ PopulationMenuView = Backbone.View.extend({
         } else if (val == "nelderMead"){
             globals.appState.set("isHillClimbing", false);
             globals.appState.set("isNelderMead", true);
-        }
+        } else console.warn("unknown optimization strategy " + val);
     },
 
     _stepNextGeneration: function(e){
