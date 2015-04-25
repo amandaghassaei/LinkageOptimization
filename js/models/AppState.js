@@ -151,9 +151,16 @@ AppState = Backbone.Model.extend({
     },
 
     _changeFitnessMetric: function(){
-        if (this.get("fitnessBasedOnTargetPath")) globals.population.reset();
-        var populationJSON = JSON.stringify(globals.population.toJSON());
-        globals.population.setFromJSON(JSON.parse(populationJSON));
+        if (this.get("fitnessBasedOnTargetPath")) {
+            globals.physics.setGravity(false);
+            globals.population.reset();
+            globals.population.removeTerrain();
+        } else {
+            globals.physics.setGravity(true);
+            globals.population.createTerrain();
+            var populationJSON = JSON.stringify(globals.population.toJSON());
+            globals.population.setFromJSON(JSON.parse(populationJSON));
+        }
     },
 
     _flipVertically: function(){
@@ -191,6 +198,7 @@ AppState = Backbone.Model.extend({
         if (!globals.appState.get("is3D")) return 0.000001;
         return this.get("zDepth");
     },
+
 
 
 

@@ -211,6 +211,13 @@ Population.prototype.render = function(){
 };
 
 Population.prototype._calcLinkageRederingOffsets = function(linkages){//draw in grid layout on screen
+    if (!(globals.appState.get("fitnessBasedOnTargetPath"))){
+        var offset = {x:0,y:0};
+        _.each(linkages, function(linkage){
+            linkage.setDrawOffset(offset);
+        });
+        return;
+    }
     var populationNum = linkages.length;
     var numPerRow = Math.ceil(Math.sqrt(populationNum));
     var width = window.innerWidth/numPerRow;
@@ -291,6 +298,28 @@ Population.prototype.setTargetPathVisibility = function(visibility){
 Population.prototype.setPhase = function(phase){
     this._renderIndex = phase;
 };
+
+
+
+
+
+//Terrain
+
+Population.prototype.removeTerrain =  function(){
+    if (this._terrain){
+        globals.physics.worldRemove(this._terrain);
+        globals.three.sceneRemove(this._terrainMesh);
+    }
+};
+
+Population.prototype.createTerrain = function(){
+    if (this._terrain) this.removeTerrain();
+    this._terrain = globals.physics.worldAdd(globals.physics.makeTerrain(globals.appState.get("terrain")));
+    this._terrainMesh = new THREE.Mesh(new THREE.BoxGeometry(1000, 10, 1));
+    this._terrainMesh.position.set(0,-100, 0);
+    globals.three.sceneAdd(this._terrainMesh);
+};
+
 
 
 

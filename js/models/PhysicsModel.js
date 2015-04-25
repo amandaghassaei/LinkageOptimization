@@ -24,7 +24,7 @@ function PhysicsModel(){
 
     function _makeCircularBody(position, radius){
         var body = Bodies.circle(position.x, position.y, 1,
-            {friction:0, frictionAir:0, groupId:1});//things with the same groupId cannot collide
+            {groupId:1});//things with the same groupId cannot collide
         Matter.Body.scale (body, radius, radius);
         worldAdd(body);
         return body;
@@ -33,6 +33,16 @@ function PhysicsModel(){
     function makeHingeBody(position, radius){
         if (radius === undefined || radius == 0) radius = 1;
         return _makeCircularBody(position, radius);
+    }
+
+    function makeTerrain(terrainType){
+        if (terrainType == "flat"){
+            var body = Bodies.rectangle(0, -100, 1000, 10,
+                {groupId:2});
+            Body.setStatic(body, true);
+            worldAdd(body);
+            return body;
+        } else console.warn("not done with this yet");
     }
 
     function makeDriveCrankBody(position, radius){
@@ -53,6 +63,11 @@ function PhysicsModel(){
         return constraint;
     }
 
+    function setGravity(state){
+        if (state) engine.world.gravity.y = -10000;
+        else engine.world.gravity.y = 0;
+    }
+
     function rotate(object, angle){
         Body.rotate(object, angle - object.angle);
     }
@@ -67,9 +82,11 @@ function PhysicsModel(){
         worldRemove: worldRemove,
         makeHingeBody: makeHingeBody,
         makeDriveCrankBody: makeDriveCrankBody,
+        makeTerrain: makeTerrain,
         scaleBody: scaleBody,
         setStatic: setStatic,
         makeConstraint: makeConstraint,
+        setGravity: setGravity,
         rotate: rotate,
         update:update
     };
