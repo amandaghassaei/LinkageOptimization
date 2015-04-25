@@ -6,6 +6,7 @@
 function Walker(json){//Linkage subclass
     Linkage.call(this);//init empty linkage
     this._walkerBodyConstraints = [];
+    this._json = json;
 
     var hinges = json.hinges;
 
@@ -194,22 +195,10 @@ Walker.prototype.destroy = function(){
 //Utilities
 
 Walker.prototype.toJSON = function(){
-    var hingesJSON = [];
-    _.each(this._hinges, function(hinge){
-        hingesJSON.push(hinge.toJSON());
-    });
-    var linksJSON = [];
-    _.each(this._links, function(link){
-        linksJSON.push(link.toJSON());
-    });
-    return {
-        hinges: hingesJSON,
-        links: linksJSON,
-        driveCrank: this._driveCrank.toJSON()
-    }
+    return JSON.parse(JSON.stringify(this._json));//deep copy of json
 };
 
 Walker.prototype.clone = function(json){
     if (json === undefined) json = this.toJSON();
-    return new Linkage(json);
+    return new Walker(json);
 };
