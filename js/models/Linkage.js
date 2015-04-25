@@ -145,10 +145,29 @@ Linkage.prototype.getFitness = function(){
 };
 
 Linkage.prototype.getTranslationScaleRotation = function(traj) {
-    var midpoint = this._calcMidpoint(traj);
-    // get angle
-    // get radius
-    return {translation:midpoint};//, scale:scale, rotation:rotation};
+    var farthest = this._getFarthest(traj);
+    var distance = this._calcDistance(farthest[0], farthest[1]);
+    return {
+        midpoint: this._calcMidpoint(farthest),
+        angle: this._calcAngle(farthest[0], farthest[1]),
+        radius: distance
+    };//, scale:scale, rotation:rotation};
+};
+
+
+Linkage.prototype._calcFarthest = function(points) {
+    // find the two farthest points from each other
+    var longest_distance = 0.0;
+    var farthest = [];
+    for (var i=0; i<points.length; i++) {
+        for (var j=i+1; j<points.length; j++) {
+            var distance = this._calcDistance(points[i], points[j]);
+            if (distance > longest_distance) {
+                farthest = [points[i], points[j]];
+            }
+        }
+    }
+    return farthest;
 };
 
 Linkage.prototype._calcMidpoint = function(points) {
@@ -168,6 +187,11 @@ Linkage.prototype._calcMidpoint = function(points) {
     return {x:x_sum/points.length, y:y_sum/points.length};
 
 };
+
+Linkage.prototype._calcAngle = function(a, b) {
+    return Math.atan2(Math.abs(a.x-b.x), Math.abs(a.y-b.y));
+    // return {x_dist: points[0].x-points[1].x}
+}
 
 Linkage.prototype._calcRadius = function(midpoint, points) {
 
