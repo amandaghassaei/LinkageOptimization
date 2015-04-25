@@ -172,7 +172,7 @@ Walker.prototype.render = function(angle){
     _.each( this._walkerBodyConstraints, function(link){
         link.render(self._drawOffset);
     });
-//    if (Math.abs(this._hinges[0].getCurrentPosition().x) > 400) this.destroy();
+    if (this._hinges && Math.abs(this._hinges[0].getCurrentPosition().x) > 400) this.destroy();
 };
 
 Walker.prototype.setHingePathVisibility = function(){
