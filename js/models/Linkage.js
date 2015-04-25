@@ -126,6 +126,11 @@ Linkage.prototype.forceMutate = function(mutationRate){//used for hill climbing
 
 //Fitness
 
+Linkage.prototype.normalizeTrajectory = function(traj, params) {
+    // adjust trajory itself
+    // return set of points adjusted for midpoint, angle, radius
+}
+
 Linkage.prototype._checkWeirdness = function() {
     return !this._outputContinuity;
 };
@@ -139,15 +144,11 @@ Linkage.prototype.getFitness = function(){
     return this._fitness;
 };
 
-Linkage.prototype.getTranslationScaleRotation = function() {
-    var hingeIndex = globals.appState.get("outputHingeIndex");
-    var traj = this.getTrajectory(hingeIndex);
-    // console.log(hingeIndex, derp);
-    // TODO: this trajectory seems to be empty
+Linkage.prototype.getTranslationScaleRotation = function(traj) {
     var midpoint = this._calcMidpoint(traj);
-    // console.log(midpoint);\
+    // get angle
+    // get radius
     return {translation:midpoint};//, scale:scale, rotation:rotation};
-//    return this._shiftMidpoint(midpoint, targetCurve);
 };
 
 Linkage.prototype._calcMidpoint = function(points) {
