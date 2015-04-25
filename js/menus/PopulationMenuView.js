@@ -108,8 +108,14 @@ PopulationMenuView = Backbone.View.extend({
         </label>\
         <br/>\
         <% if (!isHillClimbing){ %>\
-        Population Size: &nbsp;&nbsp;<input data-type="populationSize" value="<%= populationSize %>" placeholder="Size" class="form-control numberInput" type="text"><br/><br/>\
+        Population Size: &nbsp;&nbsp;<input data-type="populationSize" value="<%= populationSize %>" placeholder="Size" class="form-control numberInput" type="text"><br/>\
         <% } %>\
+        <label class="checkbox" for="flipVertical">\
+        <input type="checkbox" <% if (flipVertical){ %>checked="checked" <% } %> value="" id="flipVertical" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Flip Vertically</label>\
+        <label class="checkbox" for="flipHorizontal">\
+        <input type="checkbox" <% if (flipHorizontal){ %>checked="checked" <% } %> value="" id="flipHorizontal" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Flip Horizontally</label><br/>\
         <a href="#" id="clearAll" class="btn pull-left btn-halfWidth btn-lg btn-default">Clear All</a>\
         <a href="#" id="reset" class=" btn pull-right btn-halfWidth btn-lg btn-default">Reset</a><br/><br/>\
         <a href="#" class="importJSON btn pull-left btn-halfWidth btn-lg btn-default">Re-Init from Linkage...</a>\

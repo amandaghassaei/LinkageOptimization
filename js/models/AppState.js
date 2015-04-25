@@ -62,6 +62,8 @@ AppState = Backbone.Model.extend({
 
         linkWidth: 3,
         zDepth: 3,
+        flipVertical: false,
+        flipHorizontal: false,
 
         //view
         showHingePaths: false,
@@ -95,6 +97,8 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:outputHingeIndex", this._changeOutputHinge);
         this.listenTo(this, "change:isAnimating", this._startStopAnimation);
         this.listenTo(this, "change:fitnessBasedOnTargetPath", this._changeFitnessMetric);
+        this.listenTo(this, "change:flipVertical", this._flipVertically);
+        this.listenTo(this, "change:flipHorizontal", this._flipHorizontally);
 
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
     },
@@ -150,6 +154,25 @@ AppState = Backbone.Model.extend({
         if (this.get("fitnessBasedOnTargetPath")) globals.population.reset();
         var populationJSON = JSON.stringify(globals.population.toJSON());
         globals.population.setFromJSON(JSON.parse(populationJSON));
+    },
+
+    _flipVertically: function(){
+        this._flip('y');
+    },
+
+    _flipHorizontally: function(){
+        this._flip('x');
+    },
+
+    _flip: function(axis){
+        var populationJSON = JSON.parse(JSON.stringify(globals.population.toJSON()));
+        _.each(populationJSON, function(linkage){
+            var offset = linkage.hinges[linkage.driveCrank.centerHinge].position[axis]*2;
+            _.each(linkage.hinges, function(hinge){
+                hinge.position[axis] = offset - hinge.position[axis];
+            });
+        });
+        globals.population.setFromJSON(populationJSON);
     },
 
 

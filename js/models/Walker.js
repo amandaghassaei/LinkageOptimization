@@ -2,6 +2,7 @@
  * Created by aghassaei on 4/24/15.
  */
 
+//todo hinge relaxation
 
 function Walker(json){//Linkage subclass
     Linkage.call(this);//init empty linkage
@@ -13,7 +14,6 @@ function Walker(json){//Linkage subclass
     //make crank center hinge #0
     var centerHingeIndex = json.driveCrank.centerHinge;
     var centerHinge = this.addHingeAtPosition(hinges[centerHingeIndex].position);
-    centerHinge.setStatic(true);
     hinges[centerHingeIndex].updatedPosition = 0;
 
     //add cranks (shared between leg pair)
