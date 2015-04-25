@@ -14,6 +14,11 @@ function Walker(json){//Linkage subclass
     var centerHinge = this.addHingeAtPosition(hinges[centerHingeIndex].position);
     hinges[centerHingeIndex].updatedPosition = 0;
 
+    //add crank (shared between leg pair)
+    var outsideHingeIndex = json.driveCrank.outsideHinge;
+    var crankHinge = this.addHingeAtPosition(hinges[outsideHingeIndex].position);
+    hinges[outsideHingeIndex].updatedPosition = 1;
+
     //then add fixedHinges
     var fixedHinges = [centerHinge];
     var self = this;
@@ -24,20 +29,15 @@ function Walker(json){//Linkage subclass
             var newHinge = self.addHingeAtPosition(hinge.position);
             fixedHinges.push(newHinge);
             //also add mirror
-            var mirrorXPos = mirrorOffset-hinge.position.x;
-            var newHingeMirror = self.addHingeAtPosition({x:mirrorXPos, y:hinge.position.y});
+            var newHingeMirror = self.addHingeAtPosition({x:mirrorOffset-hinge.position.x, y:hinge.position.y});
             fixedHinges.push(newHingeMirror);
         }
     });
-    //add crank (shared between leg pair)
-    var outsideHingeIndex = json.driveCrank.outsideHinge;
-    hinges[outsideHingeIndex].updatedPosition = this._hinges.length;
-    var crankHinge = this.addHingeAtPosition(hinges[outsideHingeIndex].position);
 
     //then add legs
     this.initLeg(hinges, json.links);
     this.addDriveCrank(centerHinge, crankHinge, json.driveCrank.length);
-//    this.initLeg(hinges, json.links, mirrorOffset);//mirror leg
+    this.initLeg(hinges, json.links, mirrorOffset);//mirror leg
 
 
 
@@ -52,10 +52,15 @@ Walker.prototype.initLeg = function(hinges, links, mirrorOffset){
     _.each(hinges, function(hinge, index){//{position:this._position, static:this._static}
         lookupTable[index] = self._hinges.length;
         if (hinge.static || hinge.updatedPosition !== undefined){
+            if (mirrorOffset && hinge.updatedPosition != 0 && hinge.updatedPosition != 1){
+                lookupTable[index] = hinge.updatedPosition + 1;
+                return;
+            }
             lookupTable[index] = hinge.updatedPosition;
             return;
         }
-        self.addHingeAtPosition(hinge.position);
+        if (mirrorOffset) self.addHingeAtPosition({x:mirrorOffset-hinge.position.x, y:hinge.position.y});
+        else self.addHingeAtPosition(hinge.position);
     });
     _.each(links, function(link){//{hinges: [this.getHingeAId(), this.getHingeBId()], length: this._length}
         self.link(self._hinges[lookupTable[link.hinges[0]]], self._hinges[lookupTable[link.hinges[1]]], link.length);
