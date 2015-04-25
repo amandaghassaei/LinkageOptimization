@@ -139,8 +139,10 @@ Population.prototype.getCurrentStatistics = function(linkages, returnLinkageObje
     var maxFitness = 0;
     var bestLinkage = linkages[0];
     var fitnessSum = 0;
+    var allFitness = [];
     _.each(linkages, function(linkage){
         var fitness = linkage.getFitness();
+        allFitness.push(fitness);
         if (fitness < minFitness) minFitness = fitness;
         if (fitness > maxFitness) {
             maxFitness = fitness;
@@ -149,7 +151,7 @@ Population.prototype.getCurrentStatistics = function(linkages, returnLinkageObje
         fitnessSum += fitness;
     });
     if (returnLinkageObject) return bestLinkage;
-    return {minFitness:minFitness, maxFitness:maxFitness, avgFitness:fitnessSum/linkages.length, bestLinkage:bestLinkage.toJSON()}
+    return {minFitness:minFitness, maxFitness:maxFitness, avgFitness:fitnessSum/linkages.length, bestLinkage:bestLinkage.toJSON(), allFitness:allFitness}
 };
 
 
