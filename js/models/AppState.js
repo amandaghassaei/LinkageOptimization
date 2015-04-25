@@ -39,6 +39,7 @@ AppState = Backbone.Model.extend({
         isHillClimbing: false,
         isNelderMead: false,
         populationSize: 20,
+        simulatedAnnealing: false,
 
         fitnessBasedOnTargetPath: true,
         outputHingeIndex: 1,
@@ -286,7 +287,8 @@ AppState = Backbone.Model.extend({
                     fitnessBasedOnTargetPath: this.get("fitnessBasedOnTargetPath"),
                     mutateTopology: this.get("mutateTopology"),
                     numLegPairs: this.get("numLegPairs"),
-                    terrain: this.get("terrain")
+                    terrain: this.get("terrain"),
+                    simulatedAnnealing: this.get("simulatedAnnealing")
                 },
                 runStatistics: globals.runStatistics,
                 population: globals.population.toJSON(),

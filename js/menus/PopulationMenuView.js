@@ -102,7 +102,7 @@ PopulationMenuView = Backbone.View.extend({
         <input type="radio" name="optimizationStrategies" <% if (!isHillClimbing && !isNelderMead){ %>checked <% } %>value="ga" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Genetic Algorithm\
         </label>\
-        <label class="radio">\
+        <label class="radio disabled">\
         <input type="radio" name="optimizationStrategies" <% if (!isHillClimbing && isNelderMead){ %>checked <% } %>value="nelderMead" data-toggle="radio" disabled class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Nelder–Mead\
         </label>\
