@@ -31,6 +31,25 @@ Population.prototype._initFirstGeneration = function(archetype){
         archetype.addDriveCrank(hinge5, hinge3, link35.getLength());
     }
 
+
+    if (globals.appState.get("flipVertical") || globals.appState.get("flipHorizontal")){
+        var json = archetype.toJSON();
+        if (globals.appState.get("flipVertical")){
+            var offset = json.hinges[json.driveCrank.centerHinge].position.y*2;
+            _.each(json.hinges, function(hinge){
+                hinge.position.y = offset - hinge.position.y;
+            });
+        }
+        if (globals.appState.get("flipHorizontal")){
+            var offset = json.hinges[json.driveCrank.centerHinge].position.x*2;
+            _.each(json.hinges, function(hinge){
+                hinge.position.x = offset - hinge.position.x;
+            });
+        }
+        archetype.destroy();
+        archetype = new Linkage(json);
+    }
+
     firstGeneration.push(archetype.clone());
 
     var mutationRate = globals.appState.get("mutationRate");
