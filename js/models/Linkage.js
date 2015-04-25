@@ -201,7 +201,7 @@ Linkage.prototype._calcFitness = function(target, test){
 
     if (this._checkWeirdness()) {
         console.log('weird');
-        return 0;
+        return 100;
     }
 
     var midpoint = this._calcMidpoint(test);
@@ -242,7 +242,7 @@ Linkage.prototype._calcFitness = function(target, test){
     }
     else {
         console.log('empty');
-        return 0;
+        return 100;
     }
 
     // return the sum of the shortest distances
