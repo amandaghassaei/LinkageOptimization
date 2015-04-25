@@ -19,11 +19,11 @@ html, body {
     color: #888;
 }
 
-.checkbox .icons {
+.checkbox .icons, .radio .icons {
     top: 2px;
 }
 
-.checkbox {
+.checkbox, .radio{
     font-size: 16px;
 }
 

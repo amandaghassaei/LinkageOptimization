@@ -11,6 +11,12 @@ $(function(){
     //init web workers
 //    window.workers = persistentWorkers(8);
 
+    if (window.location.href == "http://amandaghassaei.github.io/LinkageOptimization/"){
+        $(window).bind('beforeunload', function(){
+          return 'Are you sure you want to leave?';
+        });
+    }
+
     globals.saveFile = function(data, name, extension){
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
         saveAs(blob, name + extension);
@@ -28,7 +34,7 @@ $(function(){
         _.each(curve, function(point){
             point.x -= centerX;
             point.y -= centerY;
-        })
+        });
         globals.targetCurve = curve;
     };
 

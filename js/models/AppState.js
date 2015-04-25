@@ -9,10 +9,10 @@ AppState = Backbone.Model.extend({
     defaults: {
 
         currentNav:"navDesign",// design, evo, export
-        currentTab:"drawParams",
+        currentTab:"population",
 
         //last tab that one open in each of the main menus
-        lastDesignTab: "drawParams",
+        lastDesignTab: "population",
         lastEvoTab: "population",
         lastExportTab: "print",
 
@@ -21,10 +21,10 @@ AppState = Backbone.Model.extend({
 
         allMenuTabs: {
             navDesign:{
-                drawParams:"View",
-                population:"Population",
+                population:"Setup",
                 fitness:"Fitness",
                 mutation:"Mutation",
+                drawParams:"View",
                 run:"Run"
             },
             navEvo:{
@@ -35,12 +35,29 @@ AppState = Backbone.Model.extend({
             }
         },
 
+        //default is ga, unless other specified
         isHillClimbing: false,
+        isNelderMead: false,
+        populationSize: 20,
+
+        fitnessBasedOnTargetPath: true,
+        outputHingeIndex: 1,
+        numPositionSteps: 50,
+        phase: 25,
+        shouldAutoUpdatePhase: true,
+        shouldRenderPhaseChange: false,
+
         mutationRate: 5,//percent
+        minLinkLength: 5,
+        maxLinkChange: 25,//percent
+        mutateTopology: false,
 
         is3D: false,
         isAnimating: true,//play/pause animation
-        numPositionSteps: 50,
+        isRunning:false,//play/pause optimization
+
+        numLegPairs: 3,
+        terrain: "flat",
 
         linkWidth: 3,
         zDepth: 3,
@@ -49,15 +66,7 @@ AppState = Backbone.Model.extend({
         showHingePaths: false,
         showOutputPath: true,//output hinge
         showTargetPath: true,
-        precomputePath: false,
-        shouldRenderThreeJS: true,
-
-        populationSize: 20,
-        minLinkLength: 5,
-        maxLinkChange: 25,//percent
-        outputHingeIndex: 1,
-
-        isRunning:false//play/pause optimization
+        shouldRenderThreeJS: true
 
     },
 
@@ -83,6 +92,8 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:showTargetPath", this._showTargetPath);
         this.listenTo(this, "change:isHillClimbing", this._hillClimbingMode);
         this.listenTo(this, "change:outputHingeIndex", this._changeOutputHinge);
+        this.listenTo(this, "change:isAnimating", this._startStopAnimation);
+        this.listenTo(this, "change:fitnessBasedOnTargetPath", this._changeFitnessMetric);
 
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
     },
@@ -111,12 +122,33 @@ AppState = Backbone.Model.extend({
     },
 
     _hillClimbingMode: function(){
-        globals.population.reset();
+        globals.population.reset(globals.population.getBestLinkage());
     },
 
     _changeOutputHinge: function(){
         globals.population.setHingePathVisibility(false);
         this._showOutputPaths();
+    },
+
+    changePhase: function(phase){
+        this.set("shouldAutoUpdatePhase", false, {silent:true});
+        this.set("isAnimating", false);
+        this.set("isRunning", false);
+        globals.population.setPhase(phase);
+        this.set("shouldRenderPhaseChange", true, {silent:true});
+    },
+
+    _startStopAnimation: function(){
+        if (this.get("isAnimating")) {
+            this.set("shouldAutoUpdatePhase", true);
+            this.set("shouldRenderThreeJS", true);
+        }
+    },
+
+    _changeFitnessMetric: function(){
+        if (this.get("fitnessBasedOnTargetPath")) globals.population.reset();
+        var populationJSON = JSON.stringify(globals.population.toJSON());
+        globals.population.setFromJSON(JSON.parse(populationJSON));
     },
 
 
@@ -234,8 +266,33 @@ AppState = Backbone.Model.extend({
     //Open/Save
 
     saveJSON: function(name){
-        if (!name) name = "population";
-        var data = JSON.stringify({population:globals.population.toJSON()});
+        if (!name) name = "run";
+        var data = JSON.stringify({
+            run:{
+                appState: {
+                    isHillClimbing: this.get("isHillClimbing"),
+                    isNelderMead: this.get("isNelderMead"),
+                    linkWidth: this.get("linkWidth"),
+                    maxLinkChange: this.get("maxLinkChange"),
+                    minLinkLength: this.get("minLinkLength"),
+                    mutationRate: this.get("mutationRate"),
+                    numPositionSteps: this.get("numPositionSteps"),
+                    outputHingeIndex: this.get("outputHingeIndex"),
+                    populationSize: this.get("populationSize"),
+                    showHingePaths: this.get("showHingePaths"),
+                    showOutputPath: this.get("showOutputPath"),
+                    showTargetPath: this.get("showTargetPath"),
+                    zDepth: this.get("zDepth"),
+                    fitnessBasedOnTargetPath: this.get("fitnessBasedOnTargetPath"),
+                    mutateTopology: this.get("mutateTopology"),
+                    numLegPairs: this.get("numLegPairs"),
+                    terrain: this.get("terrain")
+                },
+                runStatistics: globals.runStatistics,
+                population: globals.population.toJSON(),
+                targetCurve: globals.targetCurve
+            }
+        });
         globals.saveFile(data, name, ".json");
     },
 
@@ -256,7 +313,16 @@ AppState = Backbone.Model.extend({
         this.set("isAnimating", true);
     },
 
-    loadFileFromJSON: function(json){
+    loadRunFromJSON: function(json){
+        globals.population.clearAll();
+        globals.setTargetCurve(json.targetCurve);
+        globals.runStatistics = json.runStatistics;
+        _.each(_.keys(json.appState), function(key){
+            globals.appState.set(key, json.appState[key], {silent:true});
+        });
+        globals.appState.set("isRunning", false);
+        globals.appState.set("isAnimating", true);
+        globals.appState.trigger("change");
         globals.population.setFromJSON(json.population);
     }
 

@@ -9,7 +9,8 @@ MutationMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "click #stepNextGen":                                   "_stepNextGeneration"
+        "click #stepNextGen":                                   "_stepNextGeneration",
+        "change input:checkbox":                                "_toggleCheckbox"
     },
 
     initialize: function(){
@@ -43,10 +44,14 @@ MutationMenuView = Backbone.View.extend({
         globals.appState.set(property, newVal);
     },
 
+    _toggleCheckbox: function(e){
+        this.model.set($(e.target).attr('id'), $(e.target).is(':checked'));
+    },
+
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "mutation") return;
-        if ($("input").is(":focus")) return;
+        if ($(".numberInput").is(":focus")) return;
         this.$el.html(this.template(this.model.toJSON()));
     },
 
@@ -54,6 +59,14 @@ MutationMenuView = Backbone.View.extend({
         Mutation Rate (%): &nbsp;&nbsp;<input data-type="mutationRate" value="<%= mutationRate %>" placeholder="Mutation Rate" class="form-control numberInput" type="text"><br/><br/>\
         Max Link Length Change (%): &nbsp;&nbsp;<input data-type="maxLinkChange" value="<%= maxLinkChange %>" placeholder="Max Change" class="form-control numberInput" type="text"><br/><br/>\
         Min Link Length: &nbsp;&nbsp;<input data-type="minLinkLength" value="<%= minLinkLength %>" placeholder="Length" class="form-control numberInput" type="text"><br/><br/>\
+        <% if (!fitnessBasedOnTargetPath) { %>\
+        <label class="checkbox" for="mutateTopology">\
+        <input type="checkbox" <% if (mutateTopology){ %>checked="checked" <% } %> value="" id="mutateTopology" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Mutate Topology</label><br/>\
+        <% if (mutateTopology){ %>\
+            Mutation Options\
+        <% } %>\
+        <% } %>\
         ')
 });
 

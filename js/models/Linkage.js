@@ -17,10 +17,7 @@ function Linkage(json){//init a linkage with optional json
     this._outputContinuity = false;
     this._targetPath = null;
     this._material = new THREE.MeshBasicMaterial({color:0xffffff});
-    if (json === undefined) {
-        console.warn("inited with no json");
-        return;
-    }
+    if (json === undefined) return;
 
     var self = this;
     _.each(json.hinges, function(hinge){//{position:this._position, static:this._static}
@@ -48,6 +45,7 @@ Linkage.prototype.addHingeAtPosition = function(position){
 Linkage.prototype.addDriveCrank = function(centerHinge, outsideHinge, length){
     if (!centerHinge || !outsideHinge || !length) return console.warn("drive crank parameter is missing");
     var driveCrank = new DriveCrank(centerHinge, outsideHinge, length);
+    centerHinge.setStatic(true);
     this._driveCrank = driveCrank;
     return driveCrank;
 };
@@ -57,6 +55,7 @@ Linkage.prototype.link = function(hingeA, hingeB, distance){
     this._links.push(link);
     return link;
 };
+
 
 
 
@@ -140,16 +139,16 @@ Linkage.prototype.getFitness = function(){
     return this._fitness;
 };
 
-Linkage.prototype.getTranslationalOffset = function() {
+Linkage.prototype.getTranslationScaleRotation = function() {
     var hingeIndex = globals.appState.get("outputHingeIndex");
     var traj = this.getTrajectory(hingeIndex);
     // console.log(hingeIndex, derp);
     // TODO: this trajectory seems to be empty
     var midpoint = this._calcMidpoint(traj);
     // console.log(midpoint);\
-    return midpoint;
+    return {translation:midpoint};//, scale:scale, rotation:rotation};
 //    return this._shiftMidpoint(midpoint, targetCurve);
-}
+};
 
 Linkage.prototype._calcMidpoint = function(points) {
 
@@ -279,13 +278,15 @@ Linkage.prototype.checkContinuity = function(outputIndex){
 
 //Trajectories
 
-Linkage.prototype.drawTargetPath = function(path, translationalOffset, visibility){
+Linkage.prototype.drawTargetPath = function(path, offsets, visibility){
     if (this._targetPath) this._removeTargetPath();
     var offset = this._drawOffset;
     var geometry = new THREE.Geometry();
+    if (offsets.scale) console.log("add scale in target rendering");
+    if (offsets.rotation) console.log("add rotation in target rendering");
     _.each(path, function(position){
-        geometry.vertices.push(new THREE.Vector3(position.x+offset.x+translationalOffset.x,
-            position.y+offset.y+translationalOffset.y, 0));
+        geometry.vertices.push(new THREE.Vector3(position.x+offset.x+offsets.translation.x,
+            position.y+offset.y+offsets.translation.y, 0));
     });
     geometry.vertices.push(_.clone(geometry.vertices[0]));//close loop
     this._targetPath = new THREE.Line(geometry, targetTrajectoryMaterial);
@@ -369,8 +370,8 @@ Linkage.prototype.destroy = function(){
     this._iterateAllHingesAndLinks(function(object){
         object.destroy();
     });
-    this._hinges = [];
-    this._links = [];
+    this._hinges = null;
+    this._links = null;
     if (this._driveCrank) this._driveCrank.destroy();
     this._driveCrank = null;
     this._fitness = null;

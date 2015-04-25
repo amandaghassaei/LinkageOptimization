@@ -51,6 +51,7 @@
     <script src="js/models/AppState.js"></script>
     <script src="js/models/Population.js"></script>
     <script src="js/models/Linkage.js"></script>
+    <script src="js/models/Walker.js"></script>
     <script src="js/models/Link.js"></script>
     <script src="js/models/Hinge.js"></script>
     <script src="js/models/DriveCrank.js"></script>
@@ -88,15 +89,18 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">File <b class="caret"></b></a>
           <span class="dropdown-arrow"></span>
           <ul class="dropdown-menu">
-                <li><a id="saveJSON" href="#">Save Population &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984; + S)</a></li>
-                <li><a data-toggle="modal" data-target="#saveAsModel" href="#">Save Population As... &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984 + Shift + S)</a></li>
-                <li><a class="importJSON" href="#">Open Population... &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984 + O)</a></li>
+                <li><a id="saveJSON" href="#">Save Run &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984; + S)</a></li>
+                <li><a data-toggle="modal" data-target="#saveAsModel" href="#">Save Run As... &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984 + Shift + S)</a></li>
+                <li><a class="importJSON" href="#">Open Run... &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984 + O)</a></li>
+                <li class="divider"></li>
+                <li><a id="navSavePopulation" href="#">Save Population</a></li>
+                <li><a class="importJSON" href="#">Load Population...</a></li>
                 <li class="divider"></li>
                 <li><a id="saveLinkage" href="#">Save Best Linkage</a></li>
-                <li><a class="importJSON" href="#">Init Population From Linkage</a></li>
+                <li><a class="importJSON" href="#">Init Population From Linkage...</a></li>
                 <li class="divider"></li>
                 <li><a id="navSavePath" href="#">Save Target Path</a></li>
-                <li><a class="importJSON" href="#">Load Target Path</a></li>
+                <li><a class="importJSON" href="#">Load Target Path...</a></li>
                 <li class="divider"></li>
                 <li><a id="saveRunStats" href="#">Save Run Statistics</a></li>
           </ul>
@@ -120,7 +124,7 @@
             <p class="modal-title" >Enter File Name</p>
             </div>
             <div class="modal-body">
-                <input id="saveAsFileName" type="text" value="linkage" placeholder="Enter file name" class="form-control filename">
+                <input id="saveAsFileName" type="text" value="run" placeholder="Enter file name" class="form-control filename">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

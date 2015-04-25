@@ -12,6 +12,7 @@ PopulationMenuView = Backbone.View.extend({
         "click #clearAll":                                      "_clearAll",
         "click #reset":                                         "_reset",
         "change input:checkbox":                                "_toggleCheckbox",
+        "change input[name=optimizationStrategies]":            "_changeOptimizationStrategies",
         "click #resetFromMostFit":                              "_resetFromMostFit"
     },
 
@@ -41,13 +42,27 @@ PopulationMenuView = Backbone.View.extend({
         e.preventDefault();
         var newVal = parseFloat($(e.target).val());
         if (isNaN(newVal)) return;
-        newVal = parseFloat(newVal.toFixed(4));
+        newVal = parseInt(newVal);
         var property = $(e.target).data("type");
         globals.appState.set(property, newVal);
     },
 
     _toggleCheckbox: function(e){
         this.model.set($(e.target).attr('id'), $(e.target).is(':checked'));
+    },
+
+    _changeOptimizationStrategies: function(e){
+        var val = $(e.target).val();
+        if (val == "hillClimbing"){
+            globals.appState.set("isNelderMead", false);
+            globals.appState.set("isHillClimbing", true);
+        } else if (val == "ga"){
+            globals.appState.set("isNelderMead", false);
+            globals.appState.set("isHillClimbing", false);
+        } else if (val == "nelderMead"){
+            globals.appState.set("isHillClimbing", false);
+            globals.appState.set("isNelderMead", true);
+        } else console.warn("unknown optimization strategy " + val);
     },
 
     _stepNextGeneration: function(e){
@@ -78,9 +93,20 @@ PopulationMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
-        <label class="checkbox" for="isHillClimbing">\
-        <input type="checkbox" <% if (isHillClimbing){ %>checked="checked" <% } %> value="" id="isHillClimbing" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-        Hill Climbing Mode</label><br/>\
+        Optimization Strategy:\
+        <label class="radio">\
+        <input type="radio" name="optimizationStrategies" <% if (isHillClimbing && !isNelderMead){ %> checked <% } %>value="hillClimbing" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Hill-Climbing (Gradient)\
+        </label>\
+        <label class="radio">\
+        <input type="radio" name="optimizationStrategies" <% if (!isHillClimbing && !isNelderMead){ %>checked <% } %>value="ga" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Genetic Algorithm\
+        </label>\
+        <label class="radio">\
+        <input type="radio" name="optimizationStrategies" <% if (!isHillClimbing && isNelderMead){ %>checked <% } %>value="nelderMead" data-toggle="radio" disabled class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Nelder–Mead\
+        </label>\
+        <br/>\
         <% if (!isHillClimbing){ %>\
         Population Size: &nbsp;&nbsp;<input data-type="populationSize" value="<%= populationSize %>" placeholder="Size" class="form-control numberInput" type="text"><br/><br/>\
         <% } %>\

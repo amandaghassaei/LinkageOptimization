@@ -9,7 +9,8 @@ DrawParamsMenuView = Backbone.View.extend({
     events: {
         "change input:checkbox":                                    "_toggleCheckbox",
         "click #pauseAnimation":                                    "_pauseAnimation",
-        "click #startAnimation":                                    "_startAnimation"
+        "click #startAnimation":                                    "_startAnimation",
+        "slide #phase":                                             "_changePhaseSlider"
     },
 
     initialize: function(){
@@ -57,19 +58,34 @@ DrawParamsMenuView = Backbone.View.extend({
         globals.appState.set("isAnimating", true);
     },
 
+    _changePhaseSlider: function(e){
+        var val = $(e.target)[0].value;
+        if (val == "") return;
+        if (val == globals.appState.get("phase")) return;
+        globals.appState.set("phase", val, {silent:true});
+        globals.appState.changePhase(val);
+    },
+
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "drawParams") return;
         if ($("input").is(":focus")) return;
         this.$el.html(this.template(this.model.toJSON()));
+
+         $('#phase').slider({
+            formatter: function(value) {
+                return (Math.PI*2*value/globals.appState.get("numPositionSteps").toString()).toFixed(2);
+            }
+        });
     },
 
     template: _.template('\
         <% if (isAnimating) { %>\
-        <a href="#" id="pauseAnimation" class="btn-warning btn btn-block btn-lg btn-default">Pause Animation</a><br/>\
+        <a href="#" id="pauseAnimation" class="btn-warning btn btn-block btn-lg btn-default">Pause Animation</a>\
         <% } else  { %>\
-        <a href="#" id="startAnimation" class="btn-success btn btn-block btn-lg btn-default">Animate</a><br/>\
+        <a href="#" id="startAnimation" class="btn-success btn btn-block btn-lg btn-default">Animate</a>\
         <% } %>\
+        <input id="phase" data-slider-id="phaseSlider" type="text" data-slider-min="0" data-slider-max="<%= numPositionSteps -1 %>" data-slider-step="1" data-slider-value="<%= phase %>"/>\
         <!--Num Samples per Cycle: &nbsp;&nbsp;<input data-type="numPositionSteps" value="<%= numPositionSteps %>" placeholder="Num Samples" class="form-control numberInput" type="text"><br/><br/>-->\
         Link Width: &nbsp;&nbsp;<input data-type="linkWidth" value="<%= linkWidth %>" placeholder="Width" class="form-control numberInput" type="text"><br/><br/>\
         <% if (is3D){ %>Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/><% } %>\
@@ -82,9 +98,6 @@ DrawParamsMenuView = Backbone.View.extend({
         <label class="checkbox" for="showHingePaths">\
         <input type="checkbox" <% if (showHingePaths){ %>checked="checked" <% } %> value="" id="showHingePaths" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Show all hinge trajectories</label><br/>\
-        <!--<label class="checkbox" for="precomputePath">\
-        <input type="checkbox" <% if (precomputePath){ %>checked="checked" <% } %> value="" id="precomputePath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-        Precompute linkage path (more efficient)</label>-->\
         ')
 
 });

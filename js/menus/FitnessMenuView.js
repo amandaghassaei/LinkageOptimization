@@ -12,7 +12,9 @@ FitnessMenuView = Backbone.View.extend({
         "change input:checkbox":                                    "_toggleCheckbox",
         "click #savePath":                                          "_saveTargetPath",
         "click #loadPath":                                          "_loadTargetPath",
-        "click #saveOutputPath":                                    "_saveOutputPath"
+        "click #saveOutputPath":                                    "_saveOutputPath",
+        "change input[name=fitnessMetrics]":                        "_changeFitnessMetrics",
+        "change input[name=terrainType]":                           "_changeTerrain"
     },
 
     initialize: function(){
@@ -34,7 +36,8 @@ FitnessMenuView = Backbone.View.extend({
             return;
         }
 
-        if ($(".numberInput").is(":focus")) this._updateOutputHingeIndex(e);
+        if ($("#outputHingeIndex").is(":focus")) this._updateOutputHingeIndex(e);
+        if ($(".numberInput").is(":focus")) this._updateNumber(e);
     },
 
     _updateOutputHingeIndex: function(e){
@@ -43,6 +46,15 @@ FitnessMenuView = Backbone.View.extend({
         if (isNaN(newVal)) return;
         newVal = parseInt(newVal);
         if (newVal < 0) globals.error.throwError("index must be a positive integer");
+        var property = $(e.target).data("type");
+        globals.appState.set(property, newVal);
+    },
+
+    _updateNumber: function(e){
+        e.preventDefault();
+        var newVal = parseFloat($(e.target).val());
+        if (isNaN(newVal)) return;
+        newVal = parseInt(newVal);
         var property = $(e.target).data("type");
         globals.appState.set(property, newVal);
     },
@@ -68,24 +80,67 @@ FitnessMenuView = Backbone.View.extend({
         $("#fileInput").click();
     },
 
+    _changeFitnessMetrics: function(e){
+        var val = $(e.target).val();
+        if (val == "walking"){
+            globals.appState.set("fitnessBasedOnTargetPath", false);
+        } else if (val == "targetPath"){
+            globals.appState.set("fitnessBasedOnTargetPath", true);
+        } else console.warn("unknown fitness metric " + val);
+    },
+
+    _changeTerrain: function(e){
+        var val = $(e.target).val();
+        if (val == "flat" || val == "incline" || val == "obstacles"){
+            globals.appState.set("terrain", val);
+        } else console.warn("unknown terrain type " + val);
+    },
+
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "fitness") return;
-        if ($("input").is(":focus")) return;
+        if ($(".numberInput").is(":focus")) return;
         this.$el.html(this.template(this.model.toJSON()));
     },
 
     template: _.template('\
-        Output Hinge Index: &nbsp;&nbsp;<input data-type="outputHingeIndex" value="<%= outputHingeIndex %>" placeholder="Hinge" class="form-control numberInput" type="text"><br/><br/>\
-        <a href="#" id="loadPath" class="btn btn-block btn-lg btn-default">Load Target Path</a><br/>\
-        <a href="#" id="savePath" class=" btn pull-left btn-halfWidth btn-lg btn-default">Save Target Path</a>\
-        <a href="#" id="saveOutputPath" class="btn pull-right btn-halfWidth btn-lg btn-default">Save Best Output Path</a><br/><br/>\
-        <label class="checkbox" for="showTargetPath">\
-        <input type="checkbox" <% if (showTargetPath){ %>checked="checked" <% } %> value="" id="showTargetPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-        Show target path</label>\
-        <label class="checkbox" for="showOutputPath">\
-        <input type="checkbox" <% if (showOutputPath){ %>checked="checked" <% } %> value="" id="showOutputPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-        Show output hinge trajectory</label>\
+        Fitness Metrics:\
+        <label class="radio">\
+        <input type="radio" name="fitnessMetrics" <% if (!fitnessBasedOnTargetPath){ %> checked <% } %> value="walking" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Obstacle Course (Walking)\
+        </label>\
+        <label class="radio">\
+        <input type="radio" name="fitnessMetrics" <% if (fitnessBasedOnTargetPath){ %>checked <% } %> value="targetPath" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Target Path Fit\
+        </label><br/>\
+        <% if (fitnessBasedOnTargetPath){ %>\
+            Output Hinge Index: &nbsp;&nbsp;<input id="outputHingeIndex" data-type="outputHingeIndex" value="<%= outputHingeIndex %>" placeholder="Hinge" class="form-control numberInput" type="text"><br/><br/>\
+            <!--Num Trajectory Samples: &nbsp;&nbsp;<input data-type="numPositionSteps" value="<%= numPositionSteps %>" placeholder="Num Samples" class="form-control numberInput" type="text"><br/><br/>-->\
+            <a href="#" id="loadPath" class="btn btn-block btn-lg btn-default">Load Target Path</a><br/>\
+            <a href="#" id="savePath" class=" btn pull-left btn-halfWidth btn-lg btn-default">Save Target Path</a>\
+            <a href="#" id="saveOutputPath" class="btn pull-right btn-halfWidth btn-lg btn-default">Save Best Output Path</a><br/><br/>\
+            <label class="checkbox" for="showTargetPath">\
+            <input type="checkbox" <% if (showTargetPath){ %>checked="checked" <% } %> value="" id="showTargetPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Show target path</label>\
+            <label class="checkbox" for="showOutputPath">\
+            <input type="checkbox" <% if (showOutputPath){ %>checked="checked" <% } %> value="" id="showOutputPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Show output hinge trajectory</label>\
+        <% } else { %>\
+            Num Leg Pairs: &nbsp;&nbsp;<input id="numLegPairs" data-type="numLegPairs" value="<%= numLegPairs %>" placeholder="Num Pairs" class="form-control numberInput" type="text"><br/><br/>\
+            Terrain:\
+            <label class="radio">\
+            <input type="radio" name="terrainType" <% if (terrain == "flat"){ %> checked <% } %>value="flat" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Flat\
+            </label>\
+            <label class="radio">\
+            <input type="radio" name="terrainType" <% if (terrain == "incline"){ %>checked <% } %>value="incline" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Inclines/Declines\
+            </label>\
+            <label class="radio">\
+            <input type="radio" name="terrainType" <% if (terrain == "obstacles"){ %>checked <% } %>value="obstacles" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Obstacles\
+            </label>\
+        <% } %>\
         ')
 });
 
