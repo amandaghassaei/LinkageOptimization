@@ -37,15 +37,22 @@ AppState = Backbone.Model.extend({
 
         isHillClimbing: false,
         isNelderMead: false,
-        mutationRate: 5,//percent
-        fitnessBasedOnTargetPath: true,
 
-        is3D: false,
-        isAnimating: true,//play/pause animation
+        fitnessBasedOnTargetPath: true,
+        outputHingeIndex: 1,
         numPositionSteps: 50,
         phase: 25,
         shouldAutoUpdatePhase: true,
         shouldRenderPhaseChange: false,
+
+        mutationRate: 5,//percent
+        minLinkLength: 5,
+        maxLinkChange: 25,//percent
+        mutateTopology: false,
+
+        is3D: false,
+        isAnimating: true,//play/pause animation
+        isRunning:false,//play/pause optimization
 
         linkWidth: 3,
         zDepth: 3,
@@ -56,13 +63,7 @@ AppState = Backbone.Model.extend({
         showTargetPath: true,
         shouldRenderThreeJS: true,
 
-        populationSize: 20,
-        minLinkLength: 5,
-        maxLinkChange: 25,//percent
-        outputHingeIndex: 1,
-
-        isRunning:false//play/pause optimization
-
+        populationSize: 20
     },
 
     initialize: function(){
@@ -268,7 +269,8 @@ AppState = Backbone.Model.extend({
                     showOutputPath: this.get("showOutputPath"),
                     showTargetPath: this.get("showTargetPath"),
                     zDepth: this.get("zDepth"),
-                    fitnessBasedOnTargetPath: this.get("fitnessBasedOnTargetPath")
+                    fitnessBasedOnTargetPath: this.get("fitnessBasedOnTargetPath"),
+                    mutateTopology: this.get("mutateTopology")
                 },
                 runStatistics: globals.runStatistics,
                 population: globals.population.toJSON(),
