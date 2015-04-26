@@ -127,8 +127,9 @@ Linkage.prototype.forceMutate = function(mutationRate){//used for hill climbing
 //Fitness
 
 Linkage.prototype.normalizeTrajectory = function(traj, params) {
-    // adjust trajory itself
+    // adjust trajectory itself
     // return set of points adjusted for midpoint, angle, radius
+    return this._shiftAngle(params.angle, this._shiftMidpoint(params.midpoint, params.radius, traj));
 }
 
 Linkage.prototype._checkWeirdness = function() {
@@ -148,9 +149,9 @@ Linkage.prototype.getTranslationScaleRotation = function(traj) {
     var farthest = this._getFarthest(traj);
     var distance = this._calcDistance(farthest[0], farthest[1]);
     return {
-        midpoint: this._calcMidpoint(farthest),
-        angle: this._calcAngle(farthest[0], farthest[1]),
-        radius: distance
+        translation: this._calcMidpoint(farthest),
+        rotation: this._calcAngle(farthest[0], farthest[1]),
+        scale: distance
     };//, scale:scale, rotation:rotation};
 };
 
@@ -215,10 +216,24 @@ Linkage.prototype._shiftMidpoint = function(midpoint, radius, target) {
     var shifted_target = [];
     for (var i=0; i<target.length; i++) {
         var radius_ratio = radius / this._calcDistance(target[i], midpoint);
-        shifted_target[i] = {x: target[i].x*radius_ratio+midpoint.x, y: target[i].y*radius_ratio+midpoint.y};
+        shifted_target[i] = {
+            x: target[i].x*radius_ratio+midpoint.x, 
+            y: target[i].y*radius_ratio+midpoint.y
+        };
     }
     return shifted_target;
 };
+
+Linkage.prototype._shiftAngle = function(angle, target) {
+    var shifted_target = [];
+    for (var i=0; i<target.length; i++) {
+        shifted_target[i] = {
+            x: target[i].x, 
+            y: target[i].y+this._calcDistance(target[i], {x:0, y:0})*Math.sin(angle)
+        };
+    }
+    return shifted_target;
+}
 
 Linkage.prototype._calcFitness = function(target, test){
 
