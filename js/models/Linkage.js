@@ -326,8 +326,8 @@ Linkage.prototype.drawTargetPath = function(path, offsets, visibility){
     if (this._targetPath) this._removeTargetPath();
     var offset = this._drawOffset;
     var geometry = new THREE.Geometry();
-    if (offsets.scale) console.log("add scale in target rendering");
-    if (offsets.rotation) console.log("add rotation in target rendering");
+    if (offsets.radius) console.log("add scale in target rendering");
+    if (offsets.angle) console.log("add rotation in target rendering");
     _.each(path, function(position){
         geometry.vertices.push(new THREE.Vector3(position.x+offset.x+offsets.translation.x,
             position.y+offset.y+offsets.translation.y, 0));

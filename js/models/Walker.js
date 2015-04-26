@@ -180,8 +180,6 @@ Walker.prototype.drawTrajectories = function(){
 };
 
 Walker.prototype.getTranslationScaleRotation = function() {
-    //todo get rid of this
-    return {translation:{x:0,y:0}};
 };
 
 
