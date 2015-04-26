@@ -16,6 +16,7 @@ Population.prototype._initFirstGeneration = function(archetype){
 
     if (archetype === undefined){
         archetype = new Linkage();
+
         var hinge1 = archetype.addHingeAtPosition({x:15,y:30});
         var hinge2 = archetype.addHingeAtPosition({x:0,y:40});
         var hinge3 = archetype.addHingeAtPosition({x:-10,y:0});
@@ -31,7 +32,7 @@ Population.prototype._initFirstGeneration = function(archetype){
         archetype.addDriveCrank(hinge5, hinge3, link35.getLength());
     }
 
-    if (globals.appState.get("flipVertical") || globals.appState.get("flipHorizontal")){
+    if (globals.appState.get("flipVertical") || globals.appState.get("flipHorizontal") || !(globals.appState.get("fitnessBasedOnTargetPath"))){
         var json = archetype.toJSON();
         if (globals.appState.get("flipVertical")){
             var offset = json.hinges[json.driveCrank.centerHinge].position.y*2;
@@ -46,7 +47,8 @@ Population.prototype._initFirstGeneration = function(archetype){
             });
         }
         archetype.destroy();
-        archetype = new Linkage(json);
+        if (globals.appState.get("fitnessBasedOnTargetPath")) archetype = new Linkage(json);
+        else archetype = new Walker(json);
     }
 
     firstGeneration.push(archetype.clone());
@@ -368,7 +370,7 @@ Population.prototype.toJSON = function(){
 Population.prototype.setFromJSON = function(json){
     this.clearAll();
     var linkages = [];
-    var isWalker = !(globals.appState.get("fitnessBasedOnTargetPath"));//todo
+    var isWalker = !(globals.appState.get("fitnessBasedOnTargetPath"));
     _.each(json, function(linkageJSON){
         if (isWalker) linkages.push(new Walker(linkageJSON));
         else linkages.push(new Linkage(linkageJSON));

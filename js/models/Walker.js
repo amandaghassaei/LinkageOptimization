@@ -53,7 +53,7 @@ function Walker(json){//Linkage subclass
         this.initLeg(hinges, json.links, numLegs, i, mirrorOffset);//mirror leg
     }
 
-    this.addDriveCrank(centerHinge, cranks, json.driveCrank.length);
+    this._addDriveCrank(centerHinge, cranks, json.driveCrank.length);
 
     this._makeWalkerBody(fixedHinges);
 }
@@ -115,7 +115,11 @@ Walker.prototype._makeWalkerBody = function(hinges){
     });
 };
 
-Walker.prototype.addDriveCrank = function(centerHinge, outsideHinges, length){
+Walker.prototype.addDriveCrank = function(){
+    console.warn("no add drive crank called externally for Walker class");
+};
+
+Walker.prototype._addDriveCrank = function(centerHinge, outsideHinges, length){
     if (!centerHinge || !outsideHinges || !length || outsideHinges.length == 0) return console.warn("drive crank parameter is missing");
     var driveCrank = new DriveCrank(centerHinge, outsideHinges, length);
     this._driveCrank = driveCrank;
