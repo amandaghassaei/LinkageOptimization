@@ -154,7 +154,7 @@ Linkage.prototype.getTranslationScaleRotation = function(traj) {
     // console.log("here");
 //    console.log(traj);
     var farthest = this._calcFarthest(traj);
-    console.log(farthest);
+    // console.log(farthest);
     var distance = this._calcDistance(farthest[0], farthest[1]);
     return {
         translation: this._calcMidpoint(farthest),
@@ -165,7 +165,7 @@ Linkage.prototype.getTranslationScaleRotation = function(traj) {
 
 
 Linkage.prototype._calcFarthest = function(points) {
-    console.log('points', points);
+    // console.log('points', points);
     // find the two farthest points from each other
     var longest_distance = 0.0;
     var farthest = [];
