@@ -262,7 +262,7 @@ Population.prototype._buildTargetPathVisualization = function(linkages){
     var path = globals.targetCurve;
     var visibility = globals.appState.get("showTargetPath");
     _.each(linkages, function(linkage){
-        linkage.drawTargetPath(path, linkage.getTranslationScaleRotation(), visibility);
+        linkage.drawTargetPath(path, linkage.getTranslationScaleRotation(path), visibility);
     });
 };
 
@@ -402,6 +402,6 @@ Population.prototype.newTargetPathLoaded = function(){
     var newTargetPath = globals.targetCurve;
     var visibility = globals.appState.get("showTargetPath");
     _.each(this._linkages, function(linkage){
-        linkage.drawTargetPath(newTargetPath, linkage.getTranslationScaleRotation(), visibility);
+        linkage.drawTargetPath(newTargetPath, linkage.getTranslationScaleRotation(newTargetPath), visibility);
     });
 };

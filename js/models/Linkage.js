@@ -148,7 +148,8 @@ Linkage.prototype.getFitness = function(){
 };
 
 Linkage.prototype.getTranslationScaleRotation = function(traj) {
-    var farthest = this._getFarthest(traj);
+    console.log(traj);
+    var farthest = this._calcFarthest(traj);
     var distance = this._calcDistance(farthest[0], farthest[1]);
     return {
         translation: this._calcMidpoint(farthest),
@@ -280,7 +281,8 @@ Linkage.prototype._calcFitness = function(target, test){
           return a + b;
         });
 //        console.log(dist_sum);
-        return radius - dist_sum / target.length;
+        // return radius - dist_sum / target.length;
+        return dist_sum;
     }
     else {
         console.log('empty');
