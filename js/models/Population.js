@@ -184,7 +184,7 @@ Population.prototype.calcNextGen = function(linkages){
 
     //genetic algorithm mode
     var matingPool = this._createMatingPool(linkages);
-    if (matingPool.length == 0) console.warn("all linkages has zero fitness, no mating possible");
+    if (matingPool.length == 0) console.warn("all linkages have zero fitness, no mating possible");
     for (var i=0;i<linkages.length;i++){//next generation is the same size as this one
         var parent1 = this._drawFromMatingPool(matingPool);
         var parent2 = this._drawFromMatingPool(matingPool);
