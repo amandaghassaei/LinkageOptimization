@@ -8,9 +8,17 @@ function Walker(json){//Linkage subclass
     Linkage.call(this);//init empty linkage
     this._walkerBodyConstraints = [];
     this._json = json;
+    this._finishTime = 0;
+    this._isFinished = false;
 
     var hinges = json.hinges;
 
+    this._verticalOffset = hinges[0].position.y;
+    var self = this;
+    _.each(hinges, function(hinge){
+        if (hinge.position.y < self._verticalOffset) self._verticalOffset = hinge.position.y;
+    });
+    this._verticalOffset *= 1.15;
     //make crank center hinge #0
     var centerHingeIndex = json.driveCrank.centerHinge;
     var centerHinge = this.addHingeAtPosition(hinges[centerHingeIndex].position);
@@ -28,7 +36,6 @@ function Walker(json){//Linkage subclass
 
     //then add fixedHinges
     var fixedHinges = [centerHinge];
-    var self = this;
     var mirrorOffset = 2*centerHinge.getPosition().x;
     _.each(hinges, function(hinge){
         if (hinge.static && hinge.updatedPosition === undefined) {
@@ -91,6 +98,12 @@ Walker.prototype.initLeg = function(hinges, links, numLegs, num, mirrorOffset){
 
 
 //Construct
+
+Walker.prototype.addHingeAtPosition = function(position){
+    var hinge = new Hinge({x:position.x, y:position.y-this._verticalOffset}, this, this._material);
+    this._hinges.push(hinge);
+    return hinge;
+};
 
 Walker.prototype._makeWalkerBody = function(hinges){
     var self = this;
@@ -161,18 +174,21 @@ Walker.prototype.getTranslationScaleRotation = function() {
 //Draw
 
 Walker.prototype.render = function(angle){
-    var self = this;
-    this.drive(angle);
-    _.each(this._hinges, function(hinge){
-        hinge.physicsRender(self._drawOffset);
-    });
-    _.each( this._links, function(link){
-        link.render(self._drawOffset);
-    });
-    _.each( this._walkerBodyConstraints, function(link){
-        link.render(self._drawOffset);
-    });
-    if (this._hinges && Math.abs(this._hinges[0].getCurrentPosition().x) > 400) this.destroy();
+    if (!this._isFinished){
+        var self = this;
+        this._finishTime++;
+        this.drive(angle);
+        _.each(this._hinges, function(hinge){
+            hinge.physicsRender(self._drawOffset);
+        });
+        _.each( this._links, function(link){
+            link.render(self._drawOffset);
+        });
+        _.each( this._walkerBodyConstraints, function(link){
+            link.render(self._drawOffset);
+        });
+        if (Math.abs(this._hinges[0].getCurrentPosition().x) > 400 || this._finishTime >= 1000) this._finished(this._finishTime);
+    }
 };
 
 Walker.prototype.setHingePathVisibility = function(){
@@ -188,6 +204,17 @@ Walker.prototype.destroy = function(){
     });
     this._walkerBodyConstraints = null;
     Linkage.prototype.destroy.call(this);
+};
+
+Walker.prototype._finished = function(time){
+    this._isFinished = true;
+    _.each(this._hinges, function(hinge){
+        hinge.setStatic(true);
+    });
+    var fitness = 1000-time;
+    if (fitness < 0) fitness = 0;
+    this._fitness = fitness/10.0;
+    globals.population._obstacleCourseCompleted();
 };
 
 

@@ -31,7 +31,6 @@ Population.prototype._initFirstGeneration = function(archetype){
         archetype.addDriveCrank(hinge5, hinge3, link35.getLength());
     }
 
-
     if (globals.appState.get("flipVertical") || globals.appState.get("flipHorizontal")){
         var json = archetype.toJSON();
         if (globals.appState.get("flipVertical")){
@@ -69,7 +68,8 @@ Population.prototype._initFirstGeneration = function(archetype){
 
 Population.prototype._setLinkages = function(linkages){
     this._waitTimePassed = false;//wait for transient motion from new linkage lengths to pass before collecting position info
-    this._allHingePositionsStored = false;
+    this._readyForNextGen = false;
+    this._numWalkersCompletedCourse = 0;
     this._theta = 0;
     this._calcLinkageRederingOffsets(linkages);
     this._linkages = linkages;
@@ -90,6 +90,10 @@ Population.prototype._setLinkages = function(linkages){
 //Run
 
 Population.prototype.run = function(){
+    if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
+        this.step();
+        return;
+    }
     if (globals.appState.get("isRunning")){
         globals.population.step();
         setTimeout(globals.population.run, 0);
@@ -108,7 +112,15 @@ Population.prototype.step = function(){
 };
 
 Population.prototype.readyToCalcNextGen = function(){
-    return this._allHingePositionsStored;
+    return this._readyForNextGen;
+};
+
+Population.prototype._obstacleCourseCompleted = function(){
+    this._numWalkersCompletedCourse += 1;
+    if (this._numWalkersCompletedCourse == this._linkages.length) {
+        this._readyForNextGen = true;
+        if (globals.appState.get("isRunning")) this.step();
+    }
 };
 
 Population.prototype._calculateTrajectory = function(){
@@ -262,8 +274,8 @@ Population.prototype._getCurrentDriveCrankAngle = function(isWalker){
     if (this._theta > Math.PI*2) {
         if (!isWalker){
             if (!this._waitTimePassed) this._waitTimePassed = true;//wait for one rotation of crank to start storing hinge pos data
-            else if (!this._allHingePositionsStored) {
-                this._allHingePositionsStored = true;
+            else if (!this._readyForNextGen) {
+                this._readyForNextGen = true;
                 var visibility = globals.appState.get("showHingePaths");
                 var outputIndex = globals.appState.get("outputHingeIndex");
                 _.each(this._linkages, function(linkage){
@@ -292,7 +304,7 @@ Population.prototype.setDepth = function(depth){
 };
 
 Population.prototype.shouldStorePosition = function(){
-    return this._waitTimePassed && !this._allHingePositionsStored;
+    return this._waitTimePassed && !this._readyForNextGen;
 };
 
 Population.prototype.setHingePathVisibility = function(visibility){
@@ -340,7 +352,7 @@ Population.prototype.createTerrain = function(){
     this._terrain = globals.physics.makeTerrain(globals.appState.get("terrain"));
     globals.physics.worldAdd(this._terrain);
     this._terrainMesh = new THREE.Mesh(new THREE.BoxGeometry(1000, 10, 1));
-    this._terrainMesh.position.set(0,-100, 0);
+    this._terrainMesh.position.set(0, -5, 0);
     globals.three.sceneAdd(this._terrainMesh);
 };
 
