@@ -17,7 +17,8 @@ RunMenuView = Backbone.View.extend({
         "click #runGA":                                             "_runGA",
         "click #pauseGA":                                           "_pauseGA",
         "click #runStepNextGen":                                    "_stepNextGeneration",
-        "click #runReset":                                          "_reset"
+        "click #runReset":                                          "_reset",
+        "change .numberInput":                                      "_updateNumber"
     },
 
     initialize: function(){
@@ -40,7 +41,7 @@ RunMenuView = Backbone.View.extend({
             return;
         }
 
-        if ($(".numberInput").is(":focus")) this._updateNumber(e);
+//        if ($(".numberInput").is(":focus")) this._updateNumber(e);
     },
 
     _updateNumber: function(e){
@@ -86,9 +87,9 @@ RunMenuView = Backbone.View.extend({
             return;
         }
         var currentGen = globals.runStatistics[globals.runStatistics.length-1];
-        $("#bestFitness").html(currentGen.maxFitness.toFixed(2));
-        $("#worstFitness").html(currentGen.minFitness.toFixed(2));
-        $("#avgFitness").html(currentGen.avgFitness.toFixed(2));
+        if (currentGen.maxFitness) $("#bestFitness").html(currentGen.maxFitness.toFixed(2));
+        if (currentGen.minFitness) $("#worstFitness").html(currentGen.minFitness.toFixed(2));
+        if (currentGen.avgFitness) $("#avgFitness").html(currentGen.avgFitness.toFixed(2));
     },
 
     render: function(){
