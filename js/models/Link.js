@@ -9,6 +9,7 @@ function Link(hingeA, hingeB, material, length){//optional parameter "length" se
 // otherwise calculated from initial positions of hinges
     this._hingeA = hingeA;
     this._hingeB = hingeB;
+    this._zIndex = 0;
 
     if (length === undefined || length === null || !length) length = this._dist(hingeA.getPosition(), hingeB.getPosition());
     if (length < globals.appState.get("minLinkLength")) {
@@ -64,10 +65,14 @@ Link.prototype.render = function(screenCoordinates, ignoreThisVar, index){
 
     //get center of mass position
     var centerPos = this._avg(hingeAPos, hingeBPos);
-    this._mesh.position.set(centerPos.x+screenCoordinates.x, centerPos.y+screenCoordinates.y, 0);
+    this._mesh.position.set(centerPos.x+screenCoordinates.x, centerPos.y+screenCoordinates.y, this._zIndex*10);
 
     //get rotation of link - negative y comes from canvas using neg y for rendering (i think)
     this._mesh.rotation.z = Math.atan2(hingeAPos.x-hingeBPos.x, -(hingeAPos.y-hingeBPos.y));
+};
+
+Link.prototype.setZIndex = function(zIndex){
+    this._zIndex = zIndex;
 };
 
 

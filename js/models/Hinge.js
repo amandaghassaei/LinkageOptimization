@@ -15,6 +15,7 @@ function Hinge(position, parentLinkage, material){
     this._parentLinkage = parentLinkage;
     //todo update this._position from physics after motion settles
     this._position = position;
+    this._zIndex = 0;
     this._static = false;
     var width = globals.appState.get("linkWidth");
     this._body = this._buildBody(position, width/2);
@@ -122,9 +123,13 @@ Hinge.prototype.render = function(screenCoordinates, precompute, index){
     if (globals.population.shouldStorePosition()) this.trackPosition();
 };
 
+Hinge.prototype.setZIndex = function(zIndex){
+    this._zIndex = zIndex;
+};
+
 Hinge.prototype.physicsRender = function(screenCoordinates){//always uses physics engine to get position
     var position = this._body.position;//get position from body and update mesh
-    this._mesh.position.set(position.x+screenCoordinates.x, position.y+screenCoordinates.y, 0);
+    this._mesh.position.set(position.x+screenCoordinates.x, position.y+screenCoordinates.y, this._zIndex*10);
 };
 
 

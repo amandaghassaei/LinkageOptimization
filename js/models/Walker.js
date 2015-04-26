@@ -85,11 +85,11 @@ Walker.prototype.initLeg = function(hinges, links, numLegs, num, mirrorOffset){
             lookupTable[index] = hinge.updatedPosition;
             return;
         }
-        if (mirrorOffset) self.addHingeAtPosition({x:mirrorOffset-hinge.position.x, y:hinge.position.y});
-        else self.addHingeAtPosition(hinge.position);
+        if (mirrorOffset) self.addHingeAtPosition({x:mirrorOffset-hinge.position.x, y:hinge.position.y}).setZIndex(0);
+        else self.addHingeAtPosition(hinge.position).setZIndex(0);
     });
     _.each(links, function(link){//{hinges: [this.getHingeAId(), this.getHingeBId()], length: this._length}
-        self.link(self._hinges[lookupTable[link.hinges[0]]], self._hinges[lookupTable[link.hinges[1]]], link.length);
+        self.link(self._hinges[lookupTable[link.hinges[0]]], self._hinges[lookupTable[link.hinges[1]]], link.length).setZIndex(0);
     });
 
 };
