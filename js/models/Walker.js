@@ -133,7 +133,6 @@ Walker.prototype._addDriveCrank = function(centerHinge, outsideHinges, length){
 //Fitness
 
 Walker.prototype.getFitness = function(){
-    // return 4;
     return this._fitness;
 };
 
@@ -145,8 +144,14 @@ Walker.prototype.setFitness = function(fitness){
     this._fitness = fitness;
 };
 
-Walker.prototype._finished = function(distance){
-    this.setFitness(Math.abs(distance)/10.0);
+Walker.prototype._finished = function(distance, speed){
+    if (globals.appState.get("fitnessQuantity") == "distance") this.setFitness(Math.abs(distance)/10.0);
+    else {
+        var fitness = Math.abs(speed)-35;
+        if (fitness < 1) fitness = 1;
+        this.setFitness(fitness);
+    }
+    console.log(this._fitness);
 };
 
 
@@ -200,7 +205,12 @@ Walker.prototype.render = function(angle, tickNum, renderThreeJS){
                 link.render(self._drawOffset);
             });
         }
-        if (tickNum >= globals.appState.get("numEvalTicks")) this._finished(this._hinges[0].getCurrentPosition().x);
+        var totalNumTicks = globals.appState.get("numEvalTicks");
+        if (tickNum == totalNumTicks-globals.appState.get("numPositionSteps")) this._speedMark = this._hinges[0].getCurrentPosition().x;
+        if (tickNum >= totalNumTicks) {
+            var position = this._hinges[0].getCurrentPosition().x;
+            this._finished(position, position-this._speedMark);
+        }
     }
 };
 

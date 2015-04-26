@@ -331,7 +331,8 @@ AppState = Backbone.Model.extend({
                     numLegPairs: this.get("numLegPairs"),
                     terrain: this.get("terrain"),
                     simulatedAnnealing: this.get("simulatedAnnealing"),
-                    numEvalTicks: this.get("numEvalTicks")
+                    numEvalTicks: this.get("numEvalTicks"),
+                    fitnessQuantity: this.get("fitnessQuantity")
                 },
                 runStatistics: globals.runStatistics,
                 population: globals.population.toJSON(),
