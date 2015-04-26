@@ -4,8 +4,9 @@
 
 //todo hinge relaxation
 
-function Walker(json){//Linkage subclass
+function Walker(json, invisible){//Linkage subclass
     Linkage.call(this);//init empty linkage
+    if (invisible) this.hide();
     this._walkerBodyConstraints = [];
     this._json = JSON.parse(JSON.stringify(json));
     this._isFinished = false;
@@ -136,12 +137,11 @@ Walker.prototype.getFitness = function(){
     return this._fitness;
 };
 
-Walker.prototype.setFitness = function(fitness, shouldHide){
+Walker.prototype.setFitness = function(fitness){
     this._isFinished = true;
     _.each(this._hinges, function(hinge){
         hinge.setStatic(true);
     });
-    if (shouldHide) this.hide();
     this._fitness = fitness;
 };
 

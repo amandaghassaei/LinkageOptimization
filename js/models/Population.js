@@ -175,8 +175,8 @@ Population.prototype.calcNextGen = function(linkages){
     //hill climbing mode
     if (globals.appState.get("isHillClimbing")){
         var parent = this.getBestLinkage(linkages);
-        var clone = parent.clone();
-        clone.setFitness(parent.getFitness(), true);
+        var clone = new Walker(parent.toJSON(), true);
+        clone.setFitness(parent.getFitness());
         nextGenLinkages.push(clone);
         nextGenLinkages.push(parent.hillClimb(mutationRate));
         return nextGenLinkages;

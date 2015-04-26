@@ -14,7 +14,8 @@ FitnessMenuView = Backbone.View.extend({
         "click #loadPath":                                          "_loadTargetPath",
         "click #saveOutputPath":                                    "_saveOutputPath",
         "change input[name=fitnessMetrics]":                        "_changeFitnessMetrics",
-        "change input[name=terrainType]":                           "_changeTerrain"
+        "change input[name=terrainType]":                           "_changeTerrain",
+        "change input[name=fitnessQuantity]":                       "_changeFitnessQuantity"
     },
 
     initialize: function(){
@@ -106,6 +107,13 @@ FitnessMenuView = Backbone.View.extend({
         } else console.warn("unknown terrain type " + val);
     },
 
+    _changeFitnessQuantity: function(e){
+        var val = $(e.target).val();
+        if (val == "distance" || val == "speed"){
+            globals.appState.set("fitnessQuantity", val);
+        } else console.warn("unknown fitness metric " + val);
+    },
+
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "fitness") return;
@@ -150,7 +158,15 @@ FitnessMenuView = Backbone.View.extend({
             <input type="radio" disabled name="terrainType" <% if (terrain == "obstacles"){ %>checked <% } %>value="obstacles" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Obstacles\
             </label><br/>\
-            Eval Period (# of simulation ticks): &nbsp;&nbsp;<input id="numEvalTicks" data-type="numEvalTicks" value="<%= numEvalTicks %>" placeholder="Eval Ticks" class="form-control numberInput" type="text"><br/><br/>\
+            Eval Period (# of simulation ticks): &nbsp;&nbsp;<input id="numEvalTicks" data-type="numEvalTicks" value="<%= numEvalTicks %>" placeholder="Eval Ticks" class="form-control numberInput" type="text"><br/>\
+            <label class="radio">\
+            <input type="radio" name="fitnessQuantity" <% if (fitnessQuantity == "distance"){ %> checked <% } %>value="distance" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Distance Traversed\
+            </label>\
+            <label class="radio">\
+            <input type="radio"  name="fitnessQuantity" <% if (fitnessQuantity == "speed"){ %>checked <% } %>value="speed" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Final Speed\
+            </label>\
             Friction (between 0 and 1): &nbsp;&nbsp;<input id="friction" data-type="friction" value="<%= friction %>" placeholder="Friction" class="form-control floatInput" type="text"><br/><br/>\
         <% } %>\
         ')
