@@ -185,19 +185,21 @@ Walker.prototype.getTranslationScaleRotation = function() {
 
 //Draw
 
-Walker.prototype.render = function(angle, tickNum){
+Walker.prototype.render = function(angle, tickNum, renderThreeJS){
     if (!this._isFinished){
-        var self = this;
         this.drive(angle);
-        _.each(this._hinges, function(hinge){
-            hinge.physicsRender(self._drawOffset);
-        });
-        _.each( this._links, function(link){
-            link.render(self._drawOffset);
-        });
-        _.each( this._walkerBodyConstraints, function(link){
-            link.render(self._drawOffset);
-        });
+        if (renderThreeJS){
+            var self = this;
+            _.each(this._hinges, function(hinge){
+                hinge.physicsRender(self._drawOffset);
+            });
+            _.each( this._links, function(link){
+                link.render(self._drawOffset);
+            });
+            _.each( this._walkerBodyConstraints, function(link){
+                link.render(self._drawOffset);
+            });
+        }
         if (tickNum >= globals.appState.get("numEvalTicks")) this._finished(this._hinges[0].getCurrentPosition().x);
     }
 };

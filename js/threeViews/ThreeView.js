@@ -40,6 +40,8 @@ ThreeView = Backbone.View.extend({
         if (globals.appState.get("shouldRenderThreeJS")){
             globals.population.render();
             this.model.render();
+        } else if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
+            globals.population.render();
         }
         requestAnimationFrame(this._render);
     },

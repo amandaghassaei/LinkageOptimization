@@ -223,8 +223,9 @@ Population.prototype.render = function(){
             globals.physics.update();
             this._numSimulationTicks += 1;
             var angle = this._getCurrentDriveCrankAngle(true);
+            var renderThreeJS = globals.appState.get("shouldRenderThreeJS");
             _.each(this._linkages, function(linkage){
-                linkage.render(angle, self._numSimulationTicks);
+                linkage.render(angle, self._numSimulationTicks, renderThreeJS);
             });
             if (this._numSimulationTicks >= globals.appState.get("numEvalTicks")) {
                 this._readyForNextGen = true;
