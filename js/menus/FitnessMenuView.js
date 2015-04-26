@@ -140,6 +140,7 @@ FitnessMenuView = Backbone.View.extend({
             <input type="radio" disabled name="terrainType" <% if (terrain == "obstacles"){ %>checked <% } %>value="obstacles" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Obstacles\
             </label>\
+            Eval Period (# of simulation ticks): &nbsp;&nbsp;<input id="numEvalTicks" data-type="numEvalTicks" value="<%= numEvalTicks %>" placeholder="Hinge" class="form-control numberInput" type="text"><br/><br/>\
         <% } %>\
         ')
 });

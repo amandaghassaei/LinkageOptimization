@@ -37,7 +37,7 @@ function PhysicsModel(){
 
     function makeTerrain(terrainType){
         if (terrainType == "flat"){
-            var body = Bodies.rectangle(0, -5, 1000, 10,
+            var body = Bodies.rectangle(0, -5, 5000, 10,
                 {groupId:2});
             Body.setStatic(body, true);
             worldAdd(body);

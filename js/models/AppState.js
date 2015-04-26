@@ -59,6 +59,7 @@ AppState = Backbone.Model.extend({
 
         numLegPairs: 3,
         terrain: "flat",
+        numEvalTicks: 1000,
 
         linkWidth: 3,
         zDepth: 3,
@@ -153,13 +154,15 @@ AppState = Backbone.Model.extend({
     _changeFitnessMetric: function(){
         if (this.get("fitnessBasedOnTargetPath")) {
             globals.physics.setGravity(false);
-            globals.population.reset();
             globals.population.removeTerrain();
+            globals.population.reset();
         } else {
             globals.physics.setGravity(true);
             globals.population.createTerrain();
             var populationJSON = JSON.stringify(globals.population.toJSON());
             globals.population.setFromJSON(JSON.parse(populationJSON));
+//            this.set("isRunning", true);
+//            this.set("isAnimating", true);
         }
     },
 
@@ -319,7 +322,8 @@ AppState = Backbone.Model.extend({
                     mutateTopology: this.get("mutateTopology"),
                     numLegPairs: this.get("numLegPairs"),
                     terrain: this.get("terrain"),
-                    simulatedAnnealing: this.get("simulatedAnnealing")
+                    simulatedAnnealing: this.get("simulatedAnnealing"),
+                    numEvalTicks: this.get("numEvalTicks")
                 },
                 runStatistics: globals.runStatistics,
                 population: globals.population.toJSON(),

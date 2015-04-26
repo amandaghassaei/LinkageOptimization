@@ -137,7 +137,7 @@ Population.prototype.calcNextGen = function(linkages){
     if (globals.appState.get("isHillClimbing")){
         var parent = this.getBestLinkage(linkages);
         var clone = parent.clone();
-        clone.setFitness(parent.getFitness());
+        clone.setFitness(parent.getFitness(), true);
         nextGenLinkages.push(clone);
         nextGenLinkages.push(parent.hillClimb(mutationRate));
         return nextGenLinkages;
@@ -224,9 +224,9 @@ Population.prototype.render = function(){
             _.each(this._linkages, function(linkage){
                 linkage.render(angle, self._numSimulationTicks);
             });
-            if (this._numSimulationTicks >= 500) {
+            if (this._numSimulationTicks >= globals.appState.get("numEvalTicks")) {
                 this._readyForNextGen = true;
-                this.step();
+                if (globals.appState.get("isRunning")) this.step();
             }
         } else {
             _.each(this._linkages, function(linkage){
@@ -349,7 +349,7 @@ Population.prototype.createTerrain = function(){
     if (this._terrain) this.removeTerrain();
     this._terrain = globals.physics.makeTerrain(globals.appState.get("terrain"));
     globals.physics.worldAdd(this._terrain);
-    this._terrainMesh = new THREE.Mesh(new THREE.BoxGeometry(1000, 10, 1));
+    this._terrainMesh = new THREE.Mesh(new THREE.BoxGeometry(5000, 10, 1));
     this._terrainMesh.position.set(0, -5, 0);
     globals.three.sceneAdd(this._terrainMesh);
 };

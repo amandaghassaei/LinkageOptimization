@@ -132,13 +132,12 @@ Walker.prototype.getFitness = function(){
     return this._fitness;
 };
 
-Walker.prototype.setFitness = function(fitness){
+Walker.prototype.setFitness = function(fitness, shouldHide){
     this._isFinished = true;
-    this._walkerBodyConstraints = null;
     _.each(this._hinges, function(hinge){
         hinge.setStatic(true);
     });
-    this.hide();
+    if (shouldHide) this.hide();
     this._fitness = fitness;
 };
 
@@ -195,7 +194,7 @@ Walker.prototype.render = function(angle, tickNum){
         _.each( this._walkerBodyConstraints, function(link){
             link.render(self._drawOffset);
         });
-        if (tickNum == 500) this._finished(this._hinges[0].getCurrentPosition().x);
+        if (tickNum >= globals.appState.get("numEvalTicks")) this._finished(this._hinges[0].getCurrentPosition().x);
     }
 };
 
