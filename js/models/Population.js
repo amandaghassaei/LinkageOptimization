@@ -69,8 +69,7 @@ Population.prototype._initFirstGeneration = function(archetype){
 Population.prototype._setLinkages = function(linkages){
     this._waitTimePassed = false;//wait for transient motion from new linkage lengths to pass before collecting position info
     this._readyForNextGen = false;
-    this._numWalkersCompletedCourse = 0;
-    if (globals.appState.get("isHillClimbing") && linkages.length > 0 && linkages[0].getFitness()) this._numWalkersCompletedCourse = 1;//parent has already been accounted for
+    this._numSimulationTicks = 0;
     this._theta = 0;
     this._calcLinkageRederingOffsets(linkages);
     this._linkages = linkages;
@@ -114,14 +113,6 @@ Population.prototype.step = function(){
 
 Population.prototype.readyToCalcNextGen = function(){
     return this._readyForNextGen;
-};
-
-Population.prototype._obstacleCourseCompleted = function(){
-    this._numWalkersCompletedCourse += 1;
-    if (this._numWalkersCompletedCourse == this._linkages.length) {
-        this._readyForNextGen = true;
-        if (globals.appState.get("isRunning")) this.step();
-    }
 };
 
 Population.prototype._calculateTrajectory = function(){
@@ -228,12 +219,16 @@ Population.prototype.render = function(){
 
         if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
             globals.physics.update();
+            this._numSimulationTicks += 1;
             var angle = this._getCurrentDriveCrankAngle(true);
             _.each(this._linkages, function(linkage){
-                linkage.render(angle);
+                linkage.render(angle, self._numSimulationTicks);
             });
-        }
-        else {
+            if (this._numSimulationTicks >= 500) {
+                this._readyForNextGen = true;
+                this.step();
+            }
+        } else {
             _.each(this._linkages, function(linkage){
                 linkage.render(self._renderIndex, false);
             });

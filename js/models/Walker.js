@@ -8,7 +8,6 @@ function Walker(json){//Linkage subclass
     Linkage.call(this);//init empty linkage
     this._walkerBodyConstraints = [];
     this._json = JSON.parse(JSON.stringify(json));
-    this._finishTime = 0;
     this._isFinished = false;
 
     var hinges = json.hinges;
@@ -135,17 +134,16 @@ Walker.prototype.getFitness = function(){
 
 Walker.prototype.setFitness = function(fitness){
     this._isFinished = true;
+    this._walkerBodyConstraints = null;
     _.each(this._hinges, function(hinge){
         hinge.setStatic(true);
     });
+    this.hide();
     this._fitness = fitness;
 };
 
-Walker.prototype._finished = function(time){
-    var fitness = 1000-time;
-    if (fitness < 0) fitness = 0;
-    this.setFitness(fitness/10.0);
-    globals.population._obstacleCourseCompleted();
+Walker.prototype._finished = function(distance){
+    this.setFitness(Math.abs(distance)/10.0);
 };
 
 
@@ -184,10 +182,9 @@ Walker.prototype.getTranslationScaleRotation = function() {
 
 //Draw
 
-Walker.prototype.render = function(angle){
+Walker.prototype.render = function(angle, tickNum){
     if (!this._isFinished){
         var self = this;
-        this._finishTime++;
         this.drive(angle);
         _.each(this._hinges, function(hinge){
             hinge.physicsRender(self._drawOffset);
@@ -198,11 +195,16 @@ Walker.prototype.render = function(angle){
         _.each( this._walkerBodyConstraints, function(link){
             link.render(self._drawOffset);
         });
-        if (Math.abs(this._hinges[0].getCurrentPosition().x) > 400 || this._finishTime >= 1000) this._finished(this._finishTime);
+        if (tickNum == 500) this._finished(this._hinges[0].getCurrentPosition().x);
     }
 };
 
 Walker.prototype.setHingePathVisibility = function(){
+};
+
+Walker.prototype.hide = function(){
+    this._material.opacity = 0.0;
+    this._material.transparent = true;
 };
 
 
