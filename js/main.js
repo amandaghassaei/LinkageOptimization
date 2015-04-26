@@ -35,8 +35,9 @@ $(function(){
             point.x -= centerX;
             point.y -= centerY;
         });
-//        var params = Linkage.prototype.getTranslationScaleRotation(curve);
-        globals.targetCurve = curve;//globals.targetCurve = Linkage.prototype.normalizeTrajectory(curve, params);
+        var params = Linkage.prototype.getTranslationScaleRotation(curve);
+        globals.targetCurve = Linkage.prototype.normalizeTrajectory(curve, params);
+        //globals.targetCurve = curve;
     };
 
     //init global singletons
