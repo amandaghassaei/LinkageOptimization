@@ -70,6 +70,7 @@ Population.prototype._setLinkages = function(linkages){
     this._waitTimePassed = false;//wait for transient motion from new linkage lengths to pass before collecting position info
     this._readyForNextGen = false;
     this._numWalkersCompletedCourse = 0;
+    if (globals.appState.get("isHillClimbing") && linkages.length > 0 && linkages[0].getFitness()) this._numWalkersCompletedCourse = 1;//parent has already been accounted for
     this._theta = 0;
     this._calcLinkageRederingOffsets(linkages);
     this._linkages = linkages;
@@ -144,7 +145,9 @@ Population.prototype.calcNextGen = function(linkages){
     //hill climbing mode
     if (globals.appState.get("isHillClimbing")){
         var parent = this.getBestLinkage(linkages);
-        nextGenLinkages.push(parent.clone());
+        var clone = parent.clone();
+        clone.setFitness(parent.getFitness());
+        nextGenLinkages.push(clone);
         nextGenLinkages.push(parent.hillClimb(mutationRate));
         return nextGenLinkages;
     }

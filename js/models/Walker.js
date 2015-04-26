@@ -7,7 +7,7 @@
 function Walker(json){//Linkage subclass
     Linkage.call(this);//init empty linkage
     this._walkerBodyConstraints = [];
-    this._json = json;
+    this._json = JSON.parse(JSON.stringify(json));
     this._finishTime = 0;
     this._isFinished = false;
 
@@ -130,13 +130,24 @@ Walker.prototype.addDriveCrank = function(centerHinge, outsideHinges, length){
 
 Walker.prototype.getFitness = function(){
     // return 4;
-    if (!this._fitness) this._fitness = this._calcFitness();
     return this._fitness;
 };
 
-Walker.prototype._calcFitness = function(){
-    return 3;
+Walker.prototype.setFitness = function(fitness){
+    this._isFinished = true;
+    _.each(this._hinges, function(hinge){
+        hinge.setStatic(true);
+    });
+    this._fitness = fitness;
 };
+
+Walker.prototype._finished = function(time){
+    var fitness = 1000-time;
+    if (fitness < 0) fitness = 0;
+    this.setFitness(fitness/10.0);
+    globals.population._obstacleCourseCompleted();
+};
+
 
 
 
@@ -205,18 +216,6 @@ Walker.prototype.destroy = function(){
     this._walkerBodyConstraints = null;
     Linkage.prototype.destroy.call(this);
 };
-
-Walker.prototype._finished = function(time){
-    this._isFinished = true;
-    _.each(this._hinges, function(hinge){
-        hinge.setStatic(true);
-    });
-    var fitness = 1000-time;
-    if (fitness < 0) fitness = 0;
-    this._fitness = fitness/10.0;
-    globals.population._obstacleCourseCompleted();
-};
-
 
 
 
