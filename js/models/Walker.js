@@ -7,10 +7,17 @@
 function Walker(json){//Linkage subclass
     Linkage.call(this);//init empty linkage
     this._walkerBodyConstraints = [];
-    this._json = json;
+    this._json = JSON.parse(JSON.stringify(json));
+    this._isFinished = false;
 
     var hinges = json.hinges;
 
+    this._verticalOffset = hinges[0].position.y;
+    var self = this;
+    _.each(hinges, function(hinge){
+        if (hinge.position.y < self._verticalOffset) self._verticalOffset = hinge.position.y;
+    });
+    this._verticalOffset *= 1.15;
     //make crank center hinge #0
     var centerHingeIndex = json.driveCrank.centerHinge;
     var centerHinge = this.addHingeAtPosition(hinges[centerHingeIndex].position);
@@ -28,7 +35,6 @@ function Walker(json){//Linkage subclass
 
     //then add fixedHinges
     var fixedHinges = [centerHinge];
-    var self = this;
     var mirrorOffset = 2*centerHinge.getPosition().x;
     _.each(hinges, function(hinge){
         if (hinge.static && hinge.updatedPosition === undefined) {
@@ -92,6 +98,12 @@ Walker.prototype.initLeg = function(hinges, links, numLegs, num, mirrorOffset){
 
 //Construct
 
+Walker.prototype.addHingeAtPosition = function(position){
+    var hinge = new Hinge({x:position.x, y:position.y-this._verticalOffset}, this, this._material);
+    this._hinges.push(hinge);
+    return hinge;
+};
+
 Walker.prototype._makeWalkerBody = function(hinges){
     var self = this;
     _.each(hinges, function(hinge, index){
@@ -117,13 +129,22 @@ Walker.prototype.addDriveCrank = function(centerHinge, outsideHinges, length){
 
 Walker.prototype.getFitness = function(){
     // return 4;
-    if (!this._fitness) this._fitness = this._calcFitness();
     return this._fitness;
 };
 
-Walker.prototype._calcFitness = function(){
-    return 3;
+Walker.prototype.setFitness = function(fitness, shouldHide){
+    this._isFinished = true;
+    _.each(this._hinges, function(hinge){
+        hinge.setStatic(true);
+    });
+    if (shouldHide) this.hide();
+    this._fitness = fitness;
 };
+
+Walker.prototype._finished = function(distance){
+    this.setFitness(Math.abs(distance)/10.0);
+};
+
 
 
 
@@ -160,22 +181,29 @@ Walker.prototype.getTranslationScaleRotation = function() {
 
 //Draw
 
-Walker.prototype.render = function(angle){
-    var self = this;
-    this.drive(angle);
-    _.each(this._hinges, function(hinge){
-        hinge.physicsRender(self._drawOffset);
-    });
-    _.each( this._links, function(link){
-        link.render(self._drawOffset);
-    });
-    _.each( this._walkerBodyConstraints, function(link){
-        link.render(self._drawOffset);
-    });
-//    if (Math.abs(this._hinges[0].getCurrentPosition().x) > 400) this.destroy();
+Walker.prototype.render = function(angle, tickNum){
+    if (!this._isFinished){
+        var self = this;
+        this.drive(angle);
+        _.each(this._hinges, function(hinge){
+            hinge.physicsRender(self._drawOffset);
+        });
+        _.each( this._links, function(link){
+            link.render(self._drawOffset);
+        });
+        _.each( this._walkerBodyConstraints, function(link){
+            link.render(self._drawOffset);
+        });
+        if (tickNum >= globals.appState.get("numEvalTicks")) this._finished(this._hinges[0].getCurrentPosition().x);
+    }
 };
 
 Walker.prototype.setHingePathVisibility = function(){
+};
+
+Walker.prototype.hide = function(){
+    this._material.opacity = 0.0;
+    this._material.transparent = true;
 };
 
 
@@ -189,7 +217,6 @@ Walker.prototype.destroy = function(){
     this._walkerBodyConstraints = null;
     Linkage.prototype.destroy.call(this);
 };
-
 
 
 

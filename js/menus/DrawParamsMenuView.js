@@ -85,10 +85,11 @@ DrawParamsMenuView = Backbone.View.extend({
         <% } else  { %>\
         <a href="#" id="startAnimation" class="btn-success btn btn-block btn-lg btn-default">Animate</a>\
         <% } %>\
-        <input id="phase" data-slider-id="phaseSlider" type="text" data-slider-min="0" data-slider-max="<%= numPositionSteps -1 %>" data-slider-step="1" data-slider-value="<%= phase %>"/>\
+        <% if(fitnessBasedOnTargetPath){ %><input id="phase" data-slider-id="phaseSlider" type="text" data-slider-min="0" data-slider-max="<%= numPositionSteps -1 %>" data-slider-step="1" data-slider-value="<%= phase %>"/><% } %><br/>\
         <!--Num Samples per Cycle: &nbsp;&nbsp;<input data-type="numPositionSteps" value="<%= numPositionSteps %>" placeholder="Num Samples" class="form-control numberInput" type="text"><br/><br/>-->\
         Link Width: &nbsp;&nbsp;<input data-type="linkWidth" value="<%= linkWidth %>" placeholder="Width" class="form-control numberInput" type="text"><br/><br/>\
         <% if (is3D){ %>Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/><% } %>\
+        <% if(fitnessBasedOnTargetPath){ %>\
         <label class="checkbox" for="showTargetPath">\
         <input type="checkbox" <% if (showTargetPath){ %>checked="checked" <% } %> value="" id="showTargetPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Show target path</label>\
@@ -98,6 +99,7 @@ DrawParamsMenuView = Backbone.View.extend({
         <label class="checkbox" for="showHingePaths">\
         <input type="checkbox" <% if (showHingePaths){ %>checked="checked" <% } %> value="" id="showHingePaths" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Show all hinge trajectories</label><br/>\
+        <% } %>\
         ')
 
 });
