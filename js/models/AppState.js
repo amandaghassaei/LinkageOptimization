@@ -38,7 +38,7 @@ AppState = Backbone.Model.extend({
         //default is ga, unless other specified
         isHillClimbing: false,
         isNelderMead: false,
-        populationSize: 20,
+        populationSize: 40,
         simulatedAnnealing: false,
 
         fitnessBasedOnTargetPath: true,
@@ -48,9 +48,9 @@ AppState = Backbone.Model.extend({
         shouldAutoUpdatePhase: true,
         shouldRenderPhaseChange: false,
 
-        mutationRate: 5,//percent
+        mutationRate: 1,//percent
         minLinkLength: 5,
-        maxLinkChange: 25,//percent
+        maxLinkChange: 15,//percent
         mutateTopology: false,
 
         is3D: false,
@@ -61,7 +61,7 @@ AppState = Backbone.Model.extend({
         numLegPairs: 3,
         terrain: "flat",
         numEvalTicks: 200,
-        fitnessQuantity: "distance",
+        fitnessQuantity: "speed",
         friction: 0.9,
 
         linkWidth: 3,

@@ -151,7 +151,6 @@ Walker.prototype._finished = function(distance, speed){
         if (fitness < 1) fitness = 1;
         this.setFitness(fitness);
     }
-    console.log(this._fitness);
 };
 
 
