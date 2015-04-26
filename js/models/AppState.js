@@ -38,7 +38,7 @@ AppState = Backbone.Model.extend({
         //default is ga, unless other specified
         isHillClimbing: false,
         isNelderMead: false,
-        populationSize: 40,
+        populationSize: 10,
         simulatedAnnealing: false,
 
         fitnessBasedOnTargetPath: true,

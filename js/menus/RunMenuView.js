@@ -22,13 +22,13 @@ RunMenuView = Backbone.View.extend({
 
     initialize: function(){
 
-        _.bindAll(this, "render", "_onKeyup", "_setGeneration");
+        _.bindAll(this, "render", "_onKeyup", "_setGenerationStats");
 
         //bind events
         $(document).bind('keyup', {}, this._onKeyup);
         this.listenTo(globals.appState, "change", this.render);
 
-        $("body").bind("generationIncr", this._setGeneration);
+        $("body").bind("generationIncr", this._setGenerationStats);
     },
 
     _onKeyup: function(e){
@@ -77,8 +77,18 @@ RunMenuView = Backbone.View.extend({
         globals.population.step();
     },
 
-    _setGeneration: function(){
+    _setGenerationStats: function(){
         $("#generationNum").html(globals.runStatistics.length);
+        if (globals.runStatistics.length == 0){
+            $("#bestFitness").html("null");
+            $("#worstFitness").html("null");
+            $("#avgFitness").html("null");
+            return;
+        }
+        var currentGen = globals.runStatistics[globals.runStatistics.length-1];
+        $("#bestFitness").html(currentGen.maxFitness.toFixed(2));
+        $("#worstFitness").html(currentGen.minFitness.toFixed(2));
+        $("#avgFitness").html(currentGen.avgFitness.toFixed(2));
     },
 
     render: function(){
@@ -86,7 +96,7 @@ RunMenuView = Backbone.View.extend({
         if (this.model.get("currentTab") != "run") return;
         if ($("input").is(":focus")) return;
         this.$el.html(this.template(this.model.toJSON()));
-        this._setGeneration();
+        this._setGenerationStats();
     },
 
     template: _.template('\
@@ -100,8 +110,13 @@ RunMenuView = Backbone.View.extend({
         <label class="checkbox" for="shouldRenderThreeJS">\
         <input type="checkbox" <% if (shouldRenderThreeJS){ %>checked="checked" <% } %> value="" id="shouldRenderThreeJS" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Render linkages during run (less efficient)</label>\
-        Current Generation: &nbsp;&nbsp;<span id="generationNum"></span><br/>\
         Max Num Generations (-1 never stops): &nbsp;&nbsp;<input data-type="maxNumGenerations" value="<%= maxNumGenerations %>" placeholder="Max Gens" class="form-control numberInput" type="text"><br/><br/>\
+        Current Generation: &nbsp;&nbsp;<span id="generationNum"></span><br/>\
+        Best Fitness: &nbsp;&nbsp;<span id="bestFitness"></span><br/>\
+        <% if (!isHillClimbing){ %>\
+        Average Fitness: &nbsp;&nbsp;<span id="avgFitness"></span><br/>\
+        Worst Fitness: &nbsp;&nbsp;<span id="worstFitness"></span><br/>\
+        <% } %>\
         ')
 });
 
