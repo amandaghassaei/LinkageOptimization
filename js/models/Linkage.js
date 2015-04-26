@@ -129,7 +129,10 @@ Linkage.prototype.forceMutate = function(mutationRate){//used for hill climbing
 Linkage.prototype.normalizeTrajectory = function(traj, params) {
     // adjust trajectory itself
     // return set of points adjusted for midpoint, angle, radius
-    return this._shiftAngle(params.rotation, this._shiftMidpoint(params.translation, params.scale, traj));
+    // console.log(params);
+    // return this._shiftMidpoint(params.translation, params.scale, traj);
+    // return this._shiftAngle(params.rotation, this._shiftMidpoint(params.translation, params.scale, traj));
+    return this._shiftAngle(params.rotation, this._shiftMidpoint(params.translation, 1, traj));
 }
 
 Linkage.prototype._checkWeirdness = function() {
@@ -148,9 +151,10 @@ Linkage.prototype.getFitness = function(){
 };
 
 Linkage.prototype.getTranslationScaleRotation = function(traj) {
-    console.log("here");
+    // console.log("here");
 //    console.log(traj);
     var farthest = this._calcFarthest(traj);
+    console.log(farthest);
     var distance = this._calcDistance(farthest[0], farthest[1]);
     return {
         translation: this._calcMidpoint(farthest),
@@ -161,14 +165,18 @@ Linkage.prototype.getTranslationScaleRotation = function(traj) {
 
 
 Linkage.prototype._calcFarthest = function(points) {
+    console.log('points', points);
     // find the two farthest points from each other
     var longest_distance = 0.0;
     var farthest = [];
     for (var i=0; i<points.length; i++) {
         for (var j=i+1; j<points.length; j++) {
+            // console.log(points[i], points[j]);
             var distance = this._calcDistance(points[i], points[j]);
+            // console.log('points', points[i], points[j], 'dist', distance);
             if (distance > longest_distance) {
                 farthest = [points[i], points[j]];
+                longest_distance = distance;
             }
         }
     }
