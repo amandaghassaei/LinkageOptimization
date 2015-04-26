@@ -60,6 +60,7 @@ AppState = Backbone.Model.extend({
         numLegPairs: 3,
         terrain: "flat",
         numEvalTicks: 1000,
+        friction: 0.5,
 
         linkWidth: 3,
         zDepth: 3,

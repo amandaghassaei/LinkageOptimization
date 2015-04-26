@@ -38,6 +38,7 @@ FitnessMenuView = Backbone.View.extend({
 
         if ($("#outputHingeIndex").is(":focus")) this._updateOutputHingeIndex(e);
         if ($(".numberInput").is(":focus")) this._updateNumber(e);
+        if ($(".floatInput").is(":focus")) this._updateFloat(e);
     },
 
     _updateOutputHingeIndex: function(e){
@@ -55,6 +56,15 @@ FitnessMenuView = Backbone.View.extend({
         var newVal = parseFloat($(e.target).val());
         if (isNaN(newVal)) return;
         newVal = parseInt(newVal);
+        var property = $(e.target).data("type");
+        globals.appState.set(property, newVal);
+    },
+
+    _updateFloat: function(e){
+        e.preventDefault();
+        var newVal = parseFloat($(e.target).val());
+        if (isNaN(newVal)) return;
+        newVal = parseFloat(newVal);
         var property = $(e.target).data("type");
         globals.appState.set(property, newVal);
     },
@@ -139,8 +149,9 @@ FitnessMenuView = Backbone.View.extend({
             <label class="disabled radio">\
             <input type="radio" disabled name="terrainType" <% if (terrain == "obstacles"){ %>checked <% } %>value="obstacles" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Obstacles\
-            </label>\
-            Eval Period (# of simulation ticks): &nbsp;&nbsp;<input id="numEvalTicks" data-type="numEvalTicks" value="<%= numEvalTicks %>" placeholder="Hinge" class="form-control numberInput" type="text"><br/><br/>\
+            </label><br/>\
+            Eval Period (# of simulation ticks): &nbsp;&nbsp;<input id="numEvalTicks" data-type="numEvalTicks" value="<%= numEvalTicks %>" placeholder="Eval Ticks" class="form-control numberInput" type="text"><br/><br/>\
+            Friction (between 0 and 1): &nbsp;&nbsp;<input id="friction" data-type="friction" value="<%= friction %>" placeholder="Friction" class="form-control floatInput" type="text"><br/><br/>\
         <% } %>\
         ')
 });

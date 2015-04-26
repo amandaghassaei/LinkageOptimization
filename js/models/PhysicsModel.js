@@ -22,9 +22,10 @@ function PhysicsModel(){
         World.remove(engine.world, object);
     }
 
-    function _makeCircularBody(position, radius){
+    function _makeCircularBody(position, radius, friction){
+        if (friction === undefined) friction = 0;
         var body = Bodies.circle(position.x, position.y, 1,
-            {groupId:1});//things with the same groupId cannot collide
+            {groupId:1, friction:friction});//things with the same groupId cannot collide
         Matter.Body.scale (body, radius, radius);
         worldAdd(body);
         return body;
@@ -32,13 +33,13 @@ function PhysicsModel(){
 
     function makeHingeBody(position, radius){
         if (radius === undefined || radius == 0) radius = 1;
-        return _makeCircularBody(position, radius);
+        return _makeCircularBody(position, radius, globals.appState.get("friction"));
     }
 
     function makeTerrain(terrainType){
         if (terrainType == "flat"){
             var body = Bodies.rectangle(0, -5, 5000, 10,
-                {groupId:2});
+                {groupId:2, friction:1});
             Body.setStatic(body, true);
             worldAdd(body);
             return body;
