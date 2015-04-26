@@ -56,6 +56,7 @@ AppState = Backbone.Model.extend({
         is3D: false,
         isAnimating: true,//play/pause animation
         isRunning:false,//play/pause optimization
+        maxNumGenerations: -1,
 
         numLegPairs: 3,
         terrain: "flat",
@@ -101,6 +102,7 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:fitnessBasedOnTargetPath", this._changeFitnessMetric);
         this.listenTo(this, "change:flipVertical", this._flipVertically);
         this.listenTo(this, "change:flipHorizontal", this._flipHorizontally);
+        this.listenTo(this, "change:shouldRenderThreeJS", this._changeRenderSettings);
 
         this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
     },
@@ -150,6 +152,10 @@ AppState = Backbone.Model.extend({
             this.set("shouldAutoUpdatePhase", true);
             this.set("shouldRenderThreeJS", true);
         }
+    },
+
+    _changeRenderSettings: function(){
+        if (!(this.get("shouldRenderThreeJS")) && this.get("isRunning")) globals.population.run();
     },
 
     _changeFitnessMetric: function(){

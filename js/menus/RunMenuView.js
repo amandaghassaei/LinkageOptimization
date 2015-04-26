@@ -22,16 +22,17 @@ RunMenuView = Backbone.View.extend({
 
     initialize: function(){
 
-        _.bindAll(this, "render", "_onKeyup");
+        _.bindAll(this, "render", "_onKeyup", "_setGeneration");
 
         //bind events
         $(document).bind('keyup', {}, this._onKeyup);
         this.listenTo(globals.appState, "change", this.render);
 
+        $("body").bind("generationIncr", this._setGeneration);
     },
 
     _onKeyup: function(e){
-        if (this.model.get("currentTab") != "population") return;
+        if (this.model.get("currentTab") != "run") return;
 
         if ($("input").is(":focus") && e.keyCode == 13) {//enter key
             $(e.target).blur();
@@ -46,7 +47,7 @@ RunMenuView = Backbone.View.extend({
         e.preventDefault();
         var newVal = parseFloat($(e.target).val());
         if (isNaN(newVal)) return;
-        newVal = parseFloat(newVal.toFixed(4));
+        newVal = parseInt(newVal);
         var property = $(e.target).data("type");
         globals.appState.set(property, newVal);
     },
@@ -76,11 +77,16 @@ RunMenuView = Backbone.View.extend({
         globals.population.step();
     },
 
+    _setGeneration: function(){
+        $("#generationNum").html(globals.runStatistics.length);
+    },
+
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "run") return;
         if ($("input").is(":focus")) return;
         this.$el.html(this.template(this.model.toJSON()));
+        this._setGeneration();
     },
 
     template: _.template('\
@@ -94,6 +100,8 @@ RunMenuView = Backbone.View.extend({
         <label class="checkbox" for="shouldRenderThreeJS">\
         <input type="checkbox" <% if (shouldRenderThreeJS){ %>checked="checked" <% } %> value="" id="shouldRenderThreeJS" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Render linkages during run (less efficient)</label>\
+        Current Generation: &nbsp;&nbsp;<span id="generationNum"></span><br/>\
+        Max Num Generations (-1 never stops): &nbsp;&nbsp;<input data-type="maxNumGenerations" value="<%= maxNumGenerations %>" placeholder="Max Gens" class="form-control numberInput" type="text"><br/><br/>\
         ')
 });
 

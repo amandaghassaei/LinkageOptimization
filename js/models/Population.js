@@ -82,8 +82,9 @@ Population.prototype._setLinkages = function(linkages){
         if (linkages.length > 0 && (globals.appState.get("shouldRenderThreeJS") || !globals.appState.get("isRunning"))){
             this.getBestLinkage(linkages).setColor("0xffff00");
         }
-    }
+    } else if (!(globals.appState.get("shouldRenderThreeJS"))) {
 
+    }
 };
 
 
@@ -94,12 +95,47 @@ Population.prototype._setLinkages = function(linkages){
 Population.prototype.run = function(){
     if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
         this.step();
+        this._runWalkers();
         return;
     }
-    if (globals.appState.get("isRunning")){
+    if (globals.population._shouldKeepRunning()){
         globals.population.step();
         setTimeout(globals.population.run, 0);
     }
+};
+
+Population.prototype._shouldKeepRunning = function(){
+    if (!globals.appState.get("isRunning")) return false;
+    if (globals.appState.get("maxNumGenerations") < 0 || globals.appState.get("maxNumGenerations") > globals.runStatistics.length) return true;
+    globals.appState.set("isRunning", false);
+    $("#saveRunStats").click();
+    return false;
+};
+
+Population.prototype._runWalkers = function(){
+    if (globals.population._shouldKeepRunning() && !(globals.appState.get("shouldRenderThreeJS"))){
+        var self = globals.population;
+        var angle = self._stepWalkerSimulation();
+        _.each(self._linkages, function(linkage){
+            linkage.render(angle, self._numSimulationTicks, false);
+        });
+        self._checkWalkerFinish();
+        setTimeout(self._runWalkers, 0);
+    }
+};
+
+Population.prototype._stepWalkerSimulation = function(){
+    globals.physics.update();
+    this._numSimulationTicks += 1;
+    return this._getCurrentDriveCrankAngle(true);
+};
+
+Population.prototype._checkWalkerFinish = function(){
+    if (this._numSimulationTicks >= globals.appState.get("numEvalTicks")) {
+        this._readyForNextGen = true;
+        if (this._shouldKeepRunning()) this.step();
+    }
+    return this._readyForNextGen;
 };
 
 Population.prototype.step = function(){
@@ -109,6 +145,7 @@ Population.prototype.step = function(){
     }
     var nextGen = this.calcNextGen(this._linkages);
     globals.runStatistics.push(this.getCurrentStatistics(this._linkages));
+    $("body").trigger("generationIncr");
     this.clearAll();
     this._setLinkages(nextGen);
 };
@@ -217,20 +254,14 @@ Population.prototype._drawFromMatingPool = function(pool){
 Population.prototype.render = function(){
     if ((globals.appState.get("shouldRenderPhaseChange") || globals.appState.get("isAnimating") || globals.appState.get("isRunning"))
         && (this.readyToCalcNextGen() || !(globals.appState.get("fitnessBasedOnTargetPath")))){
-        var self = this;
 
+        var self = this;
         if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
-            globals.physics.update();
-            this._numSimulationTicks += 1;
-            var angle = this._getCurrentDriveCrankAngle(true);
-            var renderThreeJS = globals.appState.get("shouldRenderThreeJS");
+            var angle = this._stepWalkerSimulation();
             _.each(this._linkages, function(linkage){
-                linkage.render(angle, self._numSimulationTicks, renderThreeJS);
+                linkage.render(angle, self._numSimulationTicks, true);
             });
-            if (this._numSimulationTicks >= globals.appState.get("numEvalTicks")) {
-                this._readyForNextGen = true;
-                if (globals.appState.get("isRunning")) this.step();
-            }
+            this._checkWalkerFinish();
         } else {
             _.each(this._linkages, function(linkage){
                 linkage.render(self._renderIndex, false);
@@ -389,6 +420,7 @@ Population.prototype.clearAll = function(){
 
 Population.prototype.reset = function(archetype){
     globals.runStatistics = [];
+    $("body").trigger("generationIncr");
     var firstGeneration = this._initFirstGeneration(archetype);
     this.clearAll();
     this._setLinkages(firstGeneration);
