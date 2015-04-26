@@ -129,7 +129,7 @@ Linkage.prototype.forceMutate = function(mutationRate){//used for hill climbing
 Linkage.prototype.normalizeTrajectory = function(traj, params) {
     // adjust trajectory itself
     // return set of points adjusted for midpoint, angle, radius
-    return this._shiftAngle(params.angle, this._shiftMidpoint(params.midpoint, params.radius, traj));
+    return this._shiftAngle(params.rotation, this._shiftMidpoint(params.translation, params.scale, traj));
 }
 
 Linkage.prototype._checkWeirdness = function() {
@@ -140,7 +140,9 @@ Linkage.prototype.getFitness = function(){
     // return 4;
     if (!this._fitness) {
         var hingeIndex = globals.appState.get("outputHingeIndex");
-        this._fitness = this._calcFitness(globals.targetCurve, this.getTrajectory(hingeIndex));
+        var traj = this.getTrajectory(hingeIndex);
+        this._fitness = this._calcFitness(globals.targetCurve, this.normalizeTrajectory(traj, this.getTranslationScaleRotation(traj)))
+        // this._fitness = this._calcFitness(globals.targetCurve, this.getTrajectory(hingeIndex));
     }
     return this._fitness;
 };
@@ -244,9 +246,9 @@ Linkage.prototype._calcFitness = function(target, test){
         return 100;
     }
 
-    var midpoint = this._calcMidpoint(test);
-    var radius = this._calcRadius(midpoint, test);
-    var shifted_target = this._shiftMidpoint(midpoint, radius, target);
+    // var midpoint = this._calcMidpoint(test);
+    // var radius = this._calcRadius(midpoint, test);
+    // var shifted_target = this._shiftMidpoint(midpoint, radius, target);
 
     // TODO: redisplay the target curve with the shifted midpoint??
     // this.drawTargetPath(shifted_target, true);
@@ -260,8 +262,8 @@ Linkage.prototype._calcFitness = function(target, test){
         var min_distance = Infinity;
 
         // find the shortest distance to the other points
-        for (j=0; j<shifted_target.length; j++) {
-            var calc_distance = this._calcDistance(test[i], shifted_target[j]);
+        for (j=0; j<target.length; j++) {
+            var calc_distance = this._calcDistance(test[i], target[j]);
             if (calc_distance < min_distance) {
                 min_distance = calc_distance;
             }
@@ -278,7 +280,7 @@ Linkage.prototype._calcFitness = function(target, test){
           return a + b;
         });
 //        console.log(dist_sum);
-        return radius - dist_sum / shifted_target.lengthra;
+        return radius - dist_sum / target.length;
     }
     else {
         console.log('empty');
