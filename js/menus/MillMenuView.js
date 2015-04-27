@@ -10,7 +10,7 @@ MillMenuView = Backbone.View.extend({
     events: {
         "change input:checkbox":                                    "_toggleCheckbox",
         "change input[name=units]":                                 "_changeUnits",
-        "click #saveMillPaths":                                     "_export"
+        "click #saveMillPaths":                                     "_export",
     },
 
     initialize: function(){
@@ -97,6 +97,7 @@ MillMenuView = Backbone.View.extend({
         Material Thickness: &nbsp;&nbsp;<input data-type="stockThickness" value="<%= stockThickness %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/>\
         Hinge Tolerance: &nbsp;&nbsp;<input data-type="hingeTolerance" value="<%= hingeTolerance %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/>\
         Press Fit Tolerance: &nbsp;&nbsp;<input data-type="pressFitTolerance" value="<%= pressFitTolerance %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/>\
+        Curve Resolution: &nbsp;&nbsp;<input data-type="curveResolution" value="<%= curveResolution %>" placeholder="Resolution" class="form-control numberInput" type="text"><br/><br/>\
         <label class="checkbox" for="fillThreeBar">\
         <input type="checkbox" <% if (fillThreeBar){ %>checked="checked" <% } %> value="" id="fillThreeBar" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Output three-bar linkage as solid triangle</label><br/>\
