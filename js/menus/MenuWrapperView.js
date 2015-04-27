@@ -22,7 +22,7 @@ MenuWrapper = Backbone.View.extend({
         this.fitnessMenu = new FitnessMenuView({model:this.model});
         this.mutationMenu = new MutationMenuView({model:this.model});
         this.runMenu = new RunMenuView({model:this.model});
-        this.millMenu = new MillMenuView({model:this.model});
+        this.millMenu = new MillMenuView();
 
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);

@@ -9,7 +9,8 @@ MillMenuView = Backbone.View.extend({
 
     events: {
         "change input:checkbox":                                    "_toggleCheckbox",
-        "change input[name=units]":                                 "_changeUnits"
+        "change input[name=units]":                                 "_changeUnits",
+        "click #saveMillPaths":                                     "_export"
     },
 
     initialize: function(){
@@ -18,15 +19,12 @@ MillMenuView = Backbone.View.extend({
 
         //bind events
         $(document).bind('keyup', {}, this._onKeyup);
-        this.listenTo(globals.appState, "change", this.render);
-
-        this._fillThreeBar = true;
-        this._units = "inches";
+        this.listenTo(globals.appState, "change:numLegPairs", this.render);
 
     },
 
     _onKeyup: function(e){
-        if (this.model.get("currentTab") != "mill") return;
+        if (globals.appState.get("currentTab") != "mill") return;
 
         if ($("input").is(":focus") && e.keyCode == 13) {//enter key
             $(e.target).blur();
@@ -43,8 +41,7 @@ MillMenuView = Backbone.View.extend({
         if (isNaN(newVal)) return;
         newVal = parseFloat(newVal.toFixed(4));
         var property = $(e.target).data("type");
-        if (property) globals.appState.set(property, newVal);
-        else console.log(newVal);
+        this.model.set(property, newVal);
     },
 
     _toggleCheckbox: function(e){
@@ -66,11 +63,16 @@ MillMenuView = Backbone.View.extend({
         globals.appState.changePhase(val);
     },
 
+    _export: function(){
+        this.model.createVectorPathsForLinkage(globals.population.getBestLinkage().toJSON());
+    },
+
     render: function(){
-        if (this.model.changedAttributes()["currentNav"]) return;
-        if (this.model.get("currentTab") != "mill") return;
+        if (globals.appState.changedAttributes()["currentNav"]) return;
+        if (globals.appState.get("currentTab") != "mill") return;
         if ($("input").is(":focus")) return;
-        this.$el.html(this.template(_.extend({fillThreeBar:this._fillThreeBar, units:this._units}, this.model.toJSON())));
+        if (!this.model) this.model = new MillingExporter();
+        this.$el.html(this.template(_.extend({numLegPairs:globals.appState.get("numLegPairs")}, this.model.toJSON())));
 
 //         $('#scale').slider({
 //            formatter: function(value) {
@@ -90,12 +92,15 @@ MillMenuView = Backbone.View.extend({
         <input type="radio"  name="units" <% if (units == "cm"){ %>checked <% } %>value="cm" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         cm\
         </label><br/>\
-        Dowel Diameter: &nbsp;&nbsp;<input id="dowelDiameter" value="0.25" placeholder="Diameter" class="form-control numberInput" type="text"><br/><br/>\
+        Dowel Diameter: &nbsp;&nbsp;<input data-type="dowelDiameter" value="<%= dowelDiameter %>" placeholder="Diameter" class="form-control numberInput" type="text"><br/><br/>\
         Link Width: &nbsp;&nbsp;<input data-type="linkWidth" value="<%= linkWidth %>" placeholder="Width" class="form-control numberInput" type="text"><br/><br/>\
-        Material Thickness: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/>\
+        Material Thickness: &nbsp;&nbsp;<input data-type="stockThickness" value="<%= stockThickness %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/>\
+        Hinge Tolerance: &nbsp;&nbsp;<input data-type="hingeTolerance" value="<%= hingeTolerance %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/>\
+        Press Fit Tolerance: &nbsp;&nbsp;<input data-type="pressFitTolerance" value="<%= pressFitTolerance %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/>\
         <label class="checkbox" for="fillThreeBar">\
         <input type="checkbox" <% if (fillThreeBar){ %>checked="checked" <% } %> value="" id="fillThreeBar" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-        Output three-bar linkage as solid triangle</label>\
+        Output three-bar linkage as solid triangle</label><br/>\
+        <a href="#" id="saveMillPaths" class="btn btn-block btn-lg btn-success">Export Paths and Save</a><br/>\
         ')
 
 });
