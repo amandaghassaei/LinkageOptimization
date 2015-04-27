@@ -334,16 +334,25 @@ Linkage.prototype.checkContinuity = function(outputIndex){
 Linkage.prototype.drawTargetPath = function(path, offsets, visibility){
     if (this._targetPath) this._removeTargetPath();
     var geometry = new THREE.Geometry();
+    console.log(path);
     _.each(path, function(position){
         geometry.vertices.push(new THREE.Vector3(position.x, position.y, 0));
     });
     geometry.vertices.push(_.clone(geometry.vertices[0]));//close loop
     this._targetPath = new THREE.Line(geometry, targetTrajectoryMaterial);
-    if (offsets.translation) this._targetPath.position.set(this._drawOffset.x+offsets.translation.x, this._drawOffset.y+offsets.translation.y, 0);
-    if (offsets.scale) this._targetPath.scale.set(offsets.scale, offsets.scale, offsets.scale);
-    if (offsets.rotation) this._targetPath.rotateOnAxis(new THREE.Vector3(0,0,1), offsets.rotation);
+    this._targetPath.position.set(this._drawOffset.x, this._drawOffset.y, 0);
+//    if (offsets.translation) this._targetPath.position.set(this._drawOffset.x+offsets.translation.x, this._drawOffset.y+offsets.translation.y, 0);
+//    if (offsets.scale) this._targetPath.scale.set(offsets.scale, offsets.scale, offsets.scale);
+//    if (offsets.rotation) this._targetPath.rotateOnAxis(new THREE.Vector3(0,0,1), offsets.rotation);
     this.setTargetPathVisibility(visibility);
     globals.three.sceneAdd(this._targetPath);
+
+    //draw a circle at origin for sanity check
+    var geo = new THREE.CylinderGeometry(1, 1, 0.01);
+    geo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
+    var origin = new THREE.Mesh(geo);
+    origin.position.set(this._drawOffset.x, this._drawOffset.y, 0);
+    globals.three.sceneAdd(origin);
 };
 
 Linkage.prototype._removeTargetPath = function(){
