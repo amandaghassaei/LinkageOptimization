@@ -40,6 +40,11 @@ MillingExporter = Backbone.Model.extend({
         });
         var tri012 = new THREE.Line(tri012Geometry);
         globals.three.sceneAdd(tri012);
+        _.each([0,1,2], function(num){
+
+        });
+
+
 
 
     },
