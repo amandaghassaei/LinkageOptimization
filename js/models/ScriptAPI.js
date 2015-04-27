@@ -13,5 +13,5 @@ function ScriptAPI(){
     this.editedFirstGen = this.defaultFirstGen;
 }
 
-ScriptAPI.prototype.defaultFitness = Linkage.prototype._calcFitness;
-ScriptAPI.prototype.defaultFirstGen = Population.prototype._initFirstGeneration;
+//ScriptAPI.prototype.defaultFitness = Linkage.prototype._calcFitness;
+//ScriptAPI.prototype.defaultFirstGen = Population.prototype._initFirstGeneration;

@@ -22,6 +22,7 @@ MenuWrapper = Backbone.View.extend({
         this.fitnessMenu = new FitnessMenuView({model:this.model});
         this.mutationMenu = new MutationMenuView({model:this.model});
         this.runMenu = new RunMenuView({model:this.model});
+        this.millMenu = new MillMenuView();
 
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);
@@ -58,6 +59,8 @@ MenuWrapper = Backbone.View.extend({
             this.mutationMenu.render();
         } else if (tabName == "run"){
             this.runMenu.render();
+        } else if (tabName == "mill"){
+            this.millMenu.render();
         } else {
             if (this.model.changedAttributes()["currentNav"]) return;
             console.warn("no tab initialized!");
