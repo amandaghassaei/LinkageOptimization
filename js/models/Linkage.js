@@ -334,7 +334,6 @@ Linkage.prototype.checkContinuity = function(outputIndex){
 Linkage.prototype.drawTargetPath = function(path, offsets, visibility){
     if (this._targetPath) this._removeTargetPath();
     var geometry = new THREE.Geometry();
-    console.log(path);
     _.each(path, function(position){
         geometry.vertices.push(new THREE.Vector3(position.x, position.y, 0));
     });
