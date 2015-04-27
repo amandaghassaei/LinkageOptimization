@@ -18,6 +18,8 @@ MillingExporter = Backbone.Model.extend({
 
     initialize: function(){
 
+        this.material = new THREE.LineBasicMaterial({color:0x000000});
+
     },
 
     createVectorPathsForLinkage: function(json){
@@ -38,17 +40,15 @@ MillingExporter = Backbone.Model.extend({
 
         var drawOffset = 0;
         var self = this;
-        this._makeTriangle(json.hinges, [0,1,2], this.get("fillThreeBar"), drawOffset);
+        drawOffset += this._makeTriangle(json.hinges, [0,1,2], this.get("fillThreeBar"), drawOffset)/2;
         _.each(json.links, function(link){
             if (link.hinges[0] == 3 || link.hinges[1] == 3){
-                self._makeLink(link.length, drawOffset, true);
+                drawOffset += self._makeLink(link.length, drawOffset, false);
             }
             if (link.hinges[0] == 4 || link.hinges[1] == 4){
-                self._makeLink(link.length, drawOffset, false);
+                drawOffset += self._makeLink(link.length, drawOffset, true);
             }
         });
-
-
 
     },
 
@@ -56,8 +56,11 @@ MillingExporter = Backbone.Model.extend({
         var hinges = [{position:{x:0,y:0}}, {position:{x:0,y:length}}];
         globals.three.sceneAdd(this._makeOutlinePath(hinges, [0,1,0], this.get("linkWidth")/2.0, drawOffset));
         globals.three.sceneAdd(this._makeCirce(hinges[0].position, this.get("dowelDiameter")/2.0 + this.get("hingeTolerance"), drawOffset));
-        if (isPressFit) globals.three.sceneAdd(this._makeCirce(hinges[1].position, this.get("dowelDiameter")/2.0 + this.get("pressFitTolerance"), drawOffset));
-        else globals.three.sceneAdd(this._makeCirce(hinges[1].position, this.get("dowelDiameter")/2.0 + this.get("hingeTolerance"), drawOffset));
+        if (isPressFit) globals.three.sceneAdd(this._makeCirce(hinges[1].position,
+            this.get("dowelDiameter")/2.0 + this.get("pressFitTolerance"), drawOffset, new THREE.LineBasicMaterial({color:0xff0000})));
+        else globals.three.sceneAdd(this._makeCirce(hinges[1].position,
+            this.get("dowelDiameter")/2.0 + this.get("hingeTolerance"), drawOffset));
+        return this.get("linkWidth")+0.5;
     },
 
     _makeTriangle: function(hinges, indices, isSolid, drawOffset){
@@ -67,6 +70,7 @@ MillingExporter = Backbone.Model.extend({
         });
         indices.push(indices[0]);
         globals.three.sceneAdd(this._makeOutlinePath(hinges, indices, this.get("linkWidth")/2.0, drawOffset));
+        return 0;
     },
 
     _makeOutlinePath: function(hinges, indices, offset, drawOffset){
@@ -91,7 +95,7 @@ MillingExporter = Backbone.Model.extend({
             geometry.vertices = geometry.vertices.concat(cornerRadius);
         }
         geometry.vertices.push(geometry.vertices[0]);//close loop
-        var line = new THREE.Line(geometry);
+        var line = new THREE.Line(geometry, this.material);
         line.position.set(drawOffset, 0, 0);
         return line;
     },
@@ -106,11 +110,13 @@ MillingExporter = Backbone.Model.extend({
         return vertices;
     },
 
-    _makeCirce: function(centerPoint, radius, drawOffset){
+    _makeCirce: function(centerPoint, radius, drawOffset, material){
         var geometry = new THREE.Geometry();
         geometry.vertices = this._makeArc(0, Math.PI*2, centerPoint, radius);
         geometry.vertices.push(geometry.vertices[0]);
-        var line = new THREE.Line(geometry);
+        var line;
+        if (material === undefined) line  = new THREE.Line(geometry, this.material);
+        else line = new THREE.Line(geometry, material);
         line.position.set(drawOffset, 0, 0);
         return line;
     },
