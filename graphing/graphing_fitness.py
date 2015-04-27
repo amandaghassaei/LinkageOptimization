@@ -79,5 +79,6 @@ def graph_fitness(filename):
 # 	graph_fitness(infile)
 # 	sys.exit()
 
-graph_fitness("runStatistics.json")
+# graph_fitness("runStatistics.json")
+graph_fitness("hillclimbingstats_0427.json")
 
