@@ -80,6 +80,7 @@ MillMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
+        Num Leg Pairs: &nbsp;&nbsp;<input id="numLegPairs" data-type="numLegPairs" value="<%= numLegPairs %>" placeholder="Num Pairs" class="form-control numberInput" type="text"><br/><br/>\
         Units:<br/>\
         <label class="radio">\
         <input type="radio" name="units" <% if (units == "inches"){ %> checked <% } %>value="inches" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
@@ -91,10 +92,10 @@ MillMenuView = Backbone.View.extend({
         </label><br/>\
         Dowel Diameter: &nbsp;&nbsp;<input id="dowelDiameter" value="0.25" placeholder="Diameter" class="form-control numberInput" type="text"><br/><br/>\
         Link Width: &nbsp;&nbsp;<input data-type="linkWidth" value="<%= linkWidth %>" placeholder="Width" class="form-control numberInput" type="text"><br/><br/>\
-        Depth: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/>\
+        Material Thickness: &nbsp;&nbsp;<input data-type="zDepth" value="<%= zDepth %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/>\
         <label class="checkbox" for="fillThreeBar">\
         <input type="checkbox" <% if (fillThreeBar){ %>checked="checked" <% } %> value="" id="fillThreeBar" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-        Output three-bar linkages as solid triangle</label>\
+        Output three-bar linkage as solid triangle</label>\
         ')
 
 });
