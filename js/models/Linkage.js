@@ -341,7 +341,7 @@ Linkage.prototype.drawTargetPath = function(path, offsets, visibility){
     this._targetPath = new THREE.Line(geometry, targetTrajectoryMaterial);
     if (offsets.translation) this._targetPath.position.set(this._drawOffset.x+offsets.translation.x, this._drawOffset.y+offsets.translation.y, 0);
     if (offsets.scale) this._targetPath.scale.set(offsets.scale, offsets.scale, offsets.scale);
-    if (offsets.rotation) this._targetPath.rotateOnAxis(new THREE.Vector3(0,0,1), offsets.rotation)
+    if (offsets.rotation) this._targetPath.rotateOnAxis(new THREE.Vector3(0,0,1), offsets.rotation);
     this.setTargetPathVisibility(visibility);
     globals.three.sceneAdd(this._targetPath);
 };
