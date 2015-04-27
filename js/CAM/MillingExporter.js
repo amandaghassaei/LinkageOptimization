@@ -24,6 +24,8 @@ MillingExporter = Backbone.Model.extend({
 
     createVectorPathsForLinkage: function(json){
 
+        globals.population.clearAll();
+
         //find triangles
 //        var tri012 = [];
 //        var tri45 = [];
@@ -41,7 +43,7 @@ MillingExporter = Backbone.Model.extend({
         var drawOffset = 0;
         var self = this;
         drawOffset += this._makeTriangle(json.hinges, [0,1,2], this.get("fillThreeBar"), drawOffset)/2;
-        _.each(json.links, function(link){
+        _.each(json.links.reverse(), function(link){
             if (link.hinges[0] == 3 || link.hinges[1] == 3){
                 drawOffset += self._makeLink(link.length, drawOffset, false);
             }
@@ -49,7 +51,6 @@ MillingExporter = Backbone.Model.extend({
                 drawOffset += self._makeLink(link.length, drawOffset, true);
             }
         });
-
     },
 
     _makeLink: function(length, drawOffset, isPressFit){
@@ -69,8 +70,10 @@ MillingExporter = Backbone.Model.extend({
             globals.three.sceneAdd(self._makeCirce(hinges[num].position, self.get("dowelDiameter")/2.0 + self.get("hingeTolerance"), drawOffset));
         });
         indices.push(indices[0]);
-        globals.three.sceneAdd(this._makeOutlinePath(hinges, indices, this.get("linkWidth")/2.0, drawOffset));
-        return 0;
+        var outline = this._makeOutlinePath(hinges, indices, this.get("linkWidth")/2.0, drawOffset);
+        globals.three.sceneAdd(outline);
+        outline.geometry.computeBoundingBox();
+        return outline.geometry.boundingBox.max.x-outline.geometry.boundingBox.min.x;
     },
 
     _makeOutlinePath: function(hinges, indices, offset, drawOffset){

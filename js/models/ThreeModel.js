@@ -65,6 +65,6 @@ function ThreeModel(){
         sceneRemove: sceneRemove,
         sceneAdd: sceneAdd,
         domElement: renderer.domElement,
-        camera: camera
+        camera: camera,
     }
 }
