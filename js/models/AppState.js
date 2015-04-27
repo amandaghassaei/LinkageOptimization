@@ -14,7 +14,7 @@ AppState = Backbone.Model.extend({
         //last tab that one open in each of the main menus
         lastDesignTab: "population",
         lastEvoTab: "population",
-        lastExportTab: "print",
+        lastExportTab: "mill",
 
         menuIsVisible: true,
         scriptMenuIsVisible: true,
@@ -30,8 +30,8 @@ AppState = Backbone.Model.extend({
             navEvo:{
             },
             navExport:{
-                print: "3D Print",
-                mill: "Mill"
+                mill: "Mill",
+                print: "3D Print"
             }
         },
 
