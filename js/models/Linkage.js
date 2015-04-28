@@ -16,7 +16,7 @@ function Linkage(json){//init a linkage with optional json
     this._fitness = null;
     this._outputContinuity = false;
     this._targetPath = null;
-    this._material = new THREE.MeshBasicMaterial({color:0xffffff});
+    this._material = new THREE.MeshBasicMaterial({color:new THREE.Color().setRGB(Math.random(),Math.random(),Math.random())});
     if (json === undefined) return;
 
     var self = this;
@@ -375,11 +375,11 @@ Linkage.prototype.drawTargetPath = function(path, offsets, visibility){
     globals.three.sceneAdd(this._targetPath);
 
     //draw a circle at origin for sanity check
-    // var geo = new THREE.CylinderGeometry(1, 1, 0.01);
-    // geo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
-    // var origin = new THREE.Mesh(geo);
-    // origin.position.set(this._drawOffset.x, this._drawOffset.y, 0);
-    // globals.three.sceneAdd(origin);
+//    var geo = new THREE.CylinderGeometry(1, 1, 0.01);
+//    geo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
+//    var origin = new THREE.Mesh(geo);
+//    origin.position.set(this._drawOffset.x, this._drawOffset.y, 0);
+//    globals.three.sceneAdd(origin);
 };
 
 Linkage.prototype._removeTargetPath = function(){

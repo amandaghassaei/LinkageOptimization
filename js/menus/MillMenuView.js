@@ -10,7 +10,7 @@ MillMenuView = Backbone.View.extend({
     events: {
         "change input:checkbox":                                    "_toggleCheckbox",
         "change input[name=units]":                                 "_changeUnits",
-        "click #saveMillPaths":                                     "_export",
+        "click #saveMillPaths":                                     "_export"
     },
 
     initialize: function(){
@@ -45,6 +45,7 @@ MillMenuView = Backbone.View.extend({
     },
 
     _toggleCheckbox: function(e){
+        if (globals.appState.get("currentTab") != "mill") return;
         this.model.set($(e.target).attr('id'), $(e.target).is(':checked'));
     },
 

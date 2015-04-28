@@ -43,7 +43,7 @@ AppState = Backbone.Model.extend({
 
         fitnessBasedOnTargetPath: true,
         outputHingeIndex: 1,
-        numPositionSteps: 50,
+        numPositionSteps: 100,
         phase: 25,
         shouldAutoUpdatePhase: true,
         shouldRenderPhaseChange: false,

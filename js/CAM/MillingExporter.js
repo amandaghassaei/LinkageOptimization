@@ -27,6 +27,7 @@ MillingExporter = Backbone.Model.extend({
     createVectorPathsForLinkage: function(json){
 
 //        globals.population.clearAll();
+        globals.appState.set("isRunning", false);
         $("#threeContainer").hide();
         $("#svgContainer").show();
 
