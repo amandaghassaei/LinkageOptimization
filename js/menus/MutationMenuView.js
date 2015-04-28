@@ -56,8 +56,8 @@ MutationMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
-        <label class="checkbox" for="simulatedAnnealing">\
-        <input type="checkbox" <% if (simulatedAnnealing){ %>checked="checked" <% } %> value="" id="simulatedAnnealing" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        <label class="checkbox disabled" for="simulatedAnnealing">\
+        <input disabled type="checkbox" <% if (simulatedAnnealing){ %>checked="checked" <% } %> value="" id="simulatedAnnealing" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Simulated Annealing</label><br/>\
         <% if (simulatedAnnealing){ %>\
         Mutation Rate (%): &nbsp;&nbsp;<input data-type="saMaxMutationRate" value="<%= saMaxMutationRate %>" placeholder="Mutation Rate" class="form-control numberInput" type="text">&nbsp;&nbsp;to&nbsp;&nbsp;<input data-type="saMinMutationRate" value="<%= saMinMutationRate %>" placeholder="Mutation Rate" class="form-control numberInput" type="text"><br/><br/>\
