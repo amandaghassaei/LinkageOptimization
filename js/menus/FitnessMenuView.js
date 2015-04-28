@@ -15,7 +15,8 @@ FitnessMenuView = Backbone.View.extend({
         "click .saveOutputPath":                                    "_saveOutputPath",
         "change input[name=fitnessMetrics]":                        "_changeFitnessMetrics",
         "change input[name=terrainType]":                           "_changeTerrain",
-        "change input[name=fitnessQuantity]":                       "_changeFitnessQuantity"
+        "change input[name=fitnessQuantity]":                       "_changeFitnessQuantity",
+        "click #fitnessRunGA":                                      "_run"
     },
 
     initialize: function(){
@@ -114,6 +115,12 @@ FitnessMenuView = Backbone.View.extend({
         } else console.warn("unknown fitness metric " + val);
     },
 
+    _run: function(e){
+        e.preventDefault();
+        globals.appState.set("isRunning", true);
+        globals.population.run();
+    },
+
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "fitness") return;
@@ -171,7 +178,8 @@ FitnessMenuView = Backbone.View.extend({
             Final Speed\
             </label>\
             Friction (between 0 and 1): &nbsp;&nbsp;<input id="friction" data-type="friction" value="<%= friction %>" placeholder="Friction" class="form-control floatInput" type="text"><br/><br/>\
-            <a href="#" class="saveOutputPath btn btn-block btn-lg btn-default">Save Best Output Path</a><br/><br/>\
+            <a href="#" class="saveOutputPath btn btn-block btn-lg btn-default">Save Best Output Path</a><br/>\
+            <a href="#" id="fitnessRunGA" class="btn-success btn btn-block btn-lg btn-default">Run</a><br/>\
         <% } %>\
         ')
 });

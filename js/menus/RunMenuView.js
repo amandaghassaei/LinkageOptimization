@@ -106,8 +106,8 @@ RunMenuView = Backbone.View.extend({
         <% } else  { %>\
         <a href="#" id="runGA" class="btn-success btn btn-block btn-lg btn-default">Run</a><br/>\
         <a href="#" id="runStepNextGen" class="btn btn-block btn-lg btn-default">Step to Next Generation</a><br/>\
-        <a href="#" id="runReset" class="btn btn-block btn-lg btn-default">Reset</a><br/>\
         <% } %>\
+        <a href="#" id="runReset" class="btn btn-block btn-lg btn-default">Reset</a><br/>\
         <label class="checkbox" for="shouldRenderThreeJS">\
         <input type="checkbox" <% if (shouldRenderThreeJS){ %>checked="checked" <% } %> value="" id="shouldRenderThreeJS" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Render linkages during run (less efficient)</label>\

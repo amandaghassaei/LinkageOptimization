@@ -156,7 +156,8 @@ AppState = Backbone.Model.extend({
     },
 
     _changeRenderSettings: function(){
-        if (!(this.get("shouldRenderThreeJS")) && this.get("isRunning")) globals.population.run();
+        if (!(this.get("shouldRenderThreeJS")) && this.get("isRunning") && !(this.get("fitnessBasedOnTargetPath")))
+            globals.population.run();
     },
 
     _changeFitnessMetric: function(){
@@ -169,8 +170,6 @@ AppState = Backbone.Model.extend({
             globals.population.createTerrain();
             var populationJSON = JSON.stringify(globals.population.toJSON());
             globals.population.setFromJSON(JSON.parse(populationJSON));
-//            this.set("isRunning", true);
-//            this.set("isAnimating", true);
         }
     },
 

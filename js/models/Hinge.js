@@ -33,8 +33,11 @@ function Hinge(position, parentLinkage, material){
 //Motion Tracking
 
 Hinge.prototype.trackPosition = function(){
+    if (this._trackedPositions.length > globals.appState.get("numPositionSteps")) {
+        console.warn("too many positions stored for hinge");
+        return;
+    }
     this._trackedPositions.push(this.getCurrentPosition());
-    if (this._trackedPositions.length > globals.appState.get("numPositionSteps")) console.warn("too many positions stored for hinge");
 };
 
 Hinge.prototype.getTrackedPositions = function(){
