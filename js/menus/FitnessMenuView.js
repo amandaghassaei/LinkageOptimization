@@ -12,7 +12,7 @@ FitnessMenuView = Backbone.View.extend({
         "change input:checkbox":                                    "_toggleCheckbox",
         "click #savePath":                                          "_saveTargetPath",
         "click #loadPath":                                          "_loadTargetPath",
-        "click #saveOutputPath":                                    "_saveOutputPath",
+        "click .saveOutputPath":                                    "_saveOutputPath",
         "change input[name=fitnessMetrics]":                        "_changeFitnessMetrics",
         "change input[name=terrainType]":                           "_changeTerrain",
         "change input[name=fitnessQuantity]":                       "_changeFitnessQuantity"
@@ -136,7 +136,7 @@ FitnessMenuView = Backbone.View.extend({
             <!--Num Trajectory Samples: &nbsp;&nbsp;<input data-type="numPositionSteps" value="<%= numPositionSteps %>" placeholder="Num Samples" class="form-control numberInput" type="text"><br/><br/>-->\
             <a href="#" id="loadPath" class="btn btn-block btn-lg btn-default">Load Target Path</a><br/>\
             <a href="#" id="savePath" class=" btn pull-left btn-halfWidth btn-lg btn-default">Save Target Path</a>\
-            <a href="#" id="saveOutputPath" class="btn pull-right btn-halfWidth btn-lg btn-default">Save Best Output Path</a><br/><br/>\
+            <a href="#" class="saveOutputPath btn pull-right btn-halfWidth btn-lg btn-default">Save Best Output Path</a><br/><br/>\
             <label class="checkbox" for="showTargetPath">\
             <input type="checkbox" <% if (showTargetPath){ %>checked="checked" <% } %> value="" id="showTargetPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Show target path</label>\
@@ -168,6 +168,7 @@ FitnessMenuView = Backbone.View.extend({
             Final Speed\
             </label>\
             Friction (between 0 and 1): &nbsp;&nbsp;<input id="friction" data-type="friction" value="<%= friction %>" placeholder="Friction" class="form-control floatInput" type="text"><br/><br/>\
+            <a href="#" class="saveOutputPath btn btn-block btn-lg btn-default">Save Best Output Path</a><br/><br/>\
         <% } %>\
         ')
 });
