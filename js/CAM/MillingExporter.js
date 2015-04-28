@@ -56,12 +56,12 @@ MillingExporter = Backbone.Model.extend({
             link.length *= scale;
         });
 
-        var drawOffset = 0;
+        var drawOffset = -6;
         var self = this;
-        drawOffset += this._makeTriangle(json.hinges, [0,2,1], this.get("fillThreeBar"), drawOffset);
+        drawOffset += this._makeTriangle(json.hinges, [0,1,2], this.get("fillThreeBar"), drawOffset);
         var hinges = json.hinges;
         hinges.push({position:{x:2*hinges[3].position.x-hinges[4].position.x, y:hinges[4].position.y}});
-        drawOffset += this._makeTriangle(hinges, [4,3,5], this.get("fillThreeBar"), drawOffset);
+        drawOffset += this._makeTriangle(hinges, [3,4,5], this.get("fillThreeBar"), drawOffset);
         _.each(json.links.reverse(), function(link){
             if (link.hinges[0] == 3 || link.hinges[1] == 3){
                 drawOffset += self._makeLink(link.length, drawOffset, false);

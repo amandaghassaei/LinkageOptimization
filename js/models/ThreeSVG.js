@@ -30,6 +30,8 @@ function ThreeSVG(){
         renderer.setClearColor(scene.fog.color, 1);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
+        camera.position.set(-4, 0, 18);
+
         window.addEventListener('resize', onWindowResize, false);
     }
 
