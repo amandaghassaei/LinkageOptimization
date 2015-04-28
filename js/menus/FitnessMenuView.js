@@ -178,7 +178,7 @@ FitnessMenuView = Backbone.View.extend({
             Final Speed\
             </label>\
             Friction (between 0 and 1): &nbsp;&nbsp;<input id="friction" data-type="friction" value="<%= friction %>" placeholder="Friction" class="form-control floatInput" type="text"><br/><br/>\
-            <a href="#" class="saveOutputPath btn btn-block btn-lg btn-default">Save Best Output Path</a><br/>\
+            <!--<a href="#" class="saveOutputPath btn btn-block btn-lg btn-default">Save Best Output Path</a><br/>-->\
             <a href="#" id="fitnessRunGA" class="btn-success btn btn-block btn-lg btn-default">Run</a><br/>\
         <% } %>\
         ')
