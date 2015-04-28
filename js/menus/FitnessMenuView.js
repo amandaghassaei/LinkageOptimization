@@ -144,7 +144,10 @@ FitnessMenuView = Backbone.View.extend({
             <input type="checkbox" <% if (showOutputPath){ %>checked="checked" <% } %> value="" id="showOutputPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Show output hinge trajectory</label>\
         <% } else { %>\
-            Num Leg Pairs: &nbsp;&nbsp;<input id="numLegPairs" data-type="numLegPairs" value="<%= numLegPairs %>" placeholder="Num Pairs" class="form-control numberInput" type="text"><br/><br/>\
+            Num Leg Pairs: &nbsp;&nbsp;<input id="numLegPairs" data-type="numLegPairs" value="<%= numLegPairs %>" placeholder="Num Pairs" class="form-control numberInput" type="text"><br/>\
+            <label class="checkbox" for="flipVertical">\
+            <input type="checkbox" <% if (flipVertical){ %>checked="checked" <% } %> value="" id="flipVertical" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Flip Vertically</label><br/>\
             Terrain:\
             <label class="radio">\
             <input type="radio" name="terrainType" <% if (terrain == "flat"){ %> checked <% } %>value="flat" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
