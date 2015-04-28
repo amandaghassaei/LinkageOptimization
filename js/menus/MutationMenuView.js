@@ -56,11 +56,16 @@ MutationMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
-        <label class="checkbox disabled" for="simulatedAnnealing">\
-        <input type="checkbox" <% if (simulatedAnnealing){ %>checked="checked" <% } %> value="" id="simulatedAnnealing" data-toggle="checkbox" disabled class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        <label class="checkbox" for="simulatedAnnealing">\
+        <input type="checkbox" <% if (simulatedAnnealing){ %>checked="checked" <% } %> value="" id="simulatedAnnealing" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Simulated Annealing</label><br/>\
+        <% if (simulatedAnnealing){ %>\
+        Mutation Rate (%): &nbsp;&nbsp;<input data-type="saMaxMutationRate" value="<%= saMaxMutationRate %>" placeholder="Mutation Rate" class="form-control numberInput" type="text">&nbsp;&nbsp;to&nbsp;&nbsp;<input data-type="saMinMutationRate" value="<%= saMinMutationRate %>" placeholder="Mutation Rate" class="form-control numberInput" type="text"><br/><br/>\
+        Max Length Change (%): &nbsp;&nbsp;<input data-type="saMaxLinkChange" value="<%= saMaxLinkChange %>" placeholder="Max Change" class="form-control numberInput" type="text">&nbsp;&nbsp;to&nbsp;&nbsp;<input data-type="saMinLinkChange" value="<%= saMinLinkChange %>" placeholder="Max Change" class="form-control numberInput" type="text"><br/><br/>\
+        <% } else { %>\
         Mutation Rate (%): &nbsp;&nbsp;<input data-type="mutationRate" value="<%= mutationRate %>" placeholder="Mutation Rate" class="form-control numberInput" type="text"><br/><br/>\
-        Max Link Length Change (%): &nbsp;&nbsp;<input data-type="maxLinkChange" value="<%= maxLinkChange %>" placeholder="Max Change" class="form-control numberInput" type="text"><br/><br/>\
+        Max Length Change (%): &nbsp;&nbsp;<input data-type="maxLinkChange" value="<%= maxLinkChange %>" placeholder="Max Change" class="form-control numberInput" type="text"><br/><br/>\
+        <% } %>\
         Min Link Length: &nbsp;&nbsp;<input data-type="minLinkLength" value="<%= minLinkLength %>" placeholder="Length" class="form-control numberInput" type="text"><br/><br/>\
         <label class="checkbox disabled" for="mutateTopology">\
         <input disabled type="checkbox" <% if (mutateTopology){ %>checked="checked" <% } %> value="" id="mutateTopology" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\

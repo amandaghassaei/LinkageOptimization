@@ -51,6 +51,10 @@ AppState = Backbone.Model.extend({
         mutationRate: 1,//percent
         minLinkLength: 5,
         maxLinkChange: 15,//percent
+        saMaxMutationRate:5,
+        saMinMutationRate:1,
+        saMaxLinkChange:15,
+        saMinLinkChange:2,
         mutateTopology: false,
 
         is3D: false,
@@ -331,7 +335,11 @@ AppState = Backbone.Model.extend({
                     terrain: this.get("terrain"),
                     simulatedAnnealing: this.get("simulatedAnnealing"),
                     numEvalTicks: this.get("numEvalTicks"),
-                    fitnessQuantity: this.get("fitnessQuantity")
+                    fitnessQuantity: this.get("fitnessQuantity"),
+                    saMaxMutationRate: this.get("saMaxMutationRate"),
+                    saMinMutationRate: this.get("saMinMutationRate"),
+                    saMaxLinkChange: this.get("saMaxLinkChange"),
+                    saMinLinkChange: this.get("saMinLinkChange")
                 },
                 runStatistics: globals.runStatistics,
                 population: globals.population.toJSON(),
