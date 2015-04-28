@@ -41,7 +41,7 @@ NavBar = Backbone.View.extend({
     },
 
     _handleKeyStroke: function(e){
-        if ($("#saveAsFileName").is(":focus")){
+        if ($("#saveAsFileName").is(":focus") && e.keyCode == 13){
             e.preventDefault();
             this._saveAs(e);
         }

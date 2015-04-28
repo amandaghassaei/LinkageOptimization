@@ -100,18 +100,34 @@
                 <li><a data-toggle="modal" data-target="#saveAsModel" href="#">Save Run As... &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984 + Shift + S)</a></li>
                 <li><a class="importJSON" href="#">Open Run... &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984 + O)</a></li>
                 <li class="divider"></li>
-                <li><a id="navSavePopulation" href="#">Save Population</a></li>
-                <li><a class="importJSON" href="#">Load Population...</a></li>
-                <li class="divider"></li>
-                <li><a id="saveLinkage" href="#">Save Best Linkage</a></li>
-                <li><a class="importJSON" href="#">Init Population From Linkage...</a></li>
-                <li class="divider"></li>
-                <li><a id="navSavePath" href="#">Save Target Path</a></li>
-                <li><a class="importJSON" href="#">Load Target Path...</a></li>
+
+                <li class="dropdown-submenu">
+                <a tabindex="-1">Population...<span class="pull-right fui-arrow-right"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="importJSON" href="#">Load Population...</a></li>
+                    <li><a class="importJSON" href="#">Init Population From Linkage...</a></li>
+                    <li><a id="navSavePopulation" href="#">Save Population</a></li>
+                </ul>
+
+                <li class="dropdown-submenu">
+                <a tabindex="-1">Linkage...<span class="pull-right fui-arrow-right"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="importJSON" href="#">Init Population From Linkage...</a></li>
+                    <li><a id="saveLinkage" href="#">Save Best Linkage</a></li>
+                </ul>
+
+                <li class="dropdown-submenu">
+                <a tabindex="-1">Path...<span class="pull-right fui-arrow-right"></span></a>
+                <ul class="dropdown-menu">
+                     <li><a class="importJSON" href="#">Load Target Path...</a></li>
+                     <li><a id="navSavePath" href="#">Save Target Path</a></li>
+                </ul>
+
                 <li class="divider"></li>
                 <li><a id="saveRunStats" href="#">Save Run Statistics</a></li>
-          </ul>
-        </li>
+
+              </li>
+            </ul>
         <li><a data-menu-id="about" class="menuHoverControls" target="_blank" href="http://isites.harvard.edu/icb/icb.do?keyword=k109880&tabgroupid=icb.tabgroup196134">About</a></li>
        </ul>
         <ul class="nav navbar-nav pull-right">

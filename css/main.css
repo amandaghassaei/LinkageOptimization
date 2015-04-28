@@ -226,7 +226,7 @@ input.numberInput, input.floatInput{
 }
 
 .dropdown-submenu>a:after {
-    display: block;
+    display: none;
     content: " ";
     float: right;
     width: 0;
