@@ -119,8 +119,7 @@ Hinge.prototype.render = function(screenCoordinates, precompute, index){
     if (!precompute) {
         var position = this._trackedPositions[index];
         this._mesh.position.set(position.x+screenCoordinates.x, position.y+screenCoordinates.y, 0);
-    }
-    if (globals.population.shouldStorePosition()) this.trackPosition();
+    } else if (globals.population.shouldStorePosition()) this.trackPosition();
 };
 
 Hinge.prototype.setZIndex = function(zIndex){

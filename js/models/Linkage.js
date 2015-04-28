@@ -148,39 +148,27 @@ Linkage.prototype.getFitness = function(){
         this._fitness = this._calcFitness(globals.targetCurve, this.normalizeTrajectory(traj, this.getTranslationScaleRotation(traj)));
         // this._fitness = this._calcFitness(globals.targetCurve, this.getTrajectory(hingeIndex));
     }
-    console.log(this._fitness);
     return this._fitness;
 };
 
 Linkage.prototype.getTranslationScaleRotation = function(traj) {
-    // console.log("here");
-//    console.log(traj);
     var farthest = this._calcFarthest(traj);
-    // console.log(farthest);
     var distance = this._calcDistance(farthest[0], farthest[1]);
-//    console.log('farthest', farthest);
-//    console.log('tsr', this._calcMidpoint(farthest), this._calcAngle(farthest[0], farthest[1]), distance);
     return {
         translation: this._calcMidpoint(farthest),
         rotation: this._calcAngle(farthest[0], farthest[1]),
-        scale: distance,
-        // scale: 0.5,
-        // translation: 0,
-        // rotation: 0
-    };//, scale:scale, rotation:rotation};
+        scale: distance
+    };
 };
 
 
 Linkage.prototype._calcFarthest = function(points) {
-    // console.log('points', points);
     // find the two farthest points from each other
     var longest_distance = 0.0;
     var farthest = [];
     for (var i=0; i<points.length; i++) {
         for (var j=i+1; j<points.length; j++) {
-            // console.log(points[i], points[j]);
             var distance = this._calcDistance(points[i], points[j]);
-            // console.log('points', points[i], points[j], 'dist', distance);
             if (distance > longest_distance) {
                 farthest = [points[i], points[j]];
                 longest_distance = distance;
@@ -188,7 +176,7 @@ Linkage.prototype._calcFarthest = function(points) {
         }
     }
     if (farthest[0].x < farthest[1].x) {
-        temp = farthest[0];
+        var temp = farthest[0];
         farthest[0] = farthest[1];
         farthest[1] = temp;
     }
@@ -196,11 +184,7 @@ Linkage.prototype._calcFarthest = function(points) {
 };
 
 Linkage.prototype._calcMidpoint = function(points) {
-
-    // console.log(points);
-
     // calculated the midpoint of a set of points
-    // TODO: WHY IS THIS SO INEFFICIENT
     var x_sum = 0.0;
     var y_sum = 0.0;
     for (var i=0; i<points.length; i++) {

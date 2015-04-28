@@ -175,9 +175,13 @@ Population.prototype.calcNextGen = function(linkages){
     //hill climbing mode
     if (globals.appState.get("isHillClimbing")){
         var parent = this.getBestLinkage(linkages);
-        var clone = new Walker(parent.toJSON(), true);
-        clone.setFitness(parent.getFitness());
-        nextGenLinkages.push(clone);
+        if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
+            var clone = new Walker(parent.toJSON(), true);
+            clone.setFitness(parent.getFitness());
+            nextGenLinkages.push(clone);
+        } else {
+            nextGenLinkages.push(new Linkage(parent.toJSON()));
+        }
         nextGenLinkages.push(parent.hillClimb(mutationRate));
         return nextGenLinkages;
     }
