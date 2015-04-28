@@ -237,8 +237,13 @@ AppState = Backbone.Model.extend({
     //update to last tab open in that section
     _updateCurrentTabForNav: function(){
         var navSelection = this.get("currentNav");
-        if (navSelection == "navDesign") this.set("currentTab",
-            this.get("lastDesignTab"));
+        if (navSelection == "navDesign") {
+            this.set("currentTab", this.get("lastDesignTab"));
+            if (!($("#threeContainer").is(":visible"))) {
+                $("#threeContainer").show();
+                $("#svgContainer").hide();
+            }
+        }
         else if (navSelection == "navEvo") this.set("currentTab",
             this.get("lastEvoTab"));
         else if (navSelection == "navExport") this.set("currentTab",
