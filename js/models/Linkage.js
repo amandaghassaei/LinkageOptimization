@@ -131,8 +131,9 @@ Linkage.prototype.normalizeTrajectory = function(traj, params) {
     // return set of points adjusted for midpoint, angle, radius
     // console.log(params);
     // return this._shiftMidpoint(params.translation, params.scale, traj);
-    // return this._shiftAngle(params.rotation, this._shiftMidpoint(params.translation, params.scale, traj));
-    return this._shiftAngle(params.rotation, this._shiftMidpoint(params.translation, 1, traj));
+    return this._shiftAngle(params.rotation, this._shiftMidpoint(params.translation, params.scale, traj));
+    // return this._shiftAngle(params.rotation, this._shiftMidpoint(params.translation, 1, traj));
+    // return traj;
 }
 
 Linkage.prototype._checkWeirdness = function() {
@@ -161,7 +162,10 @@ Linkage.prototype.getTranslationScaleRotation = function(traj) {
     return {
         translation: this._calcMidpoint(farthest),
         rotation: this._calcAngle(farthest[0], farthest[1]),
-        scale: distance
+        scale: distance,
+        // scale: 0.5,
+        // translation: 0,
+        // rotation: 0
     };//, scale:scale, rotation:rotation};
 };
 
@@ -209,7 +213,8 @@ Linkage.prototype._calcMidpoint = function(points) {
 };
 
 Linkage.prototype._calcAngle = function(a, b) {
-    return Math.atan2(Math.abs(a.y-b.y), Math.abs(a.x-b.x));
+    // return Math.atan2(Math.abs(a.y-b.y), Math.abs(a.x-b.x));
+    return Math.atan2(a.y-b.y, a.x-b.x);
     // return Math.atan2(a.x-b.x, a.y-b.y);
     // return {x_dist: points[0].x-points[1].x}
 }
@@ -231,14 +236,16 @@ Linkage.prototype._shiftMidpoint = function(midpoint, radius, target) {
     // move the midpoint of the target curve to the midpoint of the test curves
     // return a set of point of the shifted curve
 
-//    console.log(midpoint, radius, target);
+   console.log('derp', midpoint, radius, target);
 
     var shifted_target = [];
     for (var i=0; i<target.length; i++) {
         var radius_ratio = radius / this._calcDistance(target[i], midpoint);
         shifted_target[i] = {
-            x: target[i].x*radius_ratio+midpoint.x, 
-            y: target[i].y*radius_ratio+midpoint.y
+            x: (target[i].x-midpoint.x)*1/radius, 
+            y: (target[i].y-midpoint.y)*1/radius
+            // x: target[i].x-midpoint.x,
+            // y: target[i].y-midpoint.y
         };
     }
     return shifted_target;
@@ -247,9 +254,14 @@ Linkage.prototype._shiftMidpoint = function(midpoint, radius, target) {
 Linkage.prototype._shiftAngle = function(angle, target) {
     var shifted_target = [];
     for (var i=0; i<target.length; i++) {
+        var dist = this._calcDistance(target[i], {x:0, y:0});
+        var ang = this._calcAngle(target[i], {x:0, y:0}) - angle;
+
         shifted_target[i] = {
-            x: target[i].x, 
-            y: target[i].y+this._calcDistance(target[i], {x:0, y:0})*Math.sin(angle)
+            x: dist * Math.cos(ang),
+            y: dist * Math.sin(ang)
+            // x: target[i].x, 
+            // y: target[i].y+this._calcDistance(target[i], {x:0, y:0})*Math.sin(angle)
         };
     }
     return shifted_target;
@@ -348,18 +360,18 @@ Linkage.prototype.drawTargetPath = function(path, offsets, visibility){
     geometry.vertices.push(_.clone(geometry.vertices[0]));//close loop
     this._targetPath = new THREE.Line(geometry, targetTrajectoryMaterial);
     this._targetPath.position.set(this._drawOffset.x, this._drawOffset.y, 0);
-//    if (offsets.translation) this._targetPath.position.set(this._drawOffset.x+offsets.translation.x, this._drawOffset.y+offsets.translation.y, 0);
+   // if (offsets.translation) this._targetPath.position.set(this._drawOffset.x+offsets.translation.x, this._drawOffset.y+offsets.translation.y, 0);
 //    if (offsets.scale) this._targetPath.scale.set(offsets.scale, offsets.scale, offsets.scale);
 //    if (offsets.rotation) this._targetPath.rotateOnAxis(new THREE.Vector3(0,0,1), offsets.rotation);
     this.setTargetPathVisibility(visibility);
     globals.three.sceneAdd(this._targetPath);
 
     //draw a circle at origin for sanity check
-    var geo = new THREE.CylinderGeometry(1, 1, 0.01);
-    geo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
-    var origin = new THREE.Mesh(geo);
-    origin.position.set(this._drawOffset.x, this._drawOffset.y, 0);
-    globals.three.sceneAdd(origin);
+    // var geo = new THREE.CylinderGeometry(1, 1, 0.01);
+    // geo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
+    // var origin = new THREE.Mesh(geo);
+    // origin.position.set(this._drawOffset.x, this._drawOffset.y, 0);
+    // globals.three.sceneAdd(origin);
 };
 
 Linkage.prototype._removeTargetPath = function(){
