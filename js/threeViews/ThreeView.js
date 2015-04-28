@@ -13,8 +13,6 @@ ThreeView = Backbone.View.extend({
 
     mouseIsDown: false,//store state of mouse click inside this el
 
-    el: "#threeContainer",
-
     controls: null,
 
     initialize: function(){

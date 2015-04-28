@@ -90,9 +90,13 @@ nav .btn {
     width: 100%!important;
 }
 
-#threeContainer {
+#threeContainer, #svgContainer {
     top: 0px;
     position: absolute;
+}
+
+#svgContainer {
+    display:none;
 }
 
 /*menus*/

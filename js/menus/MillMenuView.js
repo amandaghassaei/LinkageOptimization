@@ -98,8 +98,9 @@ MillMenuView = Backbone.View.extend({
         Hinge Tolerance: &nbsp;&nbsp;<input data-type="hingeTolerance" value="<%= hingeTolerance %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/>\
         Press Fit Tolerance: &nbsp;&nbsp;<input data-type="pressFitTolerance" value="<%= pressFitTolerance %>" placeholder="Depth" class="form-control numberInput" type="text"><br/><br/>\
         Curve Resolution: &nbsp;&nbsp;<input data-type="curveResolution" value="<%= curveResolution %>" placeholder="Resolution" class="form-control numberInput" type="text"><br/><br/>\
-        <label class="checkbox" for="fillThreeBar">\
-        <input type="checkbox" <% if (fillThreeBar){ %>checked="checked" <% } %> value="" id="fillThreeBar" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        Scaling Factor: &nbsp;&nbsp;<input data-type="scalingFactor" value="<%= scalingFactor %>" placeholder="Resolution" class="form-control numberInput" type="text"><br/><br/>\
+        <label class="checkbox disabled" for="fillThreeBar">\
+        <input type="checkbox" disabled <% if (fillThreeBar){ %>checked="checked" <% } %> value="" id="fillThreeBar" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Output three-bar linkage as solid triangle</label><br/>\
         <a href="#" id="saveMillPaths" class="btn btn-block btn-lg btn-success">Export Paths and Save</a><br/>\
         ')

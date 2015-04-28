@@ -46,6 +46,7 @@ $(function(){
     //init global singletons
     globals.runStatistics = [];
     globals.three = new ThreeModel();
+    globals.svg = new ThreeSVG();
     globals.physics = new PhysicsModel();
     globals.appState = new AppState();
     globals.setTargetCurve(
@@ -82,6 +83,7 @@ globals.script = function(){
 //    globals.script();
 
     //threeJS View
-    new ThreeView({model:globals.three});
+    new ThreeView({model:globals.three, el: "#threeContainer"});
+    new ThreeView({model:globals.svg, el: "#svgContainer"});
 
 });
