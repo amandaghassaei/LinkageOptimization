@@ -23,19 +23,19 @@ $(function(){
     };
 
     globals.setTargetCurve = function(curve){
-        var cumulativeX = 0;
-        var cumulativeY = 0;
-        _.each(curve, function(point){
-            cumulativeX += point.x;
-            cumulativeY += point.y;
-        });
-        var centerX = cumulativeX/curve.length;
-        var centerY = cumulativeY/curve.length;
-        _.each(curve, function(point){
-            point.x -= centerX;
-            point.y -= centerY;
-        });
-        // console.log('curve', curve);
+        // var cumulativeX = 0;
+        // var cumulativeY = 0;
+        // _.each(curve, function(point){
+        //     cumulativeX += point.x;
+        //     cumulativeY += point.y;
+        // });
+        // var centerX = cumulativeX/curve.length;
+        // var centerY = cumulativeY/curve.length;
+        // _.each(curve, function(point){
+        //     point.x -= centerX;
+        //     point.y -= centerY;
+        // });
+        console.log('curve', curve);
         var params = Linkage.prototype.getTranslationScaleRotation(curve);
         // console.log('params', params);
         globals.targetCurve = Linkage.prototype.normalizeTrajectory(curve, params);

@@ -156,6 +156,8 @@ Linkage.prototype.getTranslationScaleRotation = function(traj) {
     var farthest = this._calcFarthest(traj);
     // console.log(farthest);
     var distance = this._calcDistance(farthest[0], farthest[1]);
+    console.log('farthest', farthest);
+    console.log('tsr', this._calcMidpoint(farthest), this._calcAngle(farthest[0], farthest[1]), distance);
     return {
         translation: this._calcMidpoint(farthest),
         rotation: this._calcAngle(farthest[0], farthest[1]),
@@ -180,6 +182,11 @@ Linkage.prototype._calcFarthest = function(points) {
             }
         }
     }
+    if (farthest[0].x < farthest[1].x) {
+        temp = farthest[0];
+        farthest[0] = farthest[1];
+        farthest[1] = temp;
+    }
     return farthest;
 };
 
@@ -202,7 +209,8 @@ Linkage.prototype._calcMidpoint = function(points) {
 };
 
 Linkage.prototype._calcAngle = function(a, b) {
-    return Math.atan2(Math.abs(a.x-b.x), Math.abs(a.y-b.y));
+    return Math.atan2(Math.abs(a.y-b.y), Math.abs(a.x-b.x));
+    // return Math.atan2(a.x-b.x, a.y-b.y);
     // return {x_dist: points[0].x-points[1].x}
 }
 
