@@ -41,7 +41,6 @@ function PhysicsModel(){
             var body = Bodies.rectangle(0, -5, 5000, 10,
                 {groupId:2, friction:1});
             Body.setStatic(body, true);
-            worldAdd(body);
             return body;
         } else console.warn("not done with this yet");
     }
