@@ -158,8 +158,8 @@ Linkage.prototype.getTranslationScaleRotation = function(traj) {
     var farthest = this._calcFarthest(traj);
     // console.log(farthest);
     var distance = this._calcDistance(farthest[0], farthest[1]);
-    // console.log('farthest', farthest);
-    // console.log('tsr', this._calcMidpoint(farthest), this._calcAngle(farthest[0], farthest[1]), distance);
+//    console.log('farthest', farthest);
+//    console.log('tsr', this._calcMidpoint(farthest), this._calcAngle(farthest[0], farthest[1]), distance);
     return {
         translation: this._calcMidpoint(farthest),
         rotation: this._calcAngle(farthest[0], farthest[1]),

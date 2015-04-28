@@ -15,7 +15,7 @@ MenuErrorView = Backbone.View.extend({
     },
 
     throwError: function(message){
-        console.log(message);
+//        console.log(message);
         this.$el.html(this.template({message:message}));
     },
 
