@@ -295,8 +295,9 @@ Population.prototype._calcLinkageRederingOffsets = function(linkages){//draw in 
 Population.prototype._buildTargetPathVisualization = function(linkages){
     var path = globals.targetCurve;
     var visibility = globals.appState.get("showTargetPath");
+    var hingeIndex = globals.appState.get("outputHingeIndex");
     _.each(linkages, function(linkage){
-        linkage.drawTargetPath(path, linkage.getTranslationScaleRotation(linkage.getTrajectory(2)), visibility);
+        linkage.drawTargetPath(path, linkage.getTranslationScaleRotation(linkage.getTrajectory(hingeIndex)), visibility);
     });
 };
 

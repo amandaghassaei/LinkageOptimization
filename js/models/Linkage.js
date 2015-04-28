@@ -145,9 +145,10 @@ Linkage.prototype.getFitness = function(){
     if (!this._fitness) {
         var hingeIndex = globals.appState.get("outputHingeIndex");
         var traj = this.getTrajectory(hingeIndex);
-        this._fitness = this._calcFitness(globals.targetCurve, this.normalizeTrajectory(traj, this.getTranslationScaleRotation(traj)))
+        this._fitness = this._calcFitness(globals.targetCurve, this.normalizeTrajectory(traj, this.getTranslationScaleRotation(traj)));
         // this._fitness = this._calcFitness(globals.targetCurve, this.getTrajectory(hingeIndex));
     }
+    console.log(this._fitness);
     return this._fitness;
 };
 
@@ -157,8 +158,8 @@ Linkage.prototype.getTranslationScaleRotation = function(traj) {
     var farthest = this._calcFarthest(traj);
     // console.log(farthest);
     var distance = this._calcDistance(farthest[0], farthest[1]);
-    console.log('farthest', farthest);
-    console.log('tsr', this._calcMidpoint(farthest), this._calcAngle(farthest[0], farthest[1]), distance);
+    // console.log('farthest', farthest);
+    // console.log('tsr', this._calcMidpoint(farthest), this._calcAngle(farthest[0], farthest[1]), distance);
     return {
         translation: this._calcMidpoint(farthest),
         rotation: this._calcAngle(farthest[0], farthest[1]),
@@ -236,7 +237,7 @@ Linkage.prototype._shiftMidpoint = function(midpoint, radius, target) {
     // move the midpoint of the target curve to the midpoint of the test curves
     // return a set of point of the shifted curve
 
-   console.log('derp', midpoint, radius, target);
+   // console.log('derp', midpoint, radius, target);
 
     var shifted_target = [];
     for (var i=0; i<target.length; i++) {
@@ -273,7 +274,7 @@ Linkage.prototype._calcFitness = function(target, test){
 
     if (this._checkWeirdness()) {
         console.log('weird');
-        return 100;
+        return 0;
     }
 
     // var midpoint = this._calcMidpoint(test);
@@ -311,11 +312,17 @@ Linkage.prototype._calcFitness = function(target, test){
         });
 //        console.log(dist_sum);
         // return radius - dist_sum / target.length;
-        return dist_sum;
+        // return dist_sum;
+        var fitness = 80-dist_sum*10
+        if (fitness > 0) {
+            return fitness;
+        }
+        else
+            return 0;
     }
     else {
         console.log('empty');
-        return 100;
+        return 0;
     }
 
     // return the sum of the shortest distances
@@ -359,10 +366,11 @@ Linkage.prototype.drawTargetPath = function(path, offsets, visibility){
     });
     geometry.vertices.push(_.clone(geometry.vertices[0]));//close loop
     this._targetPath = new THREE.Line(geometry, targetTrajectoryMaterial);
-    this._targetPath.position.set(this._drawOffset.x, this._drawOffset.y, 0);
-   // if (offsets.translation) this._targetPath.position.set(this._drawOffset.x+offsets.translation.x, this._drawOffset.y+offsets.translation.y, 0);
-//    if (offsets.scale) this._targetPath.scale.set(offsets.scale, offsets.scale, offsets.scale);
-//    if (offsets.rotation) this._targetPath.rotateOnAxis(new THREE.Vector3(0,0,1), offsets.rotation);
+    // this._targetPath.position.set(this._drawOffset.x, this._drawOffset.y, 0);
+    // console.log('herp', offsets.translation);
+    if (offsets.translation) this._targetPath.position.set(this._drawOffset.x+offsets.translation.x, this._drawOffset.y+offsets.translation.y, 0);
+    if (offsets.scale) this._targetPath.scale.set(offsets.scale, offsets.scale, offsets.scale);
+    if (offsets.rotation) this._targetPath.rotateOnAxis(new THREE.Vector3(0,0,1), offsets.rotation);
     this.setTargetPathVisibility(visibility);
     globals.three.sceneAdd(this._targetPath);
 
