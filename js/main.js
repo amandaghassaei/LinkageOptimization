@@ -48,10 +48,19 @@ $(function(){
     globals.physics = new PhysicsModel();
     globals.appState = new AppState();
     globals.setTargetCurve([
-        {x:10.0,y:0.0},{x:7.071,y:7.071},
-        {x:0.0,y:10.0},{x:-7.071,y:7.071},
-        {x:-10.0,y:0.0},{x:-7.071,y:-7.071},
-        {x:0.0,y:-10.0},{x:7.071,y:-7.071}]);
+        {x:8, y:6},
+        {x:7, y:0},
+        {x:3, y:-4},
+        {x:0, y:-6},
+        {x:-8, y:-6},
+        {x:-7, y:0},
+        {x:-3, y:-4},
+        {x:0, y:6}
+        // {x:10.0,y:0.0},{x:7.071,y:7.071},
+        // {x:0.0,y:10.0},{x:-7.071,y:7.071},
+        // {x:-10.0,y:0.0},{x:-7.071,y:-7.071},
+        // {x:0.0,y:-10.0},{x:7.071,y:-7.071}
+    ]);
     globals.population = new Population();
     globals.population.init();
 
