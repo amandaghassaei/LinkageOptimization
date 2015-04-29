@@ -138,14 +138,14 @@ FitnessMenuView = Backbone.View.extend({
         Fitness Metrics:\
         <label class="radio">\
         <input type="radio" name="fitnessMetrics" <% if (!fitnessBasedOnTargetPath){ %> checked <% } %> value="walking" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-        Obstacle Course (Walking)\
+        Obstacle Course (Walking) <a class="helpModal" data-type="walkingMetric" href="#">( ? )</a>\
         </label>\
         <label class="radio">\
         <input type="radio" name="fitnessMetrics" <% if (fitnessBasedOnTargetPath){ %>checked <% } %> value="targetPath" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-        Target Path Fit\
+        Target Path Fit <a class="helpModal" data-type="targetPathMetric" href="#">( ? )</a>\
         </label><br/>\
         <% if (fitnessBasedOnTargetPath){ %>\
-            Output Hinge Index: &nbsp;&nbsp;<input id="outputHingeIndex" data-type="outputHingeIndex" value="<%= outputHingeIndex %>" placeholder="Hinge" class="form-control numberInput" type="text"><br/><br/>\
+            Output Hinge Index: &nbsp;&nbsp;<input id="outputHingeIndex" data-type="outputHingeIndex" value="<%= outputHingeIndex %>" placeholder="Hinge" class="form-control numberInput" type="text"> <a class="helpModal" data-type="outputHinge" href="#">( ? )</a><br/><br/>\
             <!--Num Trajectory Samples: &nbsp;&nbsp;<input data-type="numPositionSteps" value="<%= numPositionSteps %>" placeholder="Num Samples" class="form-control numberInput" type="text"><br/><br/>-->\
             <a href="#" id="loadPath" class="btn btn-block btn-lg btn-default">Load Target Path</a><br/>\
             <a href="#" id="savePath" class=" btn pull-left btn-halfWidth btn-lg btn-default">Save Target Path</a>\
@@ -157,11 +157,11 @@ FitnessMenuView = Backbone.View.extend({
             <input type="checkbox" <% if (showOutputPath){ %>checked="checked" <% } %> value="" id="showOutputPath" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Show output hinge trajectory</label>\
         <% } else { %>\
-            Num Leg Pairs: &nbsp;&nbsp;<input id="numLegPairs" data-type="numLegPairs" value="<%= numLegPairs %>" placeholder="Num Pairs" class="form-control numberInput" type="text"><br/>\
+            Num Leg Pairs: &nbsp;&nbsp;<input id="numLegPairs" data-type="numLegPairs" value="<%= numLegPairs %>" placeholder="Num Pairs" class="form-control numberInput" type="text"> <a class="helpModal" data-type="numLegPairs" href="#">( ? )</a><br/>\
             <label class="checkbox" for="flipVertical">\
             <input type="checkbox" <% if (flipVertical){ %>checked="checked" <% } %> value="" id="flipVertical" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Flip Vertically</label><br/>\
-            Terrain:\
+            Terrain: <a class="helpModal" data-type="terrainType" href="#">( ? )</a>\
             <label class="radio">\
             <input type="radio" name="terrainType" <% if (terrain == "flat"){ %> checked <% } %>value="flat" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Flat\
@@ -174,7 +174,7 @@ FitnessMenuView = Backbone.View.extend({
             <input type="radio" disabled name="terrainType" <% if (terrain == "obstacles"){ %>checked <% } %>value="obstacles" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Obstacles\
             </label><br/>\
-            Eval Period (# of simulation ticks): &nbsp;&nbsp;<input id="numEvalTicks" data-type="numEvalTicks" value="<%= numEvalTicks %>" placeholder="Eval Ticks" class="form-control numberInput" type="text"><br/>\
+            Eval Period (# of simulation ticks): &nbsp;&nbsp;<input id="numEvalTicks" data-type="numEvalTicks" value="<%= numEvalTicks %>" placeholder="Eval Ticks" class="form-control numberInput" type="text"> <a class="helpModal" data-type="evalPeriod" href="#">( ? )</a><br/>\
             <label class="radio">\
             <input type="radio" name="fitnessQuantity" <% if (fitnessQuantity == "distance"){ %> checked <% } %>value="distance" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Distance Traversed\
@@ -183,7 +183,7 @@ FitnessMenuView = Backbone.View.extend({
             <input type="radio"  name="fitnessQuantity" <% if (fitnessQuantity == "speed"){ %>checked <% } %>value="speed" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Final Speed\
             </label>\
-            Friction (between 0 and 1): &nbsp;&nbsp;<input id="friction" data-type="friction" value="<%= friction %>" placeholder="Friction" class="form-control floatInput" type="text"><br/><br/>\
+            Friction (between 0 and 1): &nbsp;&nbsp;<input id="friction" data-type="friction" value="<%= friction %>" placeholder="Friction" class="form-control floatInput" type="text"> <a class="helpModal" data-type="friction" href="#">( ? )</a><br/><br/>\
             <!--<a href="#" class="saveOutputPath btn btn-block btn-lg btn-default">Save Best Output Path</a><br/>-->\
              <% if (isRunning) { %>\
             <a href="#" id="fitnessPauseGA" class="btn-warning btn btn-block btn-lg btn-default">Pause Run</a><br/>\
