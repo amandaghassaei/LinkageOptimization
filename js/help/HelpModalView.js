@@ -43,7 +43,7 @@ HelpModalView = Backbone.View.extend({
                     <div class="modal-body">\
                         <%= text %>\
                     </div>\
-                    <% if (img) {%>\
+                    <% if (typeof img !== "undefined") {%>\
                     <img class="fullWidth" src="<%= img %>">\
                     <% } %>\
                 </div>\
