@@ -8,9 +8,14 @@ function Walker(json, invisible){//Linkage subclass
     Linkage.call(this);//init empty linkage
     if (invisible) this.hide();
     this._walkerBodyConstraints = [];
-    this._json = JSON.parse(JSON.stringify(json));
+    this._json = json;
     this._isFinished = false;
+}
+Walker.prototype = Object.create(Linkage.prototype);
 
+Walker.prototype.parseJSON = function(){
+
+    var json = JSON.parse(JSON.stringify(this._json));
     var hinges = json.hinges;
 
     this._verticalOffset = hinges[0].position.y;
@@ -38,7 +43,7 @@ function Walker(json, invisible){//Linkage subclass
     var fixedHinges = [centerHinge];
     var mirrorOffset = 2*centerHinge.getPosition().x;
     _.each(hinges, function(hinge){
-        if (hinge.static && hinge.updatedPosition === undefined) {
+        if (hinge.static && (typeof hinge.updatedPosition == "undefined")) {
             hinge.updatedPosition = self._hinges.length;
             var newHinge = self.addHingeAtPosition(hinge.position);
             fixedHinges.push(newHinge);
@@ -50,15 +55,14 @@ function Walker(json, invisible){//Linkage subclass
 
     //then add legs
     for (var i=0;i<numLegs;i++){
-        this.initLeg(hinges, json.links, numLegs, i);
-        this.initLeg(hinges, json.links, numLegs, i, mirrorOffset);//mirror leg
+        this._initLeg(hinges, json.links, numLegs, i);
+        this._initLeg(hinges, json.links, numLegs, i, mirrorOffset);//mirror leg
     }
 
     this._addDriveCrank(centerHinge, cranks, json.driveCrank.length);
 
     this._makeWalkerBody(fixedHinges);
-}
-Walker.prototype = Object.create(Linkage.prototype);
+};
 
 Walker.prototype._crankPositionForAngle = function(angle, position, centerPosition){
     angle +=  Math.atan2(position.y-centerPosition.y, position.x-centerPosition.x);
@@ -69,7 +73,7 @@ Walker.prototype._crankPositionForAngle = function(angle, position, centerPositi
 };
 
 
-Walker.prototype.initLeg = function(hinges, links, numLegs, num, mirrorOffset){
+Walker.prototype._initLeg = function(hinges, links, numLegs, num, mirrorOffset){
     var self = this;
     var lookupTable = {};
     _.each(hinges, function(hinge, index){//{position:this._position, static:this._static}
