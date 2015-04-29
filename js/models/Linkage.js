@@ -155,7 +155,7 @@ Linkage.prototype.getTranslationScaleRotation = function(traj) {
     var farthest = this._calcFarthest(traj);
     var distance = this._calcDistance(farthest[0], farthest[1]);
     return {
-        translation: this._calcMidpoint(farthest),
+        translation: this._calcMidpoint(traj),
         rotation: this._calcAngle(farthest[0], farthest[1]),
         scale: distance
     };
