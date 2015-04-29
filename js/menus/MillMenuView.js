@@ -64,7 +64,8 @@ MillMenuView = Backbone.View.extend({
         globals.appState.changePhase(val);
     },
 
-    _export: function(){
+    _export: function(e){
+        e.preventDefault();
         this.model.createVectorPathsForLinkage(globals.population.getBestLinkage().toJSON());
     },
 
