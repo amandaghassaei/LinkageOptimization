@@ -54,6 +54,26 @@ function buildHelpMessages(){
         outputHinge: {
             title: "Output Hinge Index",
             text:""
+        },
+        simulatedAnnealing: {
+            title: "Simulate Annealing",
+            text:""
+        },
+        mutationRate: {
+            title: "Mutation Rate",
+            text:""
+        },
+        maxLengthChange: {
+            title: "Maximum Length Change",
+            text:""
+        },
+        minLinkLength: {
+            title: "Minimum Link Length",
+            text:""
+        },
+        mutateTopology: {
+            title: "Mutate Topology",
+            text:""
         }
     }
 };
