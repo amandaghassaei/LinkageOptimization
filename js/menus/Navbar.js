@@ -141,7 +141,7 @@ NavBar = Backbone.View.extend({
             numGenerations:globals.runStatistics.length,
             mutationRatePercent:globals.appState.get("mutationRate"),
             populationSize:globals.appState.get("populationSize"),
-            isHillClimbing: globals.appState.get("isHillClimbing"),
+            optimizationStrategy: globals.appState.get("optimizationStrategy"),
             minLinkLength: globals.appState.get("minLinkLength"),
             maxLinkChangePercent: globals.appState.get("maxLinkChange"),
             data:globals.runStatistics

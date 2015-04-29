@@ -53,15 +53,8 @@ PopulationMenuView = Backbone.View.extend({
 
     _changeOptimizationStrategies: function(e){
         var val = $(e.target).val();
-        if (val == "hillClimbing"){
-            globals.appState.set("isNelderMead", false);
-            globals.appState.set("isHillClimbing", true);
-        } else if (val == "ga"){
-            globals.appState.set("isNelderMead", false);
-            globals.appState.set("isHillClimbing", false);
-        } else if (val == "nelderMead"){
-            globals.appState.set("isHillClimbing", false);
-            globals.appState.set("isNelderMead", true);
+        if (val == "hillClimbing" || val == "ga" || val == "nelderMead"){
+            globals.appState.set("optimizationStrategy", val);
         } else console.warn("unknown optimization strategy " + val);
     },
 
@@ -95,27 +88,27 @@ PopulationMenuView = Backbone.View.extend({
     template: _.template('\
         Optimization Strategy:\
         <label class="radio">\
-        <input type="radio" name="optimizationStrategies" <% if (isHillClimbing && !isNelderMead){ %> checked <% } %>value="hillClimbing" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        <input type="radio" name="optimizationStrategies" <% if (optimizationStrategy == "hillClimbing"){ %> checked <% } %>value="hillClimbing" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Hill-Climbing (Gradient)\
         </label>\
         <label class="radio">\
-        <input type="radio" name="optimizationStrategies" <% if (!isHillClimbing && !isNelderMead){ %>checked <% } %>value="ga" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        <input type="radio" name="optimizationStrategies" <% if (optimizationStrategy == "ga"){ %>checked <% } %>value="ga" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Genetic Algorithm\
         </label>\
         <label class="radio disabled">\
-        <input type="radio" name="optimizationStrategies" <% if (!isHillClimbing && isNelderMead){ %>checked <% } %>value="nelderMead" data-toggle="radio" disabled class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        <input type="radio" name="optimizationStrategies" <% if (optimizationStrategy == "nelderMead"){ %>checked <% } %>value="nelderMead" data-toggle="radio" disabled class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Nelder–Mead\
         </label>\
         <label class="radio disabled">\
-        <input type="radio" name="optimizationStrategies" <% if (!isHillClimbing && isNelderMead){ %>checked <% } %>value="nelderMead" data-toggle="radio" disabled class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        <input type="radio" name="optimizationStrategies" <% if (optimizationStrategy == "nelderMead"){ %>checked <% } %>value="nelderMead" data-toggle="radio" disabled class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Nelder–Mead (with inertia)\
         </label>\
         <label class="radio disabled">\
-        <input type="radio" name="optimizationStrategies" <% if (!isHillClimbing && isNelderMead){ %>checked <% } %>value="nelderMead" data-toggle="radio" disabled class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+        <input type="radio" name="optimizationStrategies" <% if (optimizationStrategy == "nelderMead"){ %>checked <% } %>value="nelderMead" data-toggle="radio" disabled class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Conjugate Gradient\
         </label>\
         <br/>\
-        <% if (!isHillClimbing){ %>\
+        <% if (optimizationStrategy == "ga"){ %>\
         Population Size: &nbsp;&nbsp;<input data-type="populationSize" value="<%= populationSize %>" placeholder="Size" class="form-control numberInput" type="text"><br/>\
         <% } %>\
         <label class="checkbox" for="flipVertical">\

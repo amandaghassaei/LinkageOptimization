@@ -8,7 +8,7 @@ AppState = Backbone.Model.extend({
 
     defaults: {
 
-        currentNav:"navDesign",// design, evo, export
+        currentNav:"navEvo",// design, evo, export
         currentTab:"population",
 
         //last tab that one open in each of the main menus
@@ -22,12 +22,14 @@ AppState = Backbone.Model.extend({
         allMenuTabs: {
             navDesign:{
                 population:"Setup",
+                fitness:"Fitness"
+            },
+            navEvo:{
+                population:"Setup",
                 fitness:"Fitness",
                 mutation:"Mutation",
                 drawParams:"View",
                 run:"Run"
-            },
-            navEvo:{
             },
             navExport:{
                 mill: "Mill",
@@ -36,8 +38,7 @@ AppState = Backbone.Model.extend({
         },
 
         //default is ga, unless other specified
-        isHillClimbing: false,
-        isNelderMead: false,
+        optimizationStrategy: "ga",//"hillClimbing" "nelderMead" "conjugateGradient"
         populationSize: 10,
         simulatedAnnealing: false,
 
@@ -101,7 +102,7 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:showHingePaths", this._showHingePaths);
         this.listenTo(this, "change:showOutputPath", this._showOutputPaths);
         this.listenTo(this, "change:showTargetPath", this._showTargetPath);
-        this.listenTo(this, "change:isHillClimbing", this._hillClimbingMode);
+        this.listenTo(this, "change:optimizationStrategy", this._changeOptimizationStrategy);
         this.listenTo(this, "change:outputHingeIndex", this._changeOutputHinge);
         this.listenTo(this, "change:isAnimating", this._startStopAnimation);
         this.listenTo(this, "change:fitnessBasedOnTargetPath", this._changeFitnessMetric);
@@ -135,7 +136,7 @@ AppState = Backbone.Model.extend({
         globals.population.setTargetPathVisibility(this.get("showTargetPath"));
     },
 
-    _hillClimbingMode: function(){
+    _changeOptimizationStrategy: function(){
         globals.population.reset(globals.population.getBestLinkage());
     },
 
@@ -321,8 +322,7 @@ AppState = Backbone.Model.extend({
         var data = JSON.stringify({
             run:{
                 appState: {
-                    isHillClimbing: this.get("isHillClimbing"),
-                    isNelderMead: this.get("isNelderMead"),
+                    optimizationStrategy: this.get("optimizationStrategy"),
                     linkWidth: this.get("linkWidth"),
                     maxLinkChange: this.get("maxLinkChange"),
                     minLinkLength: this.get("minLinkLength"),

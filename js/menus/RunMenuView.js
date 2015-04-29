@@ -114,7 +114,7 @@ RunMenuView = Backbone.View.extend({
         Max Num Generations (-1 never stops): &nbsp;&nbsp;<input data-type="maxNumGenerations" value="<%= maxNumGenerations %>" placeholder="Max Gens" class="form-control numberInput" type="text"><br/><br/>\
         Current Generation: &nbsp;&nbsp;<span id="generationNum"></span><br/>\
         Best Fitness: &nbsp;&nbsp;<span id="bestFitness"></span><br/>\
-        <% if (!isHillClimbing){ %>\
+        <% if (optimizationStrategy == "ga"){ %>\
         Average Fitness: &nbsp;&nbsp;<span id="avgFitness"></span><br/>\
         Worst Fitness: &nbsp;&nbsp;<span id="worstFitness"></span><br/>\
         <% } %>\

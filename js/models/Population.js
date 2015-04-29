@@ -54,7 +54,7 @@ Population.prototype._initFirstGeneration = function(archetype){
     firstGeneration.push(archetype.clone());
 
     var mutationRate = globals.appState.get("mutationRate");
-    if (globals.appState.get("isHillClimbing")){
+    if (globals.appState.get("optimizationStrategy") == "hillClimbing"){
         firstGeneration.push(archetype.forceMutate(mutationRate));
         archetype.destroy();
         return firstGeneration;
@@ -173,7 +173,7 @@ Population.prototype.calcNextGen = function(linkages){
     var nextGenLinkages = [];
 
     //hill climbing mode
-    if (globals.appState.get("isHillClimbing")){
+    if (globals.appState.get("optimizationStrategy") == "hillClimbing"){
         var parent = this.getBestLinkage(linkages);
         if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
             var clone = new Walker(parent.toJSON(), true);
