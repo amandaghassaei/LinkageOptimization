@@ -16,7 +16,8 @@ FitnessMenuView = Backbone.View.extend({
         "change input[name=fitnessMetrics]":                        "_changeFitnessMetrics",
         "change input[name=terrainType]":                           "_changeTerrain",
         "change input[name=fitnessQuantity]":                       "_changeFitnessQuantity",
-        "click #fitnessRunGA":                                      "_run"
+        "click #fitnessRunGA":                                      "_run",
+        "click #fitnessPauseGA":                                    "_pause"
     },
 
     initialize: function(){
@@ -121,6 +122,11 @@ FitnessMenuView = Backbone.View.extend({
         globals.population.run();
     },
 
+    _pause: function(e){
+        e.preventDefault();
+        globals.appState.set("isRunning", false);
+    },
+
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "fitness") return;
@@ -179,7 +185,11 @@ FitnessMenuView = Backbone.View.extend({
             </label>\
             Friction (between 0 and 1): &nbsp;&nbsp;<input id="friction" data-type="friction" value="<%= friction %>" placeholder="Friction" class="form-control floatInput" type="text"><br/><br/>\
             <!--<a href="#" class="saveOutputPath btn btn-block btn-lg btn-default">Save Best Output Path</a><br/>-->\
+             <% if (isRunning) { %>\
+            <a href="#" id="fitnessPauseGA" class="btn-warning btn btn-block btn-lg btn-default">Pause Run</a><br/>\
+            <% } else { %>\
             <a href="#" id="fitnessRunGA" class="btn-success btn btn-block btn-lg btn-default">Run</a><br/>\
+            <% } %>\
         <% } %>\
         ')
 });
