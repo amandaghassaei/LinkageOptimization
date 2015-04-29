@@ -86,7 +86,7 @@ PopulationMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
-        Optimization Strategy:\
+        Optimization Strategy: <a class="helpModal" data-type="optimizationStrategy" href="#">( ? )</a>\
         <label class="radio">\
         <input type="radio" name="optimizationStrategies" <% if (optimizationStrategy == "hillClimbing"){ %> checked <% } %>value="hillClimbing" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Hill-Climbing (Gradient)\
