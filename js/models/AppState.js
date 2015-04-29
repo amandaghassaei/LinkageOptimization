@@ -12,7 +12,7 @@ AppState = Backbone.Model.extend({
         currentTab:"population",
 
         //last tab that one open in each of the main menus
-        lastDesignTab: "population",
+        lastDesignTab: "draw",
         lastEvoTab: "population",
         lastExportTab: "mill",
 
@@ -21,8 +21,9 @@ AppState = Backbone.Model.extend({
 
         allMenuTabs: {
             navDesign:{
-                population:"Setup",
-                fitness:"Fitness"
+                draw:"Draw",
+                constrain:"Constraints",
+                script:"Script"
             },
             navEvo:{
                 population:"Setup",
