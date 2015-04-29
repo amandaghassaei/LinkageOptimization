@@ -315,3 +315,29 @@ input.numberInput, input.floatInput{
     bottom:0;
     left:0;
 }
+
+.modal-dialog {
+    /*margin: 0;*/
+    /*position: absolute;*/
+    /*top: 50%;*/
+    /*left: 50%;*/
+}
+
+.modal-body {
+    overflow-y: auto;
+}
+.modal-footer {
+    margin-top: 0;
+}
+
+.modal-content{
+    background-color: rgba(255,255,255,1);
+    border-radius: 0;
+    border: 0;
+}
+
+.modal-body>p{
+    font-weight: 100;
+    font-size: 16px;
+    padding: 0 100px 20px 33px;
+}
