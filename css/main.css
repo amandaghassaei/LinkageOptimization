@@ -323,8 +323,13 @@ input.numberInput, input.floatInput{
     /*left: 50%;*/
 }
 
+.modal-header {
+    padding-left: 30px;
+}
+
 .modal-body {
     overflow-y: auto;
+    padding: 20px 30px;
 }
 .modal-footer {
     margin-top: 0;
