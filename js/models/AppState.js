@@ -173,10 +173,7 @@ AppState = Backbone.Model.extend({
             globals.population.removeTerrain();
             globals.population.reset();
         } else {
-            globals.physics.setGravity(true);
-            globals.population.createTerrain();
-            var populationJSON = JSON.stringify(globals.population.toJSON());
-            globals.population.setFromJSON(JSON.parse(populationJSON));
+            globals.population.reset();
         }
     },
 

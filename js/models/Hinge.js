@@ -121,6 +121,7 @@ Hinge.prototype.getPosition = function(){//position from definition (not includi
 Hinge.prototype.render = function(screenCoordinates, precompute, index){
     if (!precompute) {
         var position = this._trackedPositions[index];
+        if (!screenCoordinates) screenCoordinates = {x:0,y:0};
         this._mesh.position.set(position.x+screenCoordinates.x, position.y+screenCoordinates.y, 0);
     } else if (globals.population.shouldStorePosition()) this.trackPosition();
 };

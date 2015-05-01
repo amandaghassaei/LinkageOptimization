@@ -78,7 +78,7 @@ Population.prototype._setLinkages = function(linkages){
         return;
     }
 
-    this._calcLinkageRederingOffsets(linkages);
+    if (globals.appState.get("fitnessBasedOnTargetPath")) this._calcLinkageRederingOffsets(linkages);
     this._linkages = linkages;
     this._renderIndex = 0;
     this._calculateTrajectory();
@@ -89,6 +89,8 @@ Population.prototype._setLinkages = function(linkages){
         }
     } else {
         var walkers = [];
+        this.createTerrain();
+        globals.physics.setGravity(true);
         _.each(linkages, function(linkage){
             walkers.push(new Walker(linkage.toJSON()));
             linkage.destroy();
@@ -105,14 +107,17 @@ Population.prototype._calculateTrajectory = function(){
         if (!this._waitTimePassed) this._waitTimePassed = true;//wait for one rotation of crank to start storing hinge pos data
         else if (!this._readyForNextGen) {
             this._readyForNextGen = true;
-            var visibility = globals.appState.get("showHingePaths");
-            var outputIndex = globals.appState.get("outputHingeIndex");
-            _.each(this._linkages, function(linkage){
-                linkage.drawTrajectories(visibility);
-                linkage.relaxHingePositions();
-                linkage.checkContinuity(outputIndex);
-            });
-            this.setOutputPathVisibility(globals.appState.get("showOutputPath"));
+            if (globals.appState.get("fitnessBasedOnTargetPath")){
+                var visibility = globals.appState.get("showHingePaths");
+                var outputIndex = globals.appState.get("outputHingeIndex");
+                 _.each(this._linkages, function(linkage){
+                    linkage.drawTrajectories(visibility);
+                    linkage.relaxHingePositions();
+                    linkage.checkContinuity(outputIndex);
+                });
+                this.setOutputPathVisibility(globals.appState.get("showOutputPath"));
+            }
+
         }
     }
 
@@ -288,17 +293,19 @@ Population.prototype.render = function(){
     if ((globals.appState.get("shouldRenderPhaseChange") || globals.appState.get("isAnimating") || globals.appState.get("isRunning"))
         && (this.readyToCalcNextGen())){ //should render and precompute is finished
 
-        var self = this;
         if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
             this._stepWalkerSimulation();
+            var theta = this._theta;
+            var simTicks = this._numSimulationTicks;
             _.each(this._linkages, function(linkage){
-                linkage.render(self._theta, self._numSimulationTicks, true);
+                linkage.render(theta, simTicks, true);
             });
             this._checkWalkerFinish();
 
         } else {
+            var renderIndex = this._renderIndex;
             _.each(this._linkages, function(linkage){
-                linkage.render(self._renderIndex, false);
+                linkage.render(renderIndex, false);
             });
             if (globals.appState.get("isAnimating")) this._renderIndex++;
             if (this._renderIndex >= globals.appState.get("numPositionSteps")) this._renderIndex = 0;
@@ -308,13 +315,7 @@ Population.prototype.render = function(){
 };
 
 Population.prototype._calcLinkageRederingOffsets = function(linkages){//draw in grid layout on screen
-    if (!(globals.appState.get("fitnessBasedOnTargetPath"))){
-        var offset = {x:0,y:0};
-        _.each(linkages, function(linkage){
-            linkage.setDrawOffset(offset);
-        });
-        return;
-    }
+
     var populationNum = linkages.length;
     var numPerRow = Math.ceil(Math.sqrt(populationNum));
     var width = window.innerWidth/numPerRow;
@@ -399,12 +400,12 @@ Population.prototype.removeTerrain =  function(){
 };
 
 Population.prototype.createTerrain = function(){
-//    if (this._terrain) this.removeTerrain();
-//    this._terrain = globals.physics.makeTerrain(globals.appState.get("terrain"));
-//    globals.physics.worldAdd(this._terrain);
-//    this._terrainMesh = new THREE.Mesh(new THREE.BoxGeometry(5000, 10, 1));
-//    this._terrainMesh.position.set(0, -5, 0);
-//    globals.three.sceneAdd(this._terrainMesh);
+    if (this._terrain) return;
+    this._terrain = globals.physics.makeTerrain(globals.appState.get("terrain"));
+    globals.physics.worldAdd(this._terrain);
+    this._terrainMesh = new THREE.Mesh(new THREE.BoxGeometry(5000, 10, 1));
+    this._terrainMesh.position.set(0, -5, 0);
+    globals.three.sceneAdd(this._terrainMesh);
 };
 
 
