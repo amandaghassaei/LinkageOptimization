@@ -324,6 +324,14 @@ Linkage.prototype.getTrajectory = function(hingeIndex){//trajectory of the linka
     return this._hinges[hingeIndex].getTrackedPositions();
 };
 
+Linkage.prototype.getTrajectories = function(){
+    var trajectories = [];
+    _.each(this._hinges, function(hinge){
+        trajectories.push(hinge.getTrackedPositions());
+    });
+    return trajectories;
+};
+
 Linkage.prototype.drawTrajectories = function(visibility){
     var self = this;
     _.each(this._hinges, function(hinge){

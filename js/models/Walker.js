@@ -4,18 +4,20 @@
 
 //todo hinge relaxation
 
-function Walker(linkage, numLegs){//Linkage subclass
+function Walker(linkage, numLegs, numStoredPositions){//Linkage subclass
     Linkage.call(this);//init empty linkage
 
     var json = linkage.toJSON();
     this._walkerBodyConstraints = [];
-    this._json = JSON.parse(JSON.stringify(json));
+    this._json = JSON.parse(JSON.stringify(json));//make a deep copy
     this._isFinished = false;
 
     var hinges = json.hinges;
+    var trajectories = linkage.getTrajectories();
     var self = this;
 
-    this._verticalOffset = this._getVerticalOffset(hinges);
+    var initalPhases = this._getInitialPhases(numLegs, numStoredPositions);
+    this._verticalOffset = this._getVerticalOffset(trajectories, initalPhases);
 
     //make crank center hinge #0
     var centerHingeIndex = json.driveCrank.centerHinge;
@@ -26,6 +28,7 @@ function Walker(linkage, numLegs){//Linkage subclass
     var cranks = [];
     for (var i=0;i<numLegs;i++){
         var outsideHingeIndex = json.driveCrank.outsideHinge;
+//        cranks.push(this.addHingeAtPosition(trajectories[outsideHingeIndex][initalPhases[i]]));
         cranks.push(this.addHingeAtPosition(this._crankPositionForAngle(Math.PI*2/numLegs*i,
             hinges[outsideHingeIndex].position, hinges[centerHingeIndex].position)));
     }
@@ -47,8 +50,8 @@ function Walker(linkage, numLegs){//Linkage subclass
 
     //then add legs
     for (var i=0;i<numLegs;i++){
-        this._initLeg(hinges, json.links, numLegs, i);
-        this._initLeg(hinges, json.links, numLegs, i, mirrorOffset);//mirror leg
+        this._initLeg(hinges, trajectories, json.links, initalPhases[i], i);
+        this._initLeg(hinges, trajectories, json.links, initalPhases[i], i, mirrorOffset);//mirror leg
     }
 
     this._addDriveCrank(centerHinge, cranks, json.driveCrank.length);
@@ -58,12 +61,22 @@ function Walker(linkage, numLegs){//Linkage subclass
 }
 Walker.prototype = Object.create(Linkage.prototype);
 
-Walker.prototype._getVerticalOffset = function(hinges){
-    var offset = hinges[0].position.y;
-    _.each(hinges, function(hinge){
-        if (hinge.position.y < offset) offset = hinge.position.y;
+Walker.prototype._getInitialPhases = function(numLegs, numStoredPositions){
+    var phases = [0];
+    for (var i=1;i<numLegs;i++){
+        phases.push(Math.round(numStoredPositions*i/numLegs));
+    }
+    return phases;
+};
+
+Walker.prototype._getVerticalOffset = function(trajectories, phases){
+    var offset = trajectories[0][phases[0]].y;
+    _.each(phases, function(phase){
+        _.each(trajectories, function(trajectory){
+            if (trajectory[phase].y < offset) offset = trajectory[phase].y;
+        });
     });
-    return offset*1.15;
+    return offset-4*globals.appState.get("linkWidth");
 };
 
 Walker.prototype._crankPositionForAngle = function(angle, position, centerPosition){
@@ -75,7 +88,7 @@ Walker.prototype._crankPositionForAngle = function(angle, position, centerPositi
 };
 
 
-Walker.prototype._initLeg = function(hinges, links, numLegs, num, mirrorOffset){
+Walker.prototype._initLeg = function(hinges, trajectories, links, phase, num, mirrorOffset){
     var self = this;
     var lookupTable = {};
     _.each(hinges, function(hinge, index){//{position:this._position, static:this._static}
@@ -91,8 +104,9 @@ Walker.prototype._initLeg = function(hinges, links, numLegs, num, mirrorOffset){
             lookupTable[index] = hinge.updatedPosition;
             return;
         }
-        if (mirrorOffset) self.addHingeAtPosition({x:mirrorOffset-hinge.position.x, y:hinge.position.y}).setZIndex(0);
-        else self.addHingeAtPosition(hinge.position).setZIndex(0);
+        var position = trajectories[index][phase];
+        if (mirrorOffset) self.addHingeAtPosition({x:mirrorOffset-position.x, y:position.y}).setZIndex(0);
+        else self.addHingeAtPosition(position).setZIndex(0);
     });
     _.each(links, function(link){//{hinges: [this.getHingeAId(), this.getHingeBId()], length: this._length}
         self.link(self._hinges[lookupTable[link.hinges[0]]], self._hinges[lookupTable[link.hinges[1]]], link.length).setZIndex(0);
