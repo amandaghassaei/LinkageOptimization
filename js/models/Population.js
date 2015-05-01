@@ -3,7 +3,7 @@
  */
 
 
-function Population(){//init a linkage with optional hinges, links, and driveCrank
+function Population(){
 }
 
 Population.prototype.init = function(){
@@ -47,8 +47,7 @@ Population.prototype._initFirstGeneration = function(archetype){
             });
         }
         archetype.destroy();
-        if (globals.appState.get("fitnessBasedOnTargetPath")) archetype = new Linkage(json);
-        else archetype = new Walker(json);
+        archetype = new Linkage(json);
     }
 
     firstGeneration.push(archetype.clone());
@@ -73,20 +72,53 @@ Population.prototype._setLinkages = function(linkages){
     this._readyForNextGen = false;
     this._numSimulationTicks = 0;
     this._theta = 0;
+
+    if (linkages.length == 0){//set to []
+        this._linkages = linkages;
+        return;
+    }
+
     this._calcLinkageRederingOffsets(linkages);
     this._linkages = linkages;
     this._renderIndex = 0;
     this._calculateTrajectory();
-    if (globals.appState.get("fitnessBasedOnTargetPath")) {
+//    if (globals.appState.get("fitnessBasedOnTargetPath")) {
         this._buildTargetPathVisualization(linkages);
         if (linkages.length > 0 && (globals.appState.get("shouldRenderThreeJS") || !globals.appState.get("isRunning"))){
             this.getBestLinkage(linkages).setColor("0xffff00");
         }
-    } else {
-        _.each(linkages, function(linkage){
-            linkage.parseJSON();
-        });
+//    } else {
+//        _.each(linkages, function(linkage){
+//            linkage.parseJSON();
+//        });
+//    }
+};
+
+Population.prototype._calculateTrajectory = function(){
+    globals.physics.update();
+    this._theta = this._getCurrentDriveCrankAngle(this._theta);
+
+    if (this._theta == 0){//todo maybe this comes later
+        if (!this._waitTimePassed) this._waitTimePassed = true;//wait for one rotation of crank to start storing hinge pos data
+        else if (!this._readyForNextGen) {
+            this._readyForNextGen = true;
+            var visibility = globals.appState.get("showHingePaths");
+            var outputIndex = globals.appState.get("outputHingeIndex");
+            _.each(this._linkages, function(linkage){
+                linkage.drawTrajectories(visibility);
+                linkage.relaxHingePositions();
+                linkage.checkContinuity(outputIndex);
+            });
+            this.setOutputPathVisibility(globals.appState.get("showOutputPath"));
+        }
     }
+
+    if (this.readyToCalcNextGen()) return;
+    var angle = this._theta;
+    _.each(this._linkages, function(linkage){
+        linkage.render(angle, true);
+    });
+    this._calculateTrajectory();
 };
 
 
@@ -114,32 +146,6 @@ Population.prototype._shouldKeepRunning = function(){
     return false;
 };
 
-Population.prototype._runWalkers = function(){
-    if (globals.population._shouldKeepRunning() && !(globals.appState.get("shouldRenderThreeJS"))){
-        var self = globals.population;
-        var angle = self._stepWalkerSimulation();
-        _.each(self._linkages, function(linkage){
-            linkage.render(angle, self._numSimulationTicks, false);
-        });
-        self._checkWalkerFinish();
-        setTimeout(self._runWalkers, 0);
-    }
-};
-
-Population.prototype._stepWalkerSimulation = function(){
-    globals.physics.update();
-    this._numSimulationTicks += 1;
-    return this._getCurrentDriveCrankAngle(true);
-};
-
-Population.prototype._checkWalkerFinish = function(){
-    if (this._numSimulationTicks >= globals.appState.get("numEvalTicks")) {
-        this._readyForNextGen = true;
-        if (this._shouldKeepRunning()) this.step();
-    }
-    return this._readyForNextGen;
-};
-
 Population.prototype.step = function(){
     if (!this.readyToCalcNextGen()) {
         console.warn("paths not finished computing yet");
@@ -156,16 +162,6 @@ Population.prototype.readyToCalcNextGen = function(){
     return this._readyForNextGen;
 };
 
-Population.prototype._calculateTrajectory = function(){
-    globals.physics.update();
-    var angle = this._getCurrentDriveCrankAngle();
-    if (this.readyToCalcNextGen()) return;
-    _.each(this._linkages, function(linkage){
-        linkage.render(angle, true);
-    });
-    this._calculateTrajectory();
-};
-
 Population.prototype.calcNextGen = function(linkages){
     if (!linkages || linkages.length == 0){
         console.warn("this population has no linkages");
@@ -177,13 +173,13 @@ Population.prototype.calcNextGen = function(linkages){
     //hill climbing mode
     if (globals.appState.get("optimizationStrategy") == "hillClimbing"){
         var parent = this.getBestLinkage(linkages);
-        if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
-            var clone = new Walker(parent.toJSON(), true);
-            clone.setFitness(parent.getFitness());
-            nextGenLinkages.push(clone);
-        } else {
+//        if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
+//            var clone = new Walker(parent.toJSON(), true);
+//            clone.setFitness(parent.getFitness());
+//            nextGenLinkages.push(clone);
+//        } else {
             nextGenLinkages.push(new Linkage(parent.toJSON()));
-        }
+//        }
         nextGenLinkages.push(parent.hillClimb(mutationRate));
         return nextGenLinkages;
     }
@@ -197,6 +193,40 @@ Population.prototype.calcNextGen = function(linkages){
         nextGenLinkages.push(parent1.mate(parent2, mutationRate));
     }
     return nextGenLinkages;
+};
+
+
+
+
+
+
+//Run walkers
+
+Population.prototype._runWalkers = function(){
+    if (globals.population._shouldKeepRunning() && !(globals.appState.get("shouldRenderThreeJS"))){
+        var self = globals.population;
+        self._stepWalkerSimulation();
+        var angle = self._theta;
+        _.each(self._linkages, function(linkage){
+            linkage.render(angle, self._numSimulationTicks, false);
+        });
+        self._checkWalkerFinish();
+        setTimeout(self._runWalkers, 0);
+    }
+};
+
+Population.prototype._stepWalkerSimulation = function(){
+    globals.physics.update();
+    this._numSimulationTicks += 1;
+    this._theta = this._getCurrentDriveCrankAngle(this._theta);
+};
+
+Population.prototype._checkWalkerFinish = function(){
+    if (this._numSimulationTicks >= globals.appState.get("numEvalTicks")) {
+        this._readyForNextGen = true;
+        if (this._shouldKeepRunning()) this.step();
+    }
+    return this._readyForNextGen;
 };
 
 
@@ -308,26 +338,10 @@ Population.prototype._buildTargetPathVisualization = function(linkages){
 };
 
 
-Population.prototype._getCurrentDriveCrankAngle = function(isWalker){
-    this._theta += Math.PI*2/globals.appState.get("numPositionSteps");
-    if (this._theta > Math.PI*2) {
-        if (!isWalker){
-            if (!this._waitTimePassed) this._waitTimePassed = true;//wait for one rotation of crank to start storing hinge pos data
-            else if (!this._readyForNextGen) {
-                this._readyForNextGen = true;
-                var visibility = globals.appState.get("showHingePaths");
-                var outputIndex = globals.appState.get("outputHingeIndex");
-                _.each(this._linkages, function(linkage){
-                    linkage.drawTrajectories(visibility);
-                    linkage.relaxHingePositions();
-                    linkage.checkContinuity(outputIndex);
-                });
-                this.setOutputPathVisibility(globals.appState.get("showOutputPath"));
-            }
-        }
-        this._theta = 0;
-    }
-    return this._theta;
+Population.prototype._getCurrentDriveCrankAngle = function(angle){
+    angle += Math.PI*2/globals.appState.get("numPositionSteps");
+    if (angle > Math.PI*2) return 0;
+    return angle;
 };
 
 Population.prototype.setWidth = function(width){
@@ -387,12 +401,12 @@ Population.prototype.removeTerrain =  function(){
 };
 
 Population.prototype.createTerrain = function(){
-    if (this._terrain) this.removeTerrain();
-    this._terrain = globals.physics.makeTerrain(globals.appState.get("terrain"));
-    globals.physics.worldAdd(this._terrain);
-    this._terrainMesh = new THREE.Mesh(new THREE.BoxGeometry(5000, 10, 1));
-    this._terrainMesh.position.set(0, -5, 0);
-    globals.three.sceneAdd(this._terrainMesh);
+//    if (this._terrain) this.removeTerrain();
+//    this._terrain = globals.physics.makeTerrain(globals.appState.get("terrain"));
+//    globals.physics.worldAdd(this._terrain);
+//    this._terrainMesh = new THREE.Mesh(new THREE.BoxGeometry(5000, 10, 1));
+//    this._terrainMesh.position.set(0, -5, 0);
+//    globals.three.sceneAdd(this._terrainMesh);
 };
 
 
@@ -409,10 +423,8 @@ Population.prototype.toJSON = function(){
 Population.prototype.setFromJSON = function(json){
     this.clearAll();
     var linkages = [];
-    var isWalker = !(globals.appState.get("fitnessBasedOnTargetPath"));
     _.each(json, function(linkageJSON){
-        if (isWalker) linkages.push(new Walker(linkageJSON));
-        else linkages.push(new Linkage(linkageJSON));
+        linkages.push(new Linkage(linkageJSON));
     });
     this._setLinkages(linkages);
 };

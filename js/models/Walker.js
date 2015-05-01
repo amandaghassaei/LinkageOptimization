@@ -245,5 +245,5 @@ Walker.prototype.toJSON = function(){
 
 Walker.prototype.clone = function(json){
     if (json === undefined) json = this.toJSON();
-    return new Walker(json);
+    return new Linkage(json);
 };

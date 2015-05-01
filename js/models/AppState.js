@@ -45,9 +45,9 @@ AppState = Backbone.Model.extend({
         simulatedAnnealing: false,
 
         fitnessBasedOnTargetPath: true,
-        outputHingeIndex: 1,
+        outputHingeIndex: 1,//todo this is weird for mutate topology
         numPositionSteps: 100,
-        phase: 25,
+        phase: 25,//sets initial val of slider, looks weird at 0
         shouldAutoUpdatePhase: true,
         shouldRenderPhaseChange: false,
 
@@ -323,7 +323,7 @@ AppState = Backbone.Model.extend({
         if (!name) name = "run";
         var data = JSON.stringify({
             run:{
-                appState: {
+                appState: {//everything to save
                     optimizationStrategy: this.get("optimizationStrategy"),
                     linkWidth: this.get("linkWidth"),
                     maxLinkChange: this.get("maxLinkChange"),

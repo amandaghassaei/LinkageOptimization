@@ -8,9 +8,6 @@ if (typeof globals === "undefined") globals = {};
 
 $(function(){
 
-    //init web workers
-//    window.workers = persistentWorkers(8);
-
     if (window.location.href == "http://amandaghassaei.github.io/LinkageOptimization/"){
         $(window).bind('beforeunload', function(){
           return 'Are you sure you want to leave?';
@@ -23,24 +20,8 @@ $(function(){
     };
 
     globals.setTargetCurve = function(curve){
-        // var cumulativeX = 0;
-        // var cumulativeY = 0;
-        // _.each(curve, function(point){
-        //     cumulativeX += point.x;
-        //     cumulativeY += point.y;
-        // });
-        // var centerX = cumulativeX/curve.length;
-        // var centerY = cumulativeY/curve.length;
-        // _.each(curve, function(point){
-        //     point.x -= centerX;
-        //     point.y -= centerY;
-        // });
-        
         var params = Linkage.prototype.getTranslationScaleRotation(curve);
-        // console.log('params', params);
         globals.targetCurve = Linkage.prototype.normalizeTrajectory(curve, params);
-        // console.log('curve', globals.targetCurve);
-        // globals.targetCurve = curve;
     };
 
     //init global singletons
@@ -73,14 +54,11 @@ $(function(){
     new NavBar({model:globals.appState});
     new HelpModalView();
 
-
     //the lack of indenting is on purpose - looks weird in the script editor otherwise
 globals.script = function(){
     //nothing here for now
 };
     new ScriptMenuView({model:globals.appState});
-
-//    globals.script();
 
     //threeJS View
     new ThreeView({model:globals.three, el: "#threeContainer"});

@@ -113,10 +113,7 @@ NavBar = Backbone.View.extend({
                     } else if (json.population) {
                         globals.population.setFromJSON(json.population);
                     } else if (json.linkage){
-                        var linkage;
-                        if (globals.appState.get("fitnessBasedOnTargetPath")) linkage = new Linkage(json.linkage);
-                        else linkage = new Walker(json.linkage);
-                        globals.population.reset(linkage);
+                        globals.population.reset(new Linkage(json.linkage));
                     } else if (json.run){
                         globals.appState.loadRunFromJSON(json.run);
                     }
