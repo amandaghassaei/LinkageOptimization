@@ -32,7 +32,7 @@ Population.prototype._initFirstGeneration = function(archetype){
         archetype.addDriveCrank(hinge5, hinge3, link35.getLength());
     }
 
-    if (globals.appState.get("flipVertical") || globals.appState.get("flipHorizontal") || !(globals.appState.get("fitnessBasedOnTargetPath"))){
+    if (globals.appState.get("flipVertical") || globals.appState.get("flipHorizontal")){
         var json = archetype.toJSON();
         if (globals.appState.get("flipVertical")){
             var offset = json.hinges[json.driveCrank.centerHinge].position.y*2;
@@ -173,13 +173,7 @@ Population.prototype.calcNextGen = function(linkages){
     //hill climbing mode
     if (globals.appState.get("optimizationStrategy") == "hillClimbing"){
         var parent = this.getBestLinkage(linkages);
-//        if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
-//            var clone = new Walker(parent.toJSON(), true);
-//            clone.setFitness(parent.getFitness());
-//            nextGenLinkages.push(clone);
-//        } else {
-            nextGenLinkages.push(new Linkage(parent.toJSON()));
-//        }
+        nextGenLinkages.push(parent.clone());//todo set fitness here
         nextGenLinkages.push(parent.hillClimb(mutationRate));
         return nextGenLinkages;
     }
@@ -293,10 +287,13 @@ Population.prototype.render = function(){
 
         var self = this;
         if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
-            var angle = this._stepWalkerSimulation();
+//            this._stepWalkerSimulation();
             _.each(this._linkages, function(linkage){
-                linkage.render(angle, self._numSimulationTicks, true);
+                linkage.render(self._renderIndex, false);
+//                linkage.render(self._theta, self._numSimulationTicks, true);
             });
+            if (globals.appState.get("isAnimating")) this._renderIndex++;
+            if (this._renderIndex >= globals.appState.get("numPositionSteps")) this._renderIndex = 0;
             this._checkWalkerFinish();
         } else {
             _.each(this._linkages, function(linkage){
