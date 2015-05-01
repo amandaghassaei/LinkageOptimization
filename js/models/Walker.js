@@ -76,7 +76,7 @@ Walker.prototype._getVerticalOffset = function(trajectories, phases){
             if (trajectory[phase].y < offset) offset = trajectory[phase].y;
         });
     });
-    return offset-4*globals.appState.get("linkWidth");
+    return (offset-globals.appState.get("linkWidth")/2.0)*1.05;
 };
 
 Walker.prototype._crankPositionForAngle = function(angle, position, centerPosition){
