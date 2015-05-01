@@ -4,29 +4,25 @@
 
 //todo hinge relaxation
 
-function Walker(linkage, invisible){//Linkage subclass
-    var json = linkage.toJSON();
+function Walker(linkage, numLegs){//Linkage subclass
     Linkage.call(this);//init empty linkage
-    if (invisible) this.hide();
+
+    var json = linkage.toJSON();
     this._walkerBodyConstraints = [];
-    this._json = json;
+    this._json = JSON.parse(JSON.stringify(json));
     this._isFinished = false;
 
     var hinges = json.hinges;
-
-    this._verticalOffset = hinges[0].position.y;
     var self = this;
-    _.each(hinges, function(hinge){
-        if (hinge.position.y < self._verticalOffset) self._verticalOffset = hinge.position.y;
-    });
-    this._verticalOffset *= 1.15;
+
+    this._verticalOffset = this._getVerticalOffset(hinges);
+
     //make crank center hinge #0
     var centerHingeIndex = json.driveCrank.centerHinge;
     var centerHinge = this.addHingeAtPosition(hinges[centerHingeIndex].position);
     hinges[centerHingeIndex].updatedPosition = 0;
 
     //add cranks (shared between leg pair)
-    var numLegs = globals.appState.get("numLegPairs");
     var cranks = [];
     for (var i=0;i<numLegs;i++){
         var outsideHingeIndex = json.driveCrank.outsideHinge;
@@ -61,6 +57,14 @@ function Walker(linkage, invisible){//Linkage subclass
 
 }
 Walker.prototype = Object.create(Linkage.prototype);
+
+Walker.prototype._getVerticalOffset = function(hinges){
+    var offset = hinges[0].position.y;
+    _.each(hinges, function(hinge){
+        if (hinge.position.y < offset) offset = hinge.position.y;
+    });
+    return offset*1.15;
+};
 
 Walker.prototype._crankPositionForAngle = function(angle, position, centerPosition){
     angle +=  Math.atan2(position.y-centerPosition.y, position.x-centerPosition.x);

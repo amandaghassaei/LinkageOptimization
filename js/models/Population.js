@@ -93,7 +93,7 @@ Population.prototype._setLinkages = function(linkages){
         globals.physics.setGravity(true);
         var numLegPairs = globals.appState.get("numLegPairs");
         _.each(linkages, function(linkage){
-            walkers.push(new Walker(linkage));
+            walkers.push(new Walker(linkage, numLegPairs));
             linkage.destroy();
         });
         this._linkages = walkers;
