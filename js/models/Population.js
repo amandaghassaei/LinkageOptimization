@@ -82,16 +82,19 @@ Population.prototype._setLinkages = function(linkages){
     this._linkages = linkages;
     this._renderIndex = 0;
     this._calculateTrajectory();
-//    if (globals.appState.get("fitnessBasedOnTargetPath")) {
+    if (globals.appState.get("fitnessBasedOnTargetPath")) {
         this._buildTargetPathVisualization(linkages);
         if (linkages.length > 0 && (globals.appState.get("shouldRenderThreeJS") || !globals.appState.get("isRunning"))){
             this.getBestLinkage(linkages).setColor("0xffff00");
         }
-//    } else {
-//        _.each(linkages, function(linkage){
-//            linkage.parseJSON();
-//        });
-//    }
+    } else {
+        var walkers = [];
+        _.each(linkages, function(linkage){
+            walkers.push(new Walker(linkage.toJSON()));
+            linkage.destroy();
+        });
+        this._linkages = walkers;
+    }
 };
 
 Population.prototype._calculateTrajectory = function(){
@@ -283,18 +286,16 @@ Population.prototype._drawFromMatingPool = function(pool){
 
 Population.prototype.render = function(){
     if ((globals.appState.get("shouldRenderPhaseChange") || globals.appState.get("isAnimating") || globals.appState.get("isRunning"))
-        && (this.readyToCalcNextGen() || !(globals.appState.get("fitnessBasedOnTargetPath")))){
+        && (this.readyToCalcNextGen())){ //should render and precompute is finished
 
         var self = this;
         if (!(globals.appState.get("fitnessBasedOnTargetPath"))) {
-//            this._stepWalkerSimulation();
+            this._stepWalkerSimulation();
             _.each(this._linkages, function(linkage){
-                linkage.render(self._renderIndex, false);
-//                linkage.render(self._theta, self._numSimulationTicks, true);
+                linkage.render(self._theta, self._numSimulationTicks, true);
             });
-            if (globals.appState.get("isAnimating")) this._renderIndex++;
-            if (this._renderIndex >= globals.appState.get("numPositionSteps")) this._renderIndex = 0;
             this._checkWalkerFinish();
+
         } else {
             _.each(this._linkages, function(linkage){
                 linkage.render(self._renderIndex, false);

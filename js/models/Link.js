@@ -65,6 +65,7 @@ Link.prototype.render = function(screenCoordinates, ignoreThisVar, index){
 
     //get center of mass position
     var centerPos = this._avg(hingeAPos, hingeBPos);
+    if (!screenCoordinates) screenCoordinates = {x:0,y:0};
     this._mesh.position.set(centerPos.x+screenCoordinates.x, centerPos.y+screenCoordinates.y, this._zIndex*10);
 
     //get rotation of link - negative y comes from canvas using neg y for rendering (i think)

@@ -10,6 +10,8 @@ function Walker(json, invisible){//Linkage subclass
     this._walkerBodyConstraints = [];
     this._json = json;
     this._isFinished = false;
+
+    this.parseJSON();
 }
 Walker.prototype = Object.create(Linkage.prototype);
 
@@ -195,15 +197,14 @@ Walker.prototype.render = function(angle, tickNum, renderThreeJS){
     if (!this._isFinished){
         this.drive(angle);
         if (renderThreeJS){
-            var self = this;
             _.each(this._hinges, function(hinge){
-                hinge.physicsRender(self._drawOffset);
+                hinge.physicsRender();
             });
             _.each( this._links, function(link){
-                link.render(self._drawOffset);
+                link.render();
             });
             _.each( this._walkerBodyConstraints, function(link){
-                link.render(self._drawOffset);
+                link.render();
             });
         }
         var totalNumTicks = globals.appState.get("numEvalTicks");

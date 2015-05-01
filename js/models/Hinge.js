@@ -131,6 +131,7 @@ Hinge.prototype.setZIndex = function(zIndex){
 
 Hinge.prototype.physicsRender = function(screenCoordinates){//always uses physics engine to get position
     var position = this._body.position;//get position from body and update mesh
+    if (!screenCoordinates) screenCoordinates = {x:0, y:0};
     this._mesh.position.set(position.x+screenCoordinates.x, position.y+screenCoordinates.y, this._zIndex*10);
 };
 
