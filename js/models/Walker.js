@@ -4,20 +4,14 @@
 
 //todo hinge relaxation
 
-function Walker(json, invisible){//Linkage subclass
+function Walker(linkage, invisible){//Linkage subclass
+    var json = linkage.toJSON();
     Linkage.call(this);//init empty linkage
     if (invisible) this.hide();
     this._walkerBodyConstraints = [];
     this._json = json;
     this._isFinished = false;
 
-    this.parseJSON();
-}
-Walker.prototype = Object.create(Linkage.prototype);
-
-Walker.prototype.parseJSON = function(){
-
-    var json = JSON.parse(JSON.stringify(this._json));
     var hinges = json.hinges;
 
     this._verticalOffset = hinges[0].position.y;
@@ -64,7 +58,9 @@ Walker.prototype.parseJSON = function(){
     this._addDriveCrank(centerHinge, cranks, json.driveCrank.length);
 
     this._makeWalkerBody(fixedHinges);
-};
+
+}
+Walker.prototype = Object.create(Linkage.prototype);
 
 Walker.prototype._crankPositionForAngle = function(angle, position, centerPosition){
     angle +=  Math.atan2(position.y-centerPosition.y, position.x-centerPosition.x);

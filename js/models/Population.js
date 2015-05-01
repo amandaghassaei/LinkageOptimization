@@ -91,8 +91,9 @@ Population.prototype._setLinkages = function(linkages){
         var walkers = [];
         this.createTerrain();
         globals.physics.setGravity(true);
+        var numLegPairs = globals.appState.get("numLegPairs");
         _.each(linkages, function(linkage){
-            walkers.push(new Walker(linkage.toJSON()));
+            walkers.push(new Walker(linkage));
             linkage.destroy();
         });
         this._linkages = walkers;
