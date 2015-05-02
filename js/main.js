@@ -72,7 +72,7 @@ $(function(){
     new MenuWrapper({model: globals.appState});
     globals.error = new MenuErrorView();
     new NavBar({model:globals.appState});
-//    new Ribbon({model:globals.appState});
+    new HelpModalView();
 
 
     //the lack of indenting is on purpose - looks weird in the script editor otherwise
