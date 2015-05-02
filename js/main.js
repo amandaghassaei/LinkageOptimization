@@ -39,6 +39,7 @@ $(function(){
         var params = Linkage.prototype.getTranslationScaleRotation(curve);
         // console.log('params', params);
         globals.targetCurve = Linkage.prototype.normalizeTrajectory(curve, params);
+        globals.appState.set("numPositionSteps", globals.targetCurve.length);
         // console.log('curve', globals.targetCurve);
         // globals.targetCurve = curve;
     };
