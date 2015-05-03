@@ -17,15 +17,15 @@ Population.prototype._initFirstGeneration = function(archetype){
     if (archetype === undefined){
         archetype = new Linkage();
 
-        // var hinge1 = archetype.addHingeAtPosition({x:15,y:30});
-        // var hinge2 = archetype.addHingeAtPosition({x:0,y:40});
-        // var hinge3 = archetype.addHingeAtPosition({x:-10,y:0});
+        var hinge1 = archetype.addHingeAtPosition({x:15,y:30});
+        var hinge2 = archetype.addHingeAtPosition({x:0,y:40});
+        var hinge3 = archetype.addHingeAtPosition({x:-10,y:0});
 
-        var randrange = 10;
+        // var randrange = 10;
 
-        var hinge1 = archetype.addHingeAtPosition({x: (Math.random())*20, y: (Math.random())*40});
-        var hinge2 = archetype.addHingeAtPosition({x: (Math.random())*5, y: (Math.random())*50});
-        var hinge3 = archetype.addHingeAtPosition({x: (Math.random())*-20, y: (Math.random())*5});
+        // var hinge1 = archetype.addHingeAtPosition({x: (Math.random())*20, y: (Math.random())*40});
+        // var hinge2 = archetype.addHingeAtPosition({x: (Math.random())*5, y: (Math.random())*50});
+        // var hinge3 = archetype.addHingeAtPosition({x: (Math.random())*-20, y: (Math.random())*5});
 
         // console.log(hinge1, hinge2, hinge3);
 
