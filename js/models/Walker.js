@@ -76,7 +76,7 @@ Walker.prototype._getVerticalOffset = function(trajectories, phases){
             if (trajectory[phase].y < offset) offset = trajectory[phase].y;
         });
     });
-    return (offset-globals.appState.get("linkWidth")/2.0)*1.05;
+    return (offset-globals.appState.get("linkWidth"));// /2.0
 };
 
 Walker.prototype._crankPositionForAngle = function(angle, position, centerPosition){
@@ -104,11 +104,21 @@ Walker.prototype._initLeg = function(hinges, trajectories, links, phase, num, mi
             lookupTable[index] = hinge.updatedPosition;
             return;
         }
-        var position = trajectories[index][phase];
-        if (mirrorOffset) self.addHingeAtPosition({x:mirrorOffset-position.x, y:position.y}).setZIndex(0);
-        else self.addHingeAtPosition(position).setZIndex(0);
+
+        if (mirrorOffset) {
+            var numSamples = trajectories[0].length-1;//todo fix this
+            var oppPhase = Math.round(numSamples/2) - phase;
+            if (oppPhase < 0) oppPhase = numSamples+oppPhase;
+            var position = trajectories[index][oppPhase];
+            self.addHingeAtPosition({x:mirrorOffset-position.x, y:position.y}).setZIndex(0);
+        }
+        else {
+            var position = trajectories[index][phase];
+            self.addHingeAtPosition(position).setZIndex(0);
+        }
     });
     _.each(links, function(link){//{hinges: [this.getHingeAId(), this.getHingeBId()], length: this._length}
+        if (self._hinges.length <= lookupTable[link.hinges[0]] || self._hinges.length <= lookupTable[link.hinges[1]]) return;
         self.link(self._hinges[lookupTable[link.hinges[0]]], self._hinges[lookupTable[link.hinges[1]]], link.length).setZIndex(0);
     });
 
@@ -209,6 +219,7 @@ Walker.prototype.getTranslationScaleRotation = function() {
 
 Walker.prototype.render = function(angle, tickNum, renderThreeJS){
     if (!this._isFinished){
+        if (tickNum > 1) return;
         this.drive(angle);
         if (renderThreeJS){
             _.each(this._hinges, function(hinge){
