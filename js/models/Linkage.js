@@ -252,6 +252,55 @@ Linkage.prototype._shiftAngle = function(angle, target) {
     return shifted_target;
 }
 
+Linkage.prototype._calcClosest = function(point, target) {
+
+    var min_distance = Infinity;
+    var min_index = 0;
+
+    // find the shortest distance to the other points
+    for (j=0; j<target.length; j++) {
+        var calc_distance = this._calcDistance(test[i], target[j]);
+        if (calc_distance < min_distance) {
+            min_distance = calc_distance;
+            min_index = j;
+        }
+    }
+
+    return min_index;
+
+}
+
+Linkage.prototype._calcPhaseFitness = function(test_point, target_point, test, target) {
+
+    var distances = [];
+
+    for (i=0; i<test.length; i++) {
+
+        // get the newly mapped points
+        var test_index = i+test_point;
+        if (test_index > test.length) {
+            test_index = test_index-test.length;
+        }
+        var target_index = i+target_point;
+        if (target_index > test.length) {
+            target_index = target_index-test.length;
+        }
+
+        // get the list of distances
+        distances.append(this._calcDistance(test[i+point], target[i+point]));
+    }
+
+    // 
+    return this._calcSum(distances);
+
+}
+
+Linkage.prototype._calcSum = function(points) {
+    return points.reduce(function(a, b) {
+        return a + b;
+    });
+}
+
 Linkage.prototype._calcFitness = function(target, test){
 
     // console.log('getting fitness');
@@ -268,7 +317,27 @@ Linkage.prototype._calcFitness = function(target, test){
     // TODO: redisplay the target curve with the shifted midpoint??
     // this.drawTargetPath(shifted_target, true);
 
+    var fitnesses = [];
 
+    for (i=0; i<test.length; i++) {
+
+        // calculate the closest point
+        var closest = this._calcClosest(test[i], target);
+
+        // calculate the fitness by finding distances from the points
+        fitnesses.append(this._calcPhaseFitness(test[i], closest, test, target));
+
+    }
+
+    var best_fitness = Math.min.apply(Math, fitnesses);
+    return 80-best_fitness*10;
+
+
+
+
+
+
+/***
     var distances = [];
 
     // for each of the points in the proposed solution
@@ -310,7 +379,7 @@ Linkage.prototype._calcFitness = function(target, test){
     }
 
     // return the sum of the shortest distances
-    
+***/
 
 };
 
