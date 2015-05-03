@@ -21,11 +21,13 @@ Population.prototype._initFirstGeneration = function(archetype){
         // var hinge2 = archetype.addHingeAtPosition({x:0,y:40});
         // var hinge3 = archetype.addHingeAtPosition({x:-10,y:0});
 
-        var hinge1 = archetype.addHingeAtPosition({x: (Math.random()-0.5)*30, y: (Math.random()-0.5)*30});
-        var hinge2 = archetype.addHingeAtPosition({x: (Math.random()-0.5)*30, y: (Math.random()-0.5)*30});
-        var hinge3 = archetype.addHingeAtPosition({x: (Math.random()-0.5)*30, y: (Math.random()-0.5)*30});
+        var randrange = 10;
 
-        console.log(hinge1, hinge2, hinge3);
+        var hinge1 = archetype.addHingeAtPosition({x: (Math.random())*20, y: (Math.random())*40});
+        var hinge2 = archetype.addHingeAtPosition({x: (Math.random())*5, y: (Math.random())*50});
+        var hinge3 = archetype.addHingeAtPosition({x: (Math.random())*-20, y: (Math.random())*5});
+
+        // console.log(hinge1, hinge2, hinge3);
 
         var hinge4 = archetype.addHingeAtPosition({x:14,y:2}).setStatic(true);
         var hinge5 = archetype.addHingeAtPosition({x:-20,y:-2});
