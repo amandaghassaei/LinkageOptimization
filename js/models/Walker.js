@@ -16,11 +16,17 @@ function Walker(linkage, numLegs, numStoredPositions){//Linkage subclass
     var trajectories = linkage.getTrajectories();
     var self = this;
 
-    var initalPhases = this._getInitialPhases(numLegs, numStoredPositions);
-    this._verticalOffset = this._getVerticalOffset(trajectories, initalPhases);
+    var centerHingeIndex = json.driveCrank.centerHinge;
+    var outsideHingeIndex = json.driveCrank.outsideHinge;
+    var numPositions = trajectories[0].length;
+
+    var topPhase = this._getTopPhase(hinges[centerHingeIndex].position, trajectories[outsideHingeIndex]);//get crank phase at 12 o clock position
+    var initalPhases = this._getInitialPhases(numLegs, numStoredPositions, topPhase, numPositions);
+    var complimentaryPhases = this._getComplimentaryPhases(initalPhases, topPhase, numPositions);
+    this._verticalOffset = this._getVerticalOffset(trajectories, initalPhases);//todo
 
     //make crank center hinge #0
-    var centerHingeIndex = json.driveCrank.centerHinge;
+
     var centerHinge = this.addHingeAtPosition(hinges[centerHingeIndex].position);
     hinges[centerHingeIndex].updatedPosition = 0;
 
@@ -28,7 +34,6 @@ function Walker(linkage, numLegs, numStoredPositions){//Linkage subclass
     var cranks = [];
     for (var i=0;i<numLegs;i++){
         var outsideHingeIndex = json.driveCrank.outsideHinge;
-        console.log(trajectories[outsideHingeIndex][initalPhases[i]]);
         cranks.push(this.addHingeAtPosition(trajectories[outsideHingeIndex][initalPhases[i]]));
 //        cranks.push(this.addHingeAtPosition(this._crankPositionForAngle(Math.PI*2/numLegs*i,
 //            hinges[outsideHingeIndex].position, hinges[centerHingeIndex].position)));
@@ -52,7 +57,7 @@ function Walker(linkage, numLegs, numStoredPositions){//Linkage subclass
     //then add legs
     for (var i=0;i<numLegs;i++){
         this._initLeg(hinges, trajectories, json.links, initalPhases[i], i);
-        this._initLeg(hinges, trajectories, json.links, initalPhases[i], i, mirrorOffset);//mirror leg
+        this._initLeg(hinges, trajectories, json.links, complimentaryPhases[i], i, mirrorOffset);//mirror leg
     }
 
     this._addDriveCrank(centerHinge, cranks, json.driveCrank.length);
@@ -62,10 +67,31 @@ function Walker(linkage, numLegs, numStoredPositions){//Linkage subclass
 }
 Walker.prototype = Object.create(Linkage.prototype);
 
-Walker.prototype._getInitialPhases = function(numLegs, numStoredPositions){
-    var phases = [0];
+Walker.prototype._getTopPhase = function(center, trajectory){
+    var topPhase = 0;
+    _.each(trajectory, function(point, index){
+        if (point.y<center.y) return;
+        if (Math.abs(center.x-point.x) < Math.abs(center.x-trajectory[topPhase].x)) topPhase = index;
+    });
+    return topPhase;
+};
+
+Walker.prototype._getComplimentaryPhases = function(initalPhases, topPhase, numPositions){
+    var compliments = [];
+    _.each(initalPhases, function(phase){
+        var compliment = 2*topPhase-phase;
+        if (compliment < 0) compliment += numPositions;
+        if (compliment >= numPositions) compliment -= numPositions;
+        compliments.push(compliment);
+    });
+    return compliments;
+};
+
+Walker.prototype._getInitialPhases = function(numLegs, numStoredPositions, topPhase, numPositions){
+    var phases = [topPhase];
     for (var i=1;i<numLegs;i++){
-        phases.push(Math.round(numStoredPositions*i/numLegs));
+        phases.push(Math.round(numStoredPositions*i/numLegs)+topPhase);
+        if (phases[i] >= numPositions) phases[i] -= numPositions;
     }
     return phases;
 };
@@ -77,7 +103,7 @@ Walker.prototype._getVerticalOffset = function(trajectories, phases){
             if (trajectory[phase].y < offset) offset = trajectory[phase].y;
         });
     });
-    return offset-globals.appState.get("linkWidth");
+    return offset-globals.appState.get("linkWidth")/2.0;
 };
 
 Walker.prototype._crankPositionForAngle = function(angle, position, centerPosition){
@@ -105,19 +131,9 @@ Walker.prototype._initLeg = function(hinges, trajectories, links, phase, num, mi
             lookupTable[index] = hinge.updatedPosition;
             return;
         }
-
-        if (mirrorOffset) {
-            var numSamples = trajectories[0].length-1;//todo fix this
-            var oppPhase = Math.round(numSamples/2) - phase;
-            if (oppPhase < 0) oppPhase = numSamples+oppPhase;
-            console.log("oppPhase", oppPhase);
-            var position = trajectories[index][oppPhase];
-            self.addHingeAtPosition({x:mirrorOffset-position.x, y:position.y}).setZIndex(0);
-        }
-        else {
-            var position = trajectories[index][phase];
-            self.addHingeAtPosition(position).setZIndex(0);
-        }
+        var position = trajectories[index][phase];
+        if (mirrorOffset) self.addHingeAtPosition({x:mirrorOffset-position.x, y:position.y}).setZIndex(0);
+        else self.addHingeAtPosition(position).setZIndex(0);
     });
     _.each(links, function(link){//{hinges: [this.getHingeAId(), this.getHingeBId()], length: this._length}
         if (self._hinges.length <= lookupTable[link.hinges[0]] || self._hinges.length <= lookupTable[link.hinges[1]]) return;

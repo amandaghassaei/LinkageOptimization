@@ -78,6 +78,8 @@ Population.prototype._setLinkages = function(linkages){
         return;
     }
 
+    this.removeTerrain();
+
     if (globals.appState.get("fitnessBasedOnTargetPath")) this._calcLinkageRederingOffsets(linkages);
     this._linkages = linkages;
     this._renderIndex = 0;
@@ -122,15 +124,15 @@ Population.prototype._calculateTrajectory = function(){
         if (!this._waitTimePassed) this._waitTimePassed = true;//wait for one rotation of crank to start storing hinge pos data
         else if (!this._readyForNextGen) {
             this._readyForNextGen = true;
+            var outputIndex = globals.appState.get("outputHingeIndex");
             _.each(this._linkages, function(linkage){
                 linkage.relaxHingePositions();
+                linkage.checkContinuity(outputIndex);
             });
             if (globals.appState.get("fitnessBasedOnTargetPath")){
                 var visibility = globals.appState.get("showHingePaths");
-                var outputIndex = globals.appState.get("outputHingeIndex");
                  _.each(this._linkages, function(linkage){
                     linkage.drawTrajectories(visibility);
-                    linkage.checkContinuity(outputIndex);
                 });
                 this.setOutputPathVisibility(globals.appState.get("showOutputPath"));
             }
@@ -419,11 +421,11 @@ Population.prototype.removeTerrain =  function(){
 
 Population.prototype.createTerrain = function(){
     if (this._terrain) return;
-//    this._terrain = globals.physics.makeTerrain(globals.appState.get("terrain"));
-//    globals.physics.worldAdd(this._terrain);
-//    this._terrainMesh = new THREE.Mesh(new THREE.BoxGeometry(5000, 10, 1));
-//    this._terrainMesh.position.set(0, -5, 0);
-//    globals.three.sceneAdd(this._terrainMesh);
+    this._terrain = globals.physics.makeTerrain(globals.appState.get("terrain"));
+    globals.physics.worldAdd(this._terrain);
+    this._terrainMesh = new THREE.Mesh(new THREE.BoxGeometry(5000, 10, 1));
+    this._terrainMesh.position.set(0, -5, 0);
+    globals.three.sceneAdd(this._terrainMesh);
 };
 
 

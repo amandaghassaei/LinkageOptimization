@@ -11,7 +11,7 @@ function Link(hingeA, hingeB, material, length){//optional parameter "length" se
     this._hingeB = hingeB;
     this._zIndex = 0;
 
-//    console.log(length-this._dist(hingeA.getPosition(), hingeB.getPosition()));
+//    if (length-this._dist(hingeA.getPosition(), hingeB.getPosition()) > 2) console.log("here");
     if (length === undefined || length === null || !length) length = this._dist(hingeA.getPosition(), hingeB.getPosition());
     if (length < globals.appState.get("minLinkLength")) {
         length = globals.appState.get("minLinkLength");//console.warn("specified link lengths is too short");
