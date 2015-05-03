@@ -401,13 +401,14 @@ Linkage.prototype.setDepth = function(depth){
 };
 
 Linkage.prototype.drive = function(angle){
-    if (this._driveCrank) this._driveCrank.rotate(angle);
+    if (this._driveCrank) {
+        this._driveCrank.rotate(angle);
+    }
 };
 
 Linkage.prototype.render = function(angle, precompute){
     var self = this;
     if (precompute){
-        this.drive(angle);
         _.each(this._hinges, function(hinge){
             hinge.render(self._drawOffset, true);
         });

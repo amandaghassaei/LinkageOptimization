@@ -28,9 +28,10 @@ function Walker(linkage, numLegs, numStoredPositions){//Linkage subclass
     var cranks = [];
     for (var i=0;i<numLegs;i++){
         var outsideHingeIndex = json.driveCrank.outsideHinge;
-//        cranks.push(this.addHingeAtPosition(trajectories[outsideHingeIndex][initalPhases[i]]));
-        cranks.push(this.addHingeAtPosition(this._crankPositionForAngle(Math.PI*2/numLegs*i,
-            hinges[outsideHingeIndex].position, hinges[centerHingeIndex].position)));
+        console.log(trajectories[outsideHingeIndex][initalPhases[i]]);
+        cranks.push(this.addHingeAtPosition(trajectories[outsideHingeIndex][initalPhases[i]]));
+//        cranks.push(this.addHingeAtPosition(this._crankPositionForAngle(Math.PI*2/numLegs*i,
+//            hinges[outsideHingeIndex].position, hinges[centerHingeIndex].position)));
     }
     hinges[outsideHingeIndex].updatedPosition = 1;
 
@@ -76,7 +77,7 @@ Walker.prototype._getVerticalOffset = function(trajectories, phases){
             if (trajectory[phase].y < offset) offset = trajectory[phase].y;
         });
     });
-    return (offset-globals.appState.get("linkWidth"));// /2.0
+    return offset-globals.appState.get("linkWidth");
 };
 
 Walker.prototype._crankPositionForAngle = function(angle, position, centerPosition){
@@ -109,6 +110,7 @@ Walker.prototype._initLeg = function(hinges, trajectories, links, phase, num, mi
             var numSamples = trajectories[0].length-1;//todo fix this
             var oppPhase = Math.round(numSamples/2) - phase;
             if (oppPhase < 0) oppPhase = numSamples+oppPhase;
+            console.log("oppPhase", oppPhase);
             var position = trajectories[index][oppPhase];
             self.addHingeAtPosition({x:mirrorOffset-position.x, y:position.y}).setZIndex(0);
         }
@@ -219,7 +221,7 @@ Walker.prototype.getTranslationScaleRotation = function() {
 
 Walker.prototype.render = function(angle, tickNum, renderThreeJS){
     if (!this._isFinished){
-        if (tickNum > 1) return;
+//        if (tickNum > 1) return;
         this.drive(angle);
         if (renderThreeJS){
             _.each(this._hinges, function(hinge){

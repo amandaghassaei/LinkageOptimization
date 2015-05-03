@@ -35,7 +35,9 @@ DriveCrank.prototype._buildConstraints = function(body, centerHinge, outsideHing
 };
 
 DriveCrank.prototype.rotate = function(angle){
+//    globals.physics.setStatic(this._body, false);
     globals.physics.rotate(this._body, angle);
+//    globals.physics.setStatic(this._body, true);
 };
 
 

@@ -65,7 +65,7 @@ AppState = Backbone.Model.extend({
         isRunning:false,//play/pause optimization
         maxNumGenerations: -1,
 
-        numLegPairs: 3,
+        numLegPairs: 1,
         terrain: "flat",
         numEvalTicks: 200,
         fitnessQuantity: "speed",
