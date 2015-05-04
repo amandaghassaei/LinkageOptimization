@@ -19,6 +19,8 @@ function Linkage(json){//init a linkage with optional json
     this._material = new THREE.MeshBasicMaterial({color:new THREE.Color().setRGB(Math.random(),Math.random(),Math.random())});
     if (json === undefined) return;
 
+    if (!(globals.appState.get("fitnessBasedOnTargetPath")) && json.angle && json.angle != 0) json = this._rotateLinkage(json, json.angle);
+
     var self = this;
     _.each(json.hinges, function(hinge){//{position:this._position, static:this._static}
         var newHinge = self.addHingeAtPosition(hinge.position);
@@ -29,12 +31,23 @@ function Linkage(json){//init a linkage with optional json
     });
     //{centerHinge: this.getCenterHingeId(), outsideHinge: this.getOutsideHingeId(), length: this._length}
     this.addDriveCrank(this._hinges[json.driveCrank.centerHinge], this._hinges[json.driveCrank.outsideHinge], json.driveCrank.length);
+
 }
 
 
 
 
 //Construct
+
+Linkage.prototype._rotateLinkage = function(json, angle){
+    _.each(json.hinges, function(hinge){
+        var rotation = Math.atan2(hinge.position.y, hinge.position.x) + angle;
+        var dist = Math.sqrt(Math.pow(hinge.position.y, 2) + Math.pow(hinge.position.x, 2));
+        hinge.position.x = Math.cos(rotation)*dist;
+        hinge.position.y = Math.sin(rotation)*dist;
+    });
+    return json;
+};
 
 Linkage.prototype.addHingeAtPosition = function(position){
     var hinge = new Hinge(position, this, this._material);
@@ -99,8 +112,16 @@ Linkage.prototype._mutate = function(json, mutationRate, forceMutate){
             mutationOccurred = true;
         }
     });
+    if (Math.random()<mutationRate/100.0){
+        json.angle = this._mutateAngle(json.angle);
+        mutationOccurred = true;
+    }
     if (forceMutate && !mutationOccurred) {
-        this._mutateLink(json.links[Math.floor(Math.random()*json.links.length)]);
+        if (!(globals.appState.get("fitnessBasedOnTargetPath")) && Math.random()<1/6.0){
+            json.angle = this._mutateAngle(json.angle);
+        } else {
+            this._mutateLink(json.links[Math.floor(Math.random()*json.links.length)]);
+        }
     }
     return json;
 };
@@ -110,6 +131,11 @@ Linkage.prototype._mutateLink = function(link){
     var minLength = globals.appState.get("minLinkLength");
     if (link.length < minLength) link.length = minLength;
     return link;
+};
+
+Linkage.prototype._mutateAngle = function(angle){
+    angle += (Math.random()*2-1)*0.25;//mutate angle by max 0.15 rad
+    return angle;
 };
 
 Linkage.prototype.mutate = function(mutationRate){
@@ -497,7 +523,8 @@ Linkage.prototype.toJSON = function(){
     return {
         hinges: hingesJSON,
         links: linksJSON,
-        driveCrank: this._driveCrank.toJSON()
+        driveCrank: this._driveCrank.toJSON(),
+        angle: 0
     }
 };
 

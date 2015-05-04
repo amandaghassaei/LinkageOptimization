@@ -21,7 +21,7 @@ Population.prototype._initFirstGeneration = function(archetype){
         var hinge2 = archetype.addHingeAtPosition({x:0,y:40});
         var hinge3 = archetype.addHingeAtPosition({x:-10,y:0});
         var hinge4 = archetype.addHingeAtPosition({x:14,y:2}).setStatic(true);
-        var hinge5 = archetype.addHingeAtPosition({x:-20,y:10});
+        var hinge5 = archetype.addHingeAtPosition({x:-20,y:5});
 
         archetype.link(hinge1, hinge3);//add an optional third param to set to a specific length
         archetype.link(hinge4, hinge1);
@@ -96,10 +96,10 @@ Population.prototype._setLinkages = function(linkages){
         var numLegPairs = globals.appState.get("numLegPairs");
         var numStoredPositions = globals.appState.get("numPositionSteps");
         _.each(linkages, function(linkage){
-            if (linkage._checkWeirdness()){
-                linkage.destroy();
-                return;
-            }
+//            if (linkage._checkWeirdness()){
+//                linkage.destroy();
+//                return;
+//            }
             walkers.push(new Walker(linkage, numLegPairs, numStoredPositions));
             linkage.destroy();
         });

@@ -240,9 +240,8 @@ Walker.prototype.getTranslationScaleRotation = function() {
 Walker.prototype.render = function(angle, tickNum, renderThreeJS){
     if (!this._isFinished){
         if (Math.abs(this._hinges[4].getCurrentPosition().y-this._hinges[5].getCurrentPosition().y) > 15){//(Math.abs(this._walkerBody.body.angle)>0.5){//check for rolling
-            console.log("hi");
             this._isFinished = true;
-            this.setFitness(0);
+            this.setFitness(1);
             return;
         }
 //        if (tickNum > 1) return;
