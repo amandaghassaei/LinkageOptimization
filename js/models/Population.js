@@ -21,7 +21,7 @@ Population.prototype._initFirstGeneration = function(archetype){
         var hinge2 = archetype.addHingeAtPosition({x:0,y:40});
         var hinge3 = archetype.addHingeAtPosition({x:-10,y:0});
         var hinge4 = archetype.addHingeAtPosition({x:14,y:2}).setStatic(true);
-        var hinge5 = archetype.addHingeAtPosition({x:-20,y:0});
+        var hinge5 = archetype.addHingeAtPosition({x:-20,y:10});
 
         archetype.link(hinge1, hinge3);//add an optional third param to set to a specific length
         archetype.link(hinge4, hinge1);
@@ -96,10 +96,14 @@ Population.prototype._setLinkages = function(linkages){
         var numLegPairs = globals.appState.get("numLegPairs");
         var numStoredPositions = globals.appState.get("numPositionSteps");
         _.each(linkages, function(linkage){
+            if (linkage._checkWeirdness()){
+                linkage.destroy();
+                return;
+            }
             walkers.push(new Walker(linkage, numLegPairs, numStoredPositions));
             linkage.destroy();
         });
-//        for (var i=0;i<100;i++) globals.physics.update();//let the physics env settle
+        for (var i=0;i<100;i++) globals.physics.update();//let the physics env settle
         this._linkages = walkers;
     }
 };
@@ -204,7 +208,8 @@ Population.prototype.calcNextGen = function(linkages){
     //genetic algorithm mode
     var matingPool = this._createMatingPool(linkages);
     if (matingPool.length == 0) console.warn("all linkages have zero fitness, no mating possible");
-    for (var i=0;i<linkages.length;i++){//next generation is the same size as this one
+    var populationSize = globals.appState.get("populationSize");
+    for (var i=0;i<populationSize;i++){//next generation is the same size as this one
         var parent1 = this._drawFromMatingPool(matingPool);
         var parent2 = this._drawFromMatingPool(matingPool);
         nextGenLinkages.push(parent1.mate(parent2, mutationRate));

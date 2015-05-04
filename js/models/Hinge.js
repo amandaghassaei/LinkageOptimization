@@ -87,7 +87,7 @@ Hinge.prototype.setStatic = function(isStatic){//body cannot move
 };
 
 Hinge.prototype.relaxPosition = function(){
-    this._position = _.clone(this._trackedPositions[0]);
+    this._position = this.getCurrentPosition();//_.clone(this._trackedPositions[0]);
 };
 
 

@@ -162,6 +162,7 @@ Walker.prototype._makeWalkerBody = function(hinges){
             self._walkerBodyConstraints.push(link);
         }
     });
+    this._walkerBody = globals.physics.makeWalkerBody(hinges[0].getBody(), hinges[1].getBody(), hinges[2].getBody());
 };
 
 Walker.prototype.addDriveCrank = function(){
@@ -237,6 +238,11 @@ Walker.prototype.getTranslationScaleRotation = function() {
 
 Walker.prototype.render = function(angle, tickNum, renderThreeJS){
     if (!this._isFinished){
+        if (Math.abs(this._walkerBody.body.angle)>0.5){//check for rolling
+            this._isFinished = true;
+            this._fitness = 0;
+            return;
+        }
 //        if (tickNum > 1) return;
         this.drive(angle);
         if (renderThreeJS){
@@ -251,7 +257,7 @@ Walker.prototype.render = function(angle, tickNum, renderThreeJS){
             });
         }
         var totalNumTicks = globals.appState.get("numEvalTicks");
-        if (tickNum == totalNumTicks-globals.appState.get("numPositionSteps")) this._speedMark = this._hinges[0].getCurrentPosition().x;
+        if (tickNum == totalNumTicks-2*globals.appState.get("numPositionSteps")) this._speedMark = this._hinges[0].getCurrentPosition().x;
         if (tickNum >= totalNumTicks) {
             var position = this._hinges[0].getCurrentPosition().x;
             this._finished(position, position-this._speedMark);
@@ -276,6 +282,16 @@ Walker.prototype.destroy = function(){
         constraint.destroy();
     });
     this._walkerBodyConstraints = null;
+    if (this._walkerBody) {
+        _.each(this._walkerBody.constraints, function(constraint){
+            globals.physics.worldRemove(constraint);
+            constraint = null;
+        });
+        this._walkerBody.constraints = null;
+        globals.physics.worldRemove(this._walkerBody.body);
+        this._walkerBody.body = null;
+    }
+    this._walkerBody = null;
     Linkage.prototype.destroy.call(this);
 };
 

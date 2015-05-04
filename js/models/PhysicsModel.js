@@ -24,6 +24,7 @@ function PhysicsModel(){
 
     function _makeCircularBody(position, radius, friction){
         if (friction === undefined) friction = 0;
+//        if (density === undefined) density = 0.0001;
         var body = Bodies.circle(position.x, position.y, 1,
             {groupId:1, friction:friction});//things with the same groupId cannot collide
         Matter.Body.scale (body, radius, radius);
@@ -63,6 +64,18 @@ function PhysicsModel(){
         return constraint;
     }
 
+    function makeWalkerBody(center, staticBody1, staticBody2){
+        var width = Math.abs(staticBody1.position.x - staticBody2.position.x);
+        var height = 2*Math.abs(center.position.y - staticBody1.position.y);
+        var body = Bodies.rectangle(center.position.x, center.position.y, width, height,
+                {groupId:1});
+        var constriants = [];
+        constriants.push(makeConstraint(body, center, 0));
+        constriants.push(makeConstraint(body, staticBody1, 0, {x:center.position.x-staticBody1.position.x, y:center.position.y-staticBody1.position.y}));
+        constriants.push(makeConstraint(body, staticBody1, 0, {x:center.position.x-staticBody2.position.x, y:center.position.y-staticBody2.position.y}));
+        return {body:body, constraints: constriants};
+    }
+
     function setGravity(state){
         if (state) engine.world.gravity.y = -10000;//todo mess around with density, also links have no mass
         else engine.world.gravity.y = 0;
@@ -86,6 +99,7 @@ function PhysicsModel(){
         scaleBody: scaleBody,
         setStatic: setStatic,
         makeConstraint: makeConstraint,
+        makeWalkerBody: makeWalkerBody,
         setGravity: setGravity,
         rotate: rotate,
         update:update
