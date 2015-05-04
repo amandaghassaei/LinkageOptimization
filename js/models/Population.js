@@ -103,7 +103,7 @@ Population.prototype._setLinkages = function(linkages){
             walkers.push(new Walker(linkage, numLegPairs, numStoredPositions));
             linkage.destroy();
         });
-        for (var i=0;i<100;i++) globals.physics.update();//let the physics env settle
+//        for (var i=0;i<100;i++) globals.physics.update();//let the physics env settle
         this._linkages = walkers;
     }
 };

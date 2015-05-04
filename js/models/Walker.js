@@ -36,9 +36,9 @@ function Walker(linkage, numLegs, numStoredPositions){//Linkage subclass
     var cranks = [];
     for (var i=0;i<numLegs;i++){
         var outsideHingeIndex = json.driveCrank.outsideHinge;
-        cranks.push(this.addHingeAtPosition(trajectories[outsideHingeIndex][initalPhases[i]]));
-//        cranks.push(this.addHingeAtPosition(this._crankPositionForAngle(Math.PI*2/numLegs*i,
-//            hinges[outsideHingeIndex].position, hinges[centerHingeIndex].position)));
+//        cranks.push(this.addHingeAtPosition(trajectories[outsideHingeIndex][initalPhases[i]]));
+        cranks.push(this.addHingeAtPosition(this._crankPositionForAngle(Math.PI*2/numLegs*i+Math.PI/2,
+            hinges[outsideHingeIndex].position, hinges[centerHingeIndex].position)));
     }
     hinges[outsideHingeIndex].updatedPosition = 1;
 
@@ -109,8 +109,7 @@ Walker.prototype._getVerticalOffset = function(trajectories, phases){
 };
 
 Walker.prototype._crankPositionForAngle = function(angle, position, centerPosition){
-    angle +=  Math.atan2(position.y-centerPosition.y, position.x-centerPosition.x);
-    var radius = Math.sqrt(Math.pow(position.x-centerPosition.x, 2) + Math.pow(position.y + centerPosition.y, 2));
+    var radius = Math.sqrt(Math.pow(position.x-centerPosition.x, 2) + Math.pow(position.y-centerPosition.y, 2));
     var x = centerPosition.x+Math.cos(angle)*radius;
     var y = centerPosition.y+Math.sin(angle)*radius;
     return {x:x, y:y};
@@ -240,8 +239,8 @@ Walker.prototype.getTranslationScaleRotation = function() {
 
 Walker.prototype.render = function(angle, tickNum, renderThreeJS){
     if (!this._isFinished){
-        if (Math.abs(this._walkerBody.body.angle)>0.5){//check for rolling
-            console.log("stop");
+        if (Math.abs(this._hinges[4].getCurrentPosition().y-this._hinges[5].getCurrentPosition().y) > 15){//(Math.abs(this._walkerBody.body.angle)>0.5){//check for rolling
+            console.log("hi");
             this._isFinished = true;
             this.setFitness(0);
             return;
