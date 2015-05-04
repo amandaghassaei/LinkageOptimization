@@ -190,7 +190,7 @@ Population.prototype.readyToCalcNextGen = function(){
 };
 
 Population.prototype.calcNextGen = function(linkages){
-    if (!linkages || linkages.length == 0){
+    if ((!linkages || linkages.length == 0) && globals.appState.get("optimizationStrategy") != "hillClimbing"){
         console.warn("this population has no linkages");
         return [];
     }
@@ -200,7 +200,10 @@ Population.prototype.calcNextGen = function(linkages){
     //hill climbing mode
     if (globals.appState.get("optimizationStrategy") == "hillClimbing"){
         var parent = this.getBestLinkage(linkages);
-        nextGenLinkages.push(parent.clone());//todo set fitness here
+        if (!this._bestHillClimbing || parent.getFitness() > this._bestHillClimbing.getFitness()) {
+            this._bestHillClimbing = parent.clone();
+            this._bestHillClimbing.setFitness(parent.getFitness());
+        }
         nextGenLinkages.push(parent.hillClimb(mutationRate));
         return nextGenLinkages;
     }
@@ -268,6 +271,13 @@ Population.prototype.getCurrentStatistics = function(linkages, returnLinkageObje
     var bestLinkage = linkages[0];
     var fitnessSum = 0;
     var allFitness = [];
+
+    if (globals.appState.get("optimizationStrategy")=="hillClimbing" && this._bestHillClimbing){
+        bestLinkage = this._bestHillClimbing;
+        allFitness.push(this._bestHillClimbing.getFitness());
+        maxFitness = this._bestHillClimbing.getFitness();
+    }
+
     _.each(linkages, function(linkage){
         var fitness = linkage.getFitness();
         allFitness.push(fitness);
@@ -278,8 +288,9 @@ Population.prototype.getCurrentStatistics = function(linkages, returnLinkageObje
         }
         fitnessSum += fitness;
     });
+
     if (returnLinkageObject) return bestLinkage;
-    return {minFitness:minFitness, maxFitness:maxFitness, avgFitness:fitnessSum/linkages.length, bestLinkage:bestLinkage.toJSON(), allFitness:allFitness}
+    return {minFitness:minFitness, maxFitness:maxFitness, avgFitness:fitnessSum/linkages.length, bestLinkage:bestLinkage.toJSON(), allFitness:allFitness};
 };
 
 

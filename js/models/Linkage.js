@@ -250,7 +250,12 @@ Linkage.prototype._shiftAngle = function(angle, target) {
         };
     }
     return shifted_target;
-}
+};
+
+Linkage.prototype.setFitness = function(fitness){
+    this._fitness = fitness;
+    this.hide();
+};
 
 Linkage.prototype._calcFitness = function(target, test){
 
@@ -387,6 +392,11 @@ Linkage.prototype.setTargetPathVisibility = function(visibility){
 
 
 //Draw
+
+Linkage.prototype.hide = function(){
+    this._material.opacity = 0.0;
+    this._material.transparent = true;
+};
 
 Linkage.prototype.setWidth = function(width){
     this._iterateAllHingesAndLinks(function(object){

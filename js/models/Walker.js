@@ -6,6 +6,8 @@
 
 function Walker(linkage, numLegs, numStoredPositions){//Linkage subclass
     Linkage.call(this);//init empty linkage
+//    if (numLegs === undefined) numLegs = globals.appState.get("numLegPairs");
+//    if (numStoredPositions === undefined) numStoredPositions = globals.appState.get("numPositionSteps");
 
     var json = linkage.toJSON();
     this._walkerBodyConstraints = [];
@@ -196,7 +198,7 @@ Walker.prototype.setFitness = function(fitness){
 Walker.prototype._finished = function(distance, speed){
     if (globals.appState.get("fitnessQuantity") == "distance") this.setFitness(Math.abs(distance)/10.0);
     else {
-        var fitness = Math.abs(speed)-35;
+        var fitness = Math.abs(speed)-5;
         if (fitness < 1) fitness = 1;
         this.setFitness(fitness);
     }
@@ -239,8 +241,9 @@ Walker.prototype.getTranslationScaleRotation = function() {
 Walker.prototype.render = function(angle, tickNum, renderThreeJS){
     if (!this._isFinished){
         if (Math.abs(this._walkerBody.body.angle)>0.5){//check for rolling
+            console.log("stop");
             this._isFinished = true;
-            this._fitness = 0;
+            this.setFitness(0);
             return;
         }
 //        if (tickNum > 1) return;
@@ -257,7 +260,7 @@ Walker.prototype.render = function(angle, tickNum, renderThreeJS){
             });
         }
         var totalNumTicks = globals.appState.get("numEvalTicks");
-        if (tickNum == totalNumTicks-2*globals.appState.get("numPositionSteps")) this._speedMark = this._hinges[0].getCurrentPosition().x;
+        if (tickNum == totalNumTicks-globals.appState.get("numPositionSteps")) this._speedMark = this._hinges[0].getCurrentPosition().x;
         if (tickNum >= totalNumTicks) {
             var position = this._hinges[0].getCurrentPosition().x;
             this._finished(position, position-this._speedMark);
@@ -268,10 +271,6 @@ Walker.prototype.render = function(angle, tickNum, renderThreeJS){
 Walker.prototype.setHingePathVisibility = function(){
 };
 
-Walker.prototype.hide = function(){
-    this._material.opacity = 0.0;
-    this._material.transparent = true;
-};
 
 
 
