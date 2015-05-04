@@ -339,9 +339,13 @@ Linkage.prototype._calcFitness = function(target, test){
     // console.log(fitnesses);
 
     var best_fitness = Math.min.apply(Math, fitnesses);
-    return 100-best_fitness*10;
+    var return_fitness = 100-best_fitness*10;
 
-
+    if (return_fitness > 0) {
+        return return_fitness;
+    }
+    else
+        return 0;
 
 
 
