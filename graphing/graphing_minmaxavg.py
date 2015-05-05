@@ -50,26 +50,39 @@ def remove_border(axes=None, top=False, right=False, left=True, bottom=True):
     if right:
         ax.yaxis.tick_right()
 
-def graph_fitness(filename):
+def graph_fitness(filenames):
 
-    with open(filename) as f:
-        run_stats = json.load(f)
+    avg_fits = []
+    max_fits = []
+    min_fits = []
 
-    # fitnesses = []
+    for filename in filenames:
 
-    avg_fit = []
-    max_fit = []
-    min_fit = []
+        with open(filename) as f:
+            run_stats = json.load(f)
 
-    for run in run_stats['data']:
-        # fitnesses.append(run['allFitness'])
-        avg_fit.append(run['avgFitness'])
-        max_fit.append(run['maxFitness'])
-        min_fit.append(run['minFitness'])
+        # fitnesses = []
+
+        avg_fit = []
+        max_fit = []
+        min_fit = []
+
+        for run in run_stats['data']:
+            # fitnesses.append(run['allFitness'])
+            avg_fit.append(run['avgFitness'])
+            max_fit.append(run['maxFitness'])
+            min_fit.append(run['minFitness'])
+
+        avg_fits.append(avg_fit)
+        max_fits.append(max_fit)
+        min_fits.append(min_fit)
 
     # plt.boxplot(fitnesses)
+    # for m in max_fit:
 
-    plt.plot(max_fit, label='Max fitness')
+    plt.plot(max_fits[0], label='Trial 1')
+    plt.plot(max_fits[1], label='Trial 2')
+    plt.plot(max_fits[2], label='Trial 3')
 
     # plt.plot(avg_fit, label='Avg fitness')
     # plt.plot(min_fit, label='Min fitness')
@@ -100,10 +113,10 @@ def graph_fitness(filename):
 # graph_fitness("hillclimbingstats_0427.json")
 # topbumpy_graph_hc.png
 # topsquiggly_graph_more_hc.png
-# hillClimb3Graph.png
+# hillClimbGraphCombined.png
 
 
 
 # graph_fitness('../target_curves/topsquiggly_runstats_more_hc.json')
-graph_fitness('amanda_hc/hillClimb3Stats.json')
+graph_fitness(['amanda_hc/hillClimb1Stats.json', 'amanda_hc/hillClimb2Stats.json', 'amanda_hc/hillClimb3Stats.json'])
 
