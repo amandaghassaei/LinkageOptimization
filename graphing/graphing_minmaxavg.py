@@ -97,9 +97,9 @@ def graph_fitness(filename):
 
 # graph_fitness("runStatistics.json")
 # graph_fitness("hillclimbingstats_0427.json")
-# topsquiggle_graph_hc.png
+# topbumpy_graph_hc.png
 
 
 
-graph_fitness('../target_curves/topsquiggle_runstats_hc.json')
+graph_fitness('../target_curves/topbumpy_runstats_hc.json')
 
