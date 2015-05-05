@@ -80,16 +80,21 @@ def graph_fitness(filenames):
     # plt.boxplot(fitnesses)
     # for m in max_fit:
 
+
     plt.plot(max_fits[0], label='Trial 1')
     plt.plot(max_fits[1], label='Trial 2')
     plt.plot(max_fits[2], label='Trial 3')
+    # plt.plot(max_fits[3], label='D')
 
     # plt.plot(avg_fit, label='Avg fitness')
     # plt.plot(min_fit, label='Min fitness')
 
     remove_border()
+    axes = plt.gca()
 
-    # plt.legend(loc=3)
+    # axes.set_ylim([0,100])
+
+    plt.legend(loc=4)
 
     plt.xlabel("Number of runs")
     plt.ylabel("Fitness") 
@@ -114,9 +119,14 @@ def graph_fitness(filenames):
 # topbumpy_graph_hc.png
 # topsquiggly_graph_more_hc.png
 # hillClimbGraphCombined.png
+# topcombined_graph_hc.png
 
 
 
 # graph_fitness('../target_curves/topsquiggly_runstats_more_hc.json')
 graph_fitness(['amanda_hc/hillClimb1Stats.json', 'amanda_hc/hillClimb2Stats.json', 'amanda_hc/hillClimb3Stats.json'])
+
+# graph_fitness(['../target_curves/topflat_runstats_hc.json', '../target_curves/topsmall_runstats_hc.json', '../target_curves/toploopy_runstats_hc.json', '../target_curves/topsquiggle_runstats_hc.json'])
+
+
 
