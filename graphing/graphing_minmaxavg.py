@@ -70,12 +70,13 @@ def graph_fitness(filename):
     # plt.boxplot(fitnesses)
 
     plt.plot(max_fit, label='Max fitness')
-    plt.plot(avg_fit, label='Avg fitness')
+
+    # plt.plot(avg_fit, label='Avg fitness')
     # plt.plot(min_fit, label='Min fitness')
 
     remove_border()
 
-    plt.legend(loc=3)
+    # plt.legend(loc=3)
 
     plt.xlabel("Number of runs")
     plt.ylabel("Fitness") 
@@ -98,8 +99,11 @@ def graph_fitness(filename):
 # graph_fitness("runStatistics.json")
 # graph_fitness("hillclimbingstats_0427.json")
 # topbumpy_graph_hc.png
+# topsquiggly_graph_more_hc.png
+# hillClimb3Graph.png
 
 
 
-graph_fitness('../target_curves/topbumpy_runstats_hc.json')
+# graph_fitness('../target_curves/topsquiggly_runstats_more_hc.json')
+graph_fitness('amanda_hc/hillClimb3Stats.json')
 
