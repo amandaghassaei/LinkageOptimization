@@ -69,9 +69,14 @@ def graph_fitness(filenames):
 
         for run in run_stats['data']:
             # fitnesses.append(run['allFitness'])
+
             avg_fit.append(run['avgFitness'])
             max_fit.append(run['maxFitness'])
-            min_fit.append(run['minFitness'])
+
+            if not run['minFitness']:
+                min_fit.append(0)
+            else:
+                min_fit.append(run['minFitness'])
 
         avg_fits.append(avg_fit)
         max_fits.append(max_fit)
@@ -80,14 +85,31 @@ def graph_fitness(filenames):
     # plt.boxplot(fitnesses)
     # for m in max_fit:
 
+    # plt.plot(max_fits[0][:1000], label='1%')
+    # plt.plot(max_fits[1][:1000], label='5%')
+    # plt.plot(max_fits[2][:1000], label='10%')
+    # plt.plot(max_fits[3][:1000], label='20%')
+    # plt.plot(max_fits[3][:1000], label='50%')
 
-    plt.plot(max_fits[0], label='Trial 1')
-    plt.plot(max_fits[1], label='Trial 2')
-    plt.plot(max_fits[2], label='Trial 3')
+    # plt.plot(max_fits[0], label='Trial 1')
+    # plt.plot(max_fits[1], label='Trial 2')
+    # plt.plot(max_fits[2], label='Trial 3')
+    # plt.plot(max_fits[0], label='A')
+    # plt.plot(max_fits[1], label='B')
+    # plt.plot(max_fits[2], label='C')
     # plt.plot(max_fits[3], label='D')
 
     # plt.plot(avg_fit, label='Avg fitness')
     # plt.plot(min_fit, label='Min fitness')
+
+    avg_fits[0] = avg_fits[0][:-1]
+    max_fits[0] = max_fits[0][:-1]
+    min_fits[0] = min_fits[0][:-1]
+
+    fig, ax = plt.subplots()
+    ax.plot(avg_fits[0])
+    ax.fill_between(xrange(len(avg_fits[0])), avg_fits[0], max_fits[0], alpha=0.5)
+    ax.fill_between(xrange(len(avg_fits[0])), min_fits[0], avg_fits[0], alpha=0.5)
 
     remove_border()
     axes = plt.gca()
@@ -119,14 +141,21 @@ def graph_fitness(filenames):
 # topbumpy_graph_hc.png
 # topsquiggly_graph_more_hc.png
 # hillClimbGraphCombined.png
+# gaGraph.png
 # topcombined_graph_hc.png
+# mutation_rate.png
+# mutation_rate_more.png
+# topflat_mutation_rate_evenmore.png
 
 
 
 # graph_fitness('../target_curves/topsquiggly_runstats_more_hc.json')
-graph_fitness(['amanda_hc/hillClimb1Stats.json', 'amanda_hc/hillClimb2Stats.json', 'amanda_hc/hillClimb3Stats.json'])
+# graph_fitness(['amanda_hc/hillClimb1Stats.json', 'amanda_hc/hillClimb2Stats.json', 'amanda_hc/hillClimb3Stats.json'])
 
-# graph_fitness(['../target_curves/topflat_runstats_hc.json', '../target_curves/topsmall_runstats_hc.json', '../target_curves/toploopy_runstats_hc.json', '../target_curves/topsquiggle_runstats_hc.json'])
+graph_fitness(['amanda_hc/finalGAWalkingStats.json'])
 
+# graph_fitness(['../target_curves/topflat_runstats2_hc.json', '../target_curves/topsmall_runstats_hc.json', '../target_curves/toploopy_runstats_hc.json', '../target_curves/topsquiggle_runstats_hc.json'])
 
+# graph_fitness(['../target_curves/topflat_runstats2.json', 'mutation_rate/topflat_5.json', 'mutation_rate/topflat_10.json', 'mutation_rate/topflat_20.json', 'mutation_rate/topflat_50_v2.json'])
+# graph_fitness(['../target_curves/topsquiggle_runstats.json', 'mutation_rate/topsquiggle_5.json', 'mutation_rate/topsquiggle_10.json', 'mutation_rate/topsquiggle_15.json'])
 
