@@ -14,23 +14,23 @@ function ThreeSVG(){
 
     function initialize(){
 
-        scene.fog = new THREE.FogExp2(0xcccccc, 0.000);
+        scene.fog = new THREE.FogExp2(0xffffff, 0.000);
 
         // lights
         var light = new THREE.DirectionalLight(0xffffff);
         light.position.set(1, 1, 1);
         scene.add(light);
-        light = new THREE.DirectionalLight(0xaaaaaa);
+        light = new THREE.DirectionalLight(0xffffff);
         light.position.set(-1, -1, -1);
         scene.add(light);
-        light = new THREE.AmbientLight(0x222222);
+        light = new THREE.AmbientLight(0xffffff);
         scene.add(light);
 
         // renderer
         renderer.setClearColor(scene.fog.color, 1);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
-        camera.position.set(-4, 0, 18);
+        camera.position.set(-4, 0, 22);
 
         window.addEventListener('resize', onWindowResize, false);
     }

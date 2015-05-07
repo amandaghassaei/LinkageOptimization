@@ -66,7 +66,10 @@ MillMenuView = Backbone.View.extend({
 
     _export: function(e){
         e.preventDefault();
-        this.model.createVectorPathsForLinkage(globals.population.getBestLinkage().toJSON());
+//        var linkage = globals.population.getBestLinkage().toJSON();
+        var linkage = globals.population._linkages[0].toJSON();
+        $("#linkageOutputDialog").text(JSON.stringify(linkage.links));
+        this.model.createVectorPathsForLinkage(linkage);
     },
 
     render: function(){
@@ -104,7 +107,9 @@ MillMenuView = Backbone.View.extend({
         <label class="checkbox disabled" for="fillThreeBar">\
         <input type="checkbox" disabled <% if (fillThreeBar){ %>checked="checked" <% } %> value="" id="fillThreeBar" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
         Output three-bar linkage as solid triangle</label><br/>\
+        <a href="#" class="importJSON btn btn-block btn-lg btn-default">Import Linkage</a><br/>\
         <a href="#" id="saveMillPaths" class="btn btn-block btn-lg btn-success">Export Paths and Save</a><br/>\
+        <div id="linkageOutputDialog"></div><br/>\
         ')
 
 });

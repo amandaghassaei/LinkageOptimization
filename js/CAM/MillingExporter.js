@@ -8,13 +8,13 @@ MillingExporter = Backbone.Model.extend({
     defaults: {
         fillThreeBar: true,
         units: "inches",
-        linkWidth:0.5,
+        linkWidth:1,
         dowelDiameter: 0.25,
         stockThickness: 0.47,
-        pressFitTolerance:0.001,
+        pressFitTolerance:0.005,
         hingeTolerance:0.01,
         curveResolution: 100.0,
-        scalingFactor:0.1
+        scalingFactor:0.14
     },
 
     initialize: function(){
@@ -62,7 +62,7 @@ MillingExporter = Backbone.Model.extend({
             drawOffset += this._makeTriangle(json.hinges, [0,1,2], this.get("fillThreeBar"), drawOffset);
             var hinges = json.hinges;
             hinges.push({position:{x:2*hinges[3].position.x-hinges[4].position.x, y:hinges[4].position.y}});
-            drawOffset += this._makeTriangle(hinges, [3,4,5], this.get("fillThreeBar"), drawOffset);
+            drawOffset += this._makeTriangle(hinges, [4,3,5], this.get("fillThreeBar"), drawOffset);
         } else {
             drawOffset += this._makeTriangle(json.hinges, [1,0,2], this.get("fillThreeBar"), drawOffset);
             var hinges = json.hinges;
@@ -115,6 +115,7 @@ MillingExporter = Backbone.Model.extend({
     _makeTriangle: function(hinges, indices, isSolid, drawOffset){
         var self = this;
         _.each(indices, function(num){
+            if (num == globals.appState.get("outputHingeIndex")) return;
             globals.svg.sceneAdd(self._makeCirce(hinges[num].position, self.get("dowelDiameter")/2.0 + self.get("hingeTolerance"), drawOffset));
         });
         indices.push(indices[0]);
